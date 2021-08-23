@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OsuFileIO.HitObject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,8 @@ namespace OsuFileIO.OsuFile
         //TODO property Difficulty
         //TODO property Events
         //TODO property TimingPoints
+
         //TODO property Combo colors
-        //TODO property HitObjects
+        public List<IHitObject> HitObjects { get; set; }
     }
 }
