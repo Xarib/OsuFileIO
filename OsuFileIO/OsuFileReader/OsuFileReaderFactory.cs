@@ -11,10 +11,11 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader
 {
-    public class OsuFileReaderFactory
+    public class OsuFileReaderFactory : IDisposable
     {
-        private readonly string path;
-        private readonly OsuFileReaderFactoryOptions options;
+        private OsuFileReaderFactoryOptions options;
+        private OsuFileReaderOverride readerOverride;
+        private readonly Stream stream;
 
         /// <summary>
         /// Opens and reads a .osu file and returns the corresponding reader for the given gamemode
@@ -22,20 +23,35 @@ namespace OsuFileIO.OsuFileReader
         /// <param name="path"></param>
         public OsuFileReaderFactory([NotNull] string path, OsuFileReaderFactoryOptions options = null)
         {
-            this.path = path ?? throw new ArgumentNullException(nameof(path));
-            this.options = options;
-
             if (!path.EndsWith(".osu"))
                 throw new ArgumentException("The given file is not a osu file");
 
             if (!File.Exists(path))
                 throw new FileNotFoundException("File '" + path + "' does not exist");
+
+            this.options = options;
+            this.stream = File.OpenRead(path);
+        }
+
+        public OsuFileReaderFactory([NotNull] Stream stream)
+        {
+            this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
+        }
+
+        public void ConfigureOptions(OsuFileReaderFactoryOptions options)
+        {
+            this.options = options;
+        }
+
+        public void ConfigureOverride(OsuFileReaderOverride readerOverride)
+        {
+            this.readerOverride = readerOverride;
         }
 
         private static string searchString = "Mode:";
         public OsuFileReader Build()
         {
-            using StreamReader sr = new(path);
+            using StreamReader sr = new(this.stream);
 
             string line;
             if (options is null)
@@ -52,19 +68,33 @@ namespace OsuFileIO.OsuFileReader
                 .Remove(0, searchString.Length)
                 .Trim());
 
+            //TODO change this. Did this because of stream disposing. Dispose method cannot know if the stream is already disposed in the file reader. 
+            var newStream = new MemoryStream();
+            this.stream.CopyTo(newStream);
+            newStream.Position = 0;
             return mode switch
             {
-                GameMode.Standard => new OsuStdFileReader(),
+                GameMode.Standard => new OsuStdFileReader(newStream),
                 GameMode.Taiko => throw new NotImplementedException(),
                 GameMode.Catch => throw new NotImplementedException(),
                 GameMode.Mania => throw new NotImplementedException(),
                 _ => throw new OsuFileReaderException(),
             };
         }
+
+        public void Dispose()
+        {
+            this.stream.Dispose();
+        }
     }
 
     public class OsuFileReaderFactoryOptions
     {
         public StringComparison StringComparison { get; set; }
+    }
+
+    public class OsuFileReaderOverride
+    {
+
     }
 }

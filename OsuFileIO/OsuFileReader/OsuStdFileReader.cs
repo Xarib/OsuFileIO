@@ -1,6 +1,6 @@
 ﻿using OsuFileIO.OsuFile;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,9 +9,24 @@ namespace OsuFileIO.OsuFileReader
 {
     public class OsuStdFileReader : OsuFileReader
     {
+        public OsuStdFileReader(string path) : base(path)
+        {
+        }
+
+        public OsuStdFileReader(Stream stream) : base(stream)
+        {
+        }
+
         public override OsuStdFile ReadAll()
         {
-            throw new NotImplementedException();
+            var osuStdFile = new OsuStdFile();
+
+            do
+            {
+                this.sr.ReadLine();
+            } while (!this.sr.EndOfStream);
+
+            return osuStdFile;
         }
     }
 }
