@@ -11,12 +11,14 @@ namespace OsuFileIO.OsuFileReader.HitObjectReader
     {
         protected readonly IList<TimingPoint> timingPoints;
         protected readonly IList<IHitObject> hitObjects;
-        protected int index;
+        protected int indexHitObject;
+        protected int indexTimingPoint;
 
-        public TimingPoint CurrentTimingPoint { get; init; }
         public double MaxTimeBetweenStreamObjects { get; init; }
         public double MaxTimeBetweenJumps { get; init; }
         public double SliderBaseLength { get; init; }
+        public TimingPoint CurrentTimingPoint { get => this.timingPoints[this.indexTimingPoint]; }
+        public IHitObject CurrentHitObject { get => this.hitObjects[this.indexHitObject]; }
 
         public HitObjectReader(IList<TimingPoint> timingPoints, IList<IHitObject> hitObjects)
         {
@@ -24,13 +26,23 @@ namespace OsuFileIO.OsuFileReader.HitObjectReader
             this.hitObjects = hitObjects ?? throw new ArgumentNullException(nameof(hitObjects));
         }
 
-        public abstract void ReadNext();
+        public abstract bool ReadNext();
+
+        public TimingPoint GetTimingPoint(int offsetFromCurrent)
+        {
+            var indexAfterOffset = this.indexTimingPoint + offsetFromCurrent;
+
+            if (indexAfterOffset < 0 || indexAfterOffset >= this.timingPoints.Count)
+                return null;
+
+            return this.timingPoints[indexAfterOffset];
+        }
 
         public IHitObject GetHitObject(int offsetFromCurrent)
         {
-            var indexAfterOffset = this.index + offsetFromCurrent;
+            var indexAfterOffset = this.indexHitObject + offsetFromCurrent;
 
-            if (indexAfterOffset < 0 || indexAfterOffset >= hitObjects.Count)
+            if (indexAfterOffset < 0 || indexAfterOffset >= this.hitObjects.Count)
                 return null;
 
             return this.hitObjects[indexAfterOffset];

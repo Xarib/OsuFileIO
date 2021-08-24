@@ -13,12 +13,31 @@ namespace OsuFileIO.OsuFileReader.HitObjectReader
         {
         }
 
-        public override void ReadNext()
+        /// <summary>
+        /// Reads the next <see cref="IHitObject"/> and set the most current <see cref="TimingPoint"/>
+        /// </summary>
+        /// <returns></returns>
+        public override bool ReadNext()
         {
-            this.index++;
+            if (this.indexHitObject == this.hitObjects.Count - 1)
+                return false;
 
-            //while (this.hitObjects[this.index].TimeInMs )
+            this.indexHitObject++;
 
+            //Get Most current Timingpoint
+            while (this.hitObjects[this.indexHitObject].TimeInMs > this.CurrentTimingPoint.TimeInMs)
+            {
+                this.indexTimingPoint++;
+
+                /* 
+                 * Checks if list has next timing point and if the time of the timingPoints are equal.
+                 * In a situation where two timing points with the same time exist it selects the last one.
+                 */
+                if (this.indexTimingPoint != this.timingPoints.Count - 1 && this.timingPoints[this.indexTimingPoint + 1].TimeInMs == this.CurrentTimingPoint.TimeInMs)
+                    this.indexTimingPoint++;
+            }
+
+            return true;
         }
     }
 }

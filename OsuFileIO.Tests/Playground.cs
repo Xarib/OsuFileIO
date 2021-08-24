@@ -4,7 +4,7 @@ using OsuFileIO.OsuFileReader;
 namespace OsuFileIO.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class Playground
     {
         [TestMethod]
         public void TestMethod1()

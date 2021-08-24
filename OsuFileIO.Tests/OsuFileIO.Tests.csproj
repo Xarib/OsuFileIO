@@ -17,4 +17,8 @@
     <ProjectReference Include="..\OsuFileIO\OsuFileIO.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="OsuFileWriter\" />
+  </ItemGroup>
+
 </Project>
