@@ -16,6 +16,7 @@ namespace OsuFileIO.OsuFileReader
         private OsuFileReaderFactoryOptions options;
         private OsuFileReaderOverride readerOverride;
         private readonly Stream stream;
+        private bool willBeDisposedByReader;
 
         /// <summary>
         /// Opens and reads a .osu file and returns the corresponding reader for the given gamemode
@@ -51,7 +52,7 @@ namespace OsuFileIO.OsuFileReader
         private static string searchString = "Mode:";
         public OsuFileReader Build()
         {
-            using StreamReader sr = new(this.stream);
+            StreamReader sr = new(this.stream);
 
             string line;
             if (options is null)
@@ -68,23 +69,35 @@ namespace OsuFileIO.OsuFileReader
                 .Remove(0, searchString.Length)
                 .Trim());
 
-            //TODO change this. Did this because of stream disposing. Dispose method cannot know if the stream is already disposed in the file reader. 
-            var newStream = new MemoryStream();
-            this.stream.CopyTo(newStream);
-            newStream.Position = 0;
-            return mode switch
+            this.stream.Position = 0;
+
+            switch (mode)
             {
-                GameMode.Standard => new OsuStdFileReader(newStream),
-                GameMode.Taiko => throw new NotImplementedException(),
-                GameMode.Catch => throw new NotImplementedException(),
-                GameMode.Mania => throw new NotImplementedException(),
-                _ => throw new OsuFileReaderException(),
-            };
+                case GameMode.Standard:
+                    this.willBeDisposedByReader = true;
+
+                    return new OsuStdFileReader(this.stream);
+                case GameMode.Taiko:
+                    this.willBeDisposedByReader = false; //TODO: Change this if implemented
+
+                    throw new NotImplementedException();
+                case GameMode.Catch:
+                    this.willBeDisposedByReader = false; //TODO: Change this if implemented
+
+                    throw new NotImplementedException();
+                case GameMode.Mania:
+                    this.willBeDisposedByReader = false; //TODO: Change this if implemented
+
+                    throw new NotImplementedException();
+                default:
+                    throw new OsuFileReaderException();
+            }
         }
 
         public void Dispose()
         {
-            this.stream.Dispose();
+            if (!this.willBeDisposedByReader)
+                this.stream.Dispose();
         }
     }
 

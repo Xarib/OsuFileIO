@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader.Exceptions
 {
-    [Serializable]
     class OsuFileReaderException : Exception
     {
         public OsuFileReaderException() { }
 
         public OsuFileReaderException(string message)
             : base(message) { }
+
+        public OsuFileReaderException(string message, Exception innerException)
+            : base(message, innerException) { }
     }
 }
