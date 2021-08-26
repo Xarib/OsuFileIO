@@ -10,23 +10,15 @@ namespace OsuFileIO.HitObject
     {
         public Coordinates Coordinates { get; set; }
         public int TimeInMs { get; set; }
-        public int EndTimeInMs { get; set; }
         public double Length { get; set; }
         public List<Coordinates> SliderCoordinates { get; set; }
 
-        public Slider(Coordinates coordinates, int timeInMs, int endTimeInMs, double length, List<Coordinates> sliderCoordinates)
+        public Slider(Coordinates coordinates, int timeInMs, List<Coordinates> sliderCoordinates, double length)
         {
             this.Coordinates = coordinates;
             this.TimeInMs = timeInMs;
-            this.EndTimeInMs = endTimeInMs;
-            this.Length = length;
             this.SliderCoordinates = sliderCoordinates;
+            this.Length = length;
         }
-
-        public Coordinates GetEndCoordinates()
-            => this.Coordinates;
-
-        public int GetEndTime()
-            => this.TimeInMs;
     }
 }

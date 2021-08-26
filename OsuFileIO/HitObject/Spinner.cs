@@ -18,11 +18,5 @@ namespace OsuFileIO.HitObject
             this.TimeInMs = timeInMs;
             this.EndTimeInMs = endTimeInMs;
         }
-
-        public Coordinates GetEndCoordinates()
-            => this.Coordinates;
-
-        public int GetEndTime()
-            => this.TimeInMs;
     }
 }

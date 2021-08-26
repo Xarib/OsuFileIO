@@ -13,7 +13,7 @@ namespace OsuFileIO.Tests
 
             var reader = factory.Build();
             var map = reader.ReadAll();
-
+            
         }
     }
 }

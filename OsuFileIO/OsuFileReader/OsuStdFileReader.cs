@@ -1,5 +1,6 @@
 ﻿using OsuFileIO.Enums;
 using OsuFileIO.Extensions;
+using OsuFileIO.HitObject;
 using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader.Exceptions;
 using OsuFileIO.OsuFileReader.HitObjectReader;
@@ -85,17 +86,19 @@ namespace OsuFileIO.OsuFileReader
 
                     string s0 = line[0..line.IndexOf(',')];
                     indexOfComma = s0.Length + 1;
-                    timingPoint.TimeInMs = (int)float.Parse(s0);
+                    timingPoint.TimeInMs = (int)double.Parse(s0);
 
                     s0 = line[indexOfComma..line.IndexOf(',', indexOfComma)];
                     indexOfComma += s0.Length + 1;
-                    timingPoint.BeatLength = float.Parse(s0);
+                    timingPoint.BeatLength = double.Parse(s0);
 
                     s0 = line[indexOfComma..line.IndexOf(',', indexOfComma)];
                     indexOfComma += s0.Length + 1;
-                    timingPoint.Meter = (int)float.Parse(s0);
+                    timingPoint.Meter = (int)double.Parse(s0);
 
                     osuStdFile.TimingPoints.Add(timingPoint);
+
+                    this.line = this.sr.ReadLine();
                 }
                 #endregion
 
@@ -105,12 +108,103 @@ namespace OsuFileIO.OsuFileReader
                 //string s1 = line[indexOfComma..line.IndexOf(',', indexOfComma)];
                 //indexOfComma += s1.Length + 1;
                 //string s2 = line[indexOfComma..line.IndexOf(',', indexOfComma)];
-                #endregion
 
-                do
+                this.line = this.sr.ReadLineStartingWithOrNull("[HitObjects]");
+                while (!this.sr.EndOfStream)
                 {
-                    this.line = sr.ReadLine();
-                } while (!this.sr.EndOfStream);
+                    this.line = this.sr.ReadLine();
+
+                    //Some maps have random new lines.
+                    if (this.line.Trim() == "")
+                        continue;
+
+                    string hitobjectPart = line[0..line.IndexOf(',')];
+                    indexOfComma = hitobjectPart.Length + 1;
+                    int x = (int)double.Parse(hitobjectPart);
+
+                    hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
+                    indexOfComma += hitobjectPart.Length + 1;
+                    int y = (int)double.Parse(hitobjectPart);
+
+                    hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
+                    indexOfComma += hitobjectPart.Length + 1;
+                    int timeInMs = (int)double.Parse(hitobjectPart);
+
+                    hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
+                    indexOfComma += hitobjectPart.Length + 1;
+                    int objectType = (int)double.Parse(hitobjectPart) % 4;
+
+                    IHitObject hitObject;
+                    switch (objectType)
+                    {
+                        case 0:
+                            hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
+                            indexOfComma += hitobjectPart.Length + 1;
+                            hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
+
+                            hitObject = new Spinner(new Coordinates(x, y), timeInMs, (int)double.Parse(hitobjectPart));
+                            break;
+
+                        case 1:
+                            hitObject = new Circle(new Coordinates(x, y), timeInMs);
+                            break;
+
+                        case 2:
+                            hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
+                            indexOfComma += hitobjectPart.Length + 1;
+
+                            hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
+                            indexOfComma += hitobjectPart.Length + 1;
+
+                            var sliderParts = hitobjectPart.Split('|');
+                            var sliderPoints = new List<Coordinates>();
+                            string[] coordsAsString;
+                            for (int i = 1; i < sliderParts.Length; i++)
+                            {
+                                coordsAsString = sliderParts[i].Split(':');
+                                var point = new Coordinates
+                                {
+                                    X = (int)double.Parse(coordsAsString[0]),
+                                    Y = (int)double.Parse(coordsAsString[1]),
+                                };
+
+                                var lastPoint = sliderPoints.LastOrDefault();
+                                if (i == 1)
+                                    lastPoint = new Coordinates(-1, -1);
+
+                                if (point == lastPoint)
+                                    continue;
+
+                                sliderPoints.Add(point);
+                            }
+
+                            hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
+                            indexOfComma += hitobjectPart.Length + 1;
+
+                            if (this.line == "499,284,39769,2,0,L|425:306,1,53.9999983520508")
+                                ;
+
+                            var tempIndex = line.IndexOf(',', indexOfComma);
+
+                            if (tempIndex == -1)
+                            {
+                                hitobjectPart = line[indexOfComma..];
+                            }
+                            else
+                            {
+                                hitobjectPart = line[indexOfComma..tempIndex];
+                            }
+
+                            hitObject = new Slider(new Coordinates(x, y), timeInMs, sliderPoints, double.Parse(hitobjectPart));
+                            break;
+
+                        default:
+                            throw new OsuFileReaderException("Invalid type was found in string: " + objectType);
+                    }
+
+                    osuStdFile.HitObjects.Add(hitObject);
+                }
+                #endregion
 
             }
             catch (Exception e)
