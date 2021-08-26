@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -14,11 +14,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="OsuFileReader\HitObjectReader\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\OsuFileIO\OsuFileIO.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="OsuFileWriter\" />
+    <None Update="OsuFileReader\TestFiles\stdShort.osu">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
