@@ -79,37 +79,40 @@ namespace OsuFileIO.OsuFileReader
                 #region TimingPoints
                 this.line = this.sr.ReadLineStartingWithOrNull("[TimingPoints]");
                 this.line = this.sr.ReadLine();
-                int indexOfComma;
                 while (this.line.Trim() != "" && !this.line.StartsWith('['))
                 {
                     var timingPoint = new TimingPoint();
 
-                    string s0 = line[0..line.IndexOf(',')];
-                    indexOfComma = s0.Length + 1;
-                    timingPoint.TimeInMs = (int)double.Parse(s0);
-
-                    s0 = line[indexOfComma..line.IndexOf(',', indexOfComma)];
-                    indexOfComma += s0.Length + 1;
-                    timingPoint.BeatLength = double.Parse(s0);
-
-                    s0 = line[indexOfComma..line.IndexOf(',', indexOfComma)];
-                    indexOfComma += s0.Length + 1;
-                    timingPoint.Meter = (int)double.Parse(s0);
+                    int spanIndex = -1;
+                    foreach (var span in this.line.SplitLinesAt(','))
+                    {
+                        spanIndex++;
+                        switch (spanIndex)
+                        {
+                            case 0:
+                                timingPoint.TimeInMs = (int)double.Parse(span);
+                                continue;
+                            case 1:
+                                timingPoint.BeatLength = double.Parse(span);
+                                continue;
+                            case 2:
+                                timingPoint.Meter = (int)double.Parse(span);
+                                continue;
+                            default:
+                                break;
+                        }
+                        break;
+                    }
 
                     osuStdFile.TimingPoints.Add(timingPoint);
-
                     this.line = this.sr.ReadLine();
                 }
                 #endregion
 
                 #region HitObjects
-                //string s0 = line[0..line.IndexOf(',')];
-                //indexOfComma = s0.Length + 1;
-                //string s1 = line[indexOfComma..line.IndexOf(',', indexOfComma)];
-                //indexOfComma += s1.Length + 1;
-                //string s2 = line[indexOfComma..line.IndexOf(',', indexOfComma)];
 
                 this.line = this.sr.ReadLineStartingWithOrNull("[HitObjects]");
+                int indexOfComma;
                 while (!this.sr.EndOfStream)
                 {
                     this.line = this.sr.ReadLine();
@@ -128,81 +131,26 @@ namespace OsuFileIO.OsuFileReader
 
                     hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
                     indexOfComma += hitobjectPart.Length + 1;
-                    int timeInMs = (int)double.Parse(hitobjectPart);
+                    int ms = (int)double.Parse(hitobjectPart);
 
                     hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
                     indexOfComma += hitobjectPart.Length + 1;
                     int objectType = (int)double.Parse(hitobjectPart) % 4;
 
-                    IHitObject hitObject;
                     switch (objectType)
                     {
                         case 0:
-                            hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
-                            indexOfComma += hitobjectPart.Length + 1;
-                            hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
-
-                            hitObject = new Spinner(new Coordinates(x, y), timeInMs, (int)double.Parse(hitobjectPart));
+                            osuStdFile.HitObjects.Add(ReadSpinner(new Coordinates(x, y), ms, line[indexOfComma..]));
                             break;
-
                         case 1:
-                            hitObject = new Circle(new Coordinates(x, y), timeInMs);
+                            osuStdFile.HitObjects.Add(new Circle(new Coordinates(x, y), ms));
                             break;
-
                         case 2:
-                            hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
-                            indexOfComma += hitobjectPart.Length + 1;
-
-                            hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
-                            indexOfComma += hitobjectPart.Length + 1;
-
-                            var sliderParts = hitobjectPart.Split('|');
-                            var sliderPoints = new List<Coordinates>();
-                            string[] coordsAsString;
-                            for (int i = 1; i < sliderParts.Length; i++)
-                            {
-                                coordsAsString = sliderParts[i].Split(':');
-                                var point = new Coordinates
-                                {
-                                    X = (int)double.Parse(coordsAsString[0]),
-                                    Y = (int)double.Parse(coordsAsString[1]),
-                                };
-
-                                var lastPoint = sliderPoints.LastOrDefault();
-                                if (i == 1)
-                                    lastPoint = new Coordinates(-1, -1);
-
-                                if (point == lastPoint)
-                                    continue;
-
-                                sliderPoints.Add(point);
-                            }
-
-                            hitobjectPart = line[indexOfComma..line.IndexOf(',', indexOfComma)];
-                            indexOfComma += hitobjectPart.Length + 1;
-
-                            if (this.line == "499,284,39769,2,0,L|425:306,1,53.9999983520508")
-                                ;
-
-                            var tempIndex = line.IndexOf(',', indexOfComma);
-
-                            if (tempIndex == -1)
-                            {
-                                hitobjectPart = line[indexOfComma..];
-                            }
-                            else
-                            {
-                                hitobjectPart = line[indexOfComma..tempIndex];
-                            }
-
-                            hitObject = new Slider(new Coordinates(x, y), timeInMs, sliderPoints, double.Parse(hitobjectPart));
+                            osuStdFile.HitObjects.Add(ReadSlider(new Coordinates(x, y), ms, line[indexOfComma..]));
                             break;
-
                         default:
                             throw new OsuFileReaderException("Invalid type was found in string: " + objectType);
                     }
-
-                    osuStdFile.HitObjects.Add(hitObject);
                 }
                 #endregion
 
@@ -213,6 +161,77 @@ namespace OsuFileIO.OsuFileReader
             }
 
             return osuStdFile;
+        }
+
+        private static Spinner ReadSpinner(Coordinates coordinates, int ms, string rest)
+        {
+            Spinner spinner = null;
+            int spanIndex = -1;
+            foreach (var span in rest.SplitLinesAt(','))
+            {
+                spanIndex++;
+
+                switch (spanIndex)
+                {
+                    case 0:
+                        continue;
+                    case 1:
+                        spinner = new Spinner(coordinates, ms, (int)double.Parse(span));
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            }
+
+            return spinner;
+        }
+
+        private static Slider ReadSlider(Coordinates coordinates, int ms, string rest)
+        {
+            Slider slider = null;
+            int spanIndex = -1;
+            var sliderPoints = new List<Coordinates>();
+            foreach (var span in rest.SplitLinesAt(','))
+            {
+                spanIndex++;
+
+                switch (spanIndex)
+                {
+                    case 0:
+                        continue;
+                    case 1:
+                        var enumerator = span.ToString().SplitLinesAt('|');
+                        enumerator.MoveNext();
+                        foreach (var point in enumerator)
+                        {
+                            var x = (int)double.Parse(point[0..point.IndexOf(':')]);
+                            var y = (int)double.Parse(point[(point.IndexOf(':') + 1)..]);
+
+                            if (sliderPoints.Count == 0)
+                            {
+                                sliderPoints.Add(new Coordinates(x, y));
+                                continue;
+                            }
+
+                            if (sliderPoints.Last() == new Coordinates(x, y))
+                                continue;
+
+                            sliderPoints.Add(new Coordinates(x, y));
+                        }
+                        continue;
+                    case 2:
+                        continue;
+                    case 3:
+                        slider = new Slider(coordinates, ms, sliderPoints, double.Parse(span));
+                            break;
+                    default:
+                        break;
+                }
+                break;
+            }
+
+            return slider;
         }
     }
 }
