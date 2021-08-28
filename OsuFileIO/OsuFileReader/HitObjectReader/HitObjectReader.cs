@@ -1,4 +1,5 @@
 ﻿using OsuFileIO.HitObject;
+using OsuFileIO.OsuFile;
 using System;
 using System.Collections.Generic;
 using System.Linq;

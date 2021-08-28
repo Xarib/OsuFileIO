@@ -57,7 +57,7 @@ namespace OsuFileIO.OsuFileReader
             string line;
             if (options is null)
             {
-                line = sr.ReadLineStartingWithOrNull(searchString);
+                line = sr.ReadLineStartingWithOrNull(searchString, StringComparison.OrdinalIgnoreCase);
             }
             else
             {

@@ -6,6 +6,7 @@ using OsuFileIO.OsuFileReader.Exceptions;
 using OsuFileIO.OsuFileReader.HitObjectReader;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -124,6 +125,35 @@ namespace OsuFileIO.Tests.OsuFileReader
 
 
         [TestMethod]
+        [DataRow("-28,461.538461538462,4,1,0,100,1,0")]
+        [DataRow("34125,-100,4,1,0,87,0,0")]
+        public void ReadTimingPoints_TimingPointData_ReturnsTimingPoint(string timingPoint)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine(timingPoint);
+            writer.Flush();
+            stream.Position = 0;
+
+            var reader = new OsuFileReaderFactory(stream).Build();
+
+            //Act
+            var actual = reader.ReadTimingPoints().Single();
+
+            //Assert
+            var expected = timingPoint.Split(',');
+            Assert.AreEqual(expected[0], actual.TimeInMs.ToString(), $"Expected the file reader to read '{nameof(actual.TimeInMs)}' correctly");
+            Assert.AreEqual(expected[1], actual.BeatLength.ToString(), $"Expected the file reader to read '{nameof(actual.BeatLength)}' correctly");
+            Assert.AreEqual(expected[2], actual.Meter.ToString(), $"Expected the file reader to read '{nameof(actual.Meter)}' correctly");
+        }
+
+
+        [TestMethod]
         [DeploymentItem(fileLocation + tutorialFile)]
         public void ReadGeneral_OsuFileReadWrongOrder_ThrowsException()
         {
@@ -188,10 +218,12 @@ namespace OsuFileIO.Tests.OsuFileReader
 
             //Act
             var read1 = reader.ReadGeneral();
+
             reader.ResetReader();
 
             var read2 = reader.ReadGeneral();
 
+            //Arrange
             Assert.AreEqual(read1.Mode, read2.Mode, $"Expected the re-read to be the same");
             Assert.AreEqual(read1.OsuFileFormat, read2.OsuFileFormat, $"Expected the re-read to be the same");
             Assert.AreEqual(read1.StackLeniency, read2.StackLeniency, $"Expected the re-read to be the same");

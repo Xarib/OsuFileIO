@@ -94,7 +94,7 @@ namespace OsuFileIO.OsuFileReader
 
             int indexColon;
             this.line = this.sr.ReadLine();
-            while (this.line.Trim() != "" && !this.line.StartsWith('['))
+            while (!string.IsNullOrWhiteSpace(this.line) && !this.line.StartsWith('['))
             {
                 indexColon = line.IndexOf(':');
 
@@ -170,7 +170,7 @@ namespace OsuFileIO.OsuFileReader
 
             this.line = this.sr.ReadLine();
 
-            while (this.line.Trim() != "" && !this.line.StartsWith('['))
+            while (!string.IsNullOrWhiteSpace(this.line) && !this.line.StartsWith('['))
             {
                 var timingPoint = new TimingPoint();
 
