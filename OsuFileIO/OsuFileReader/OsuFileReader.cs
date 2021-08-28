@@ -1,6 +1,7 @@
 ﻿using OsuFileIO.Enums;
 using OsuFileIO.Extensions;
 using OsuFileIO.OsuFile;
+using OsuFileIO.OsuFileReader.Exceptions;
 using OsuFileIO.OsuFileReader.HitObjectReader;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace OsuFileIO.OsuFileReader
             };
         }
 
-        public abstract OsuFile.OsuFile ReadAll();
+        public abstract OsuFile.OsuFile ReadFile();
 
         public void Dispose()
             => this.sr.Dispose();
@@ -76,8 +77,11 @@ namespace OsuFileIO.OsuFileReader
 
         private Dictionary<string, string> ReadAllTagsInBlockOrNull(string dilimiter)
         {
-            if (!this.line.StartsWith(dilimiter))
+            if (this.line is null || !this.line.StartsWith(dilimiter))
                 this.line = this.sr.ReadLineStartingWithOrNull(dilimiter);
+
+            if (this.line is null)
+                throw new OsuFileReaderException("The File was not read in the correct order. ReadMethods have to be ordere like: 'Genral -> Editor -> Metadata -> Difficulty -> Events -> TimingPoints -> Colours -> HitObjects' or with 'ReadFile'");
 
             var tagDict = new Dictionary<string, string>();
 
@@ -95,7 +99,7 @@ namespace OsuFileIO.OsuFileReader
             return tagDict;
         }
 
-        protected General ReadGeneral()
+        public General ReadGeneral()
         {
             var general = new General();
 
@@ -110,7 +114,7 @@ namespace OsuFileIO.OsuFileReader
             return general;
         }
 
-        protected MetaData ReadMetadata()
+        public MetaData ReadMetadata()
         {
             var blockDict = this.ReadAllTagsInBlockOrNull("[Metadata]");
 
@@ -129,7 +133,7 @@ namespace OsuFileIO.OsuFileReader
             };
         }
 
-        protected Difficulty ReadDifficulty()
+        public Difficulty ReadDifficulty()
         {
             var blockDict = this.ReadAllTagsInBlockOrNull("[Difficulty]");
 
@@ -144,7 +148,7 @@ namespace OsuFileIO.OsuFileReader
             };
         }
 
-        protected List<TimingPoint> ReadTimingPoints()
+        public List<TimingPoint> ReadTimingPoints()
         {
             var points = new List<TimingPoint>();
 

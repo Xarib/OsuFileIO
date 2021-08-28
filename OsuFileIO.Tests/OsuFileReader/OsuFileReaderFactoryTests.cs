@@ -63,5 +63,25 @@ namespace OsuFileIO.Tests.OsuFileReader
 
             Assert.IsTrue(reader is OsuStdFileReader, $"Expected the {nameof(OsuStdFileReader)} for file but got an nother reader");
         }
+
+        [TestMethod]
+        public void Constructor_NonOsuFile_ThrowsException()
+        {
+            //Act
+            Action actual = () => new OsuFileReaderFactory("test.txt");
+
+            //Assert
+            Assert.ThrowsException<ArgumentException>(actual);
+        }
+
+        [TestMethod]
+        public void Constructor_FileDoesNotExist_ThrowsException()
+        {
+            //Act
+            Action actual = () => new OsuFileReaderFactory("test.osu");
+
+            //Assert
+            Assert.ThrowsException<FileNotFoundException>(actual);
+        }
     }
 }

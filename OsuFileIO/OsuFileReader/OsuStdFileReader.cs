@@ -26,7 +26,7 @@ namespace OsuFileIO.OsuFileReader
         {
         }
 
-        public override OsuStdFile ReadAll()
+        public override OsuStdFile ReadFile()
         {
             var osuStdFile = new OsuStdFile();
 

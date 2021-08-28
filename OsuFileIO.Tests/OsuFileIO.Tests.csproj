@@ -22,8 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="OsuFileReader\TestFiles\new beginnings.osu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="OsuFileReader\TestFiles\stdShort.osu">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
