@@ -26,7 +26,7 @@ namespace OsuFileIO.Tests.OsuFileReader
             //Act
             factory.Dispose();
 
-            Action actual = () => stream.ReadByte();
+            void actual() => stream.ReadByte();
 
             //Assert
             Assert.ThrowsException<ObjectDisposedException>(actual);
@@ -68,7 +68,7 @@ namespace OsuFileIO.Tests.OsuFileReader
         public void Constructor_NonOsuFile_ThrowsException()
         {
             //Act
-            Action actual = () => new OsuFileReaderFactory("test.txt");
+            static void actual() => new OsuFileReaderFactory("test.txt");
 
             //Assert
             Assert.ThrowsException<ArgumentException>(actual);
@@ -78,7 +78,7 @@ namespace OsuFileIO.Tests.OsuFileReader
         public void Constructor_FileDoesNotExist_ThrowsException()
         {
             //Act
-            Action actual = () => new OsuFileReaderFactory("test.osu");
+            static void actual() => new OsuFileReaderFactory("test.osu");
 
             //Assert
             Assert.ThrowsException<FileNotFoundException>(actual);

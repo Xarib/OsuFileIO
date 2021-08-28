@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader.Exceptions
 {
-    internal class OsuFileReaderException : Exception
+    public class OsuFileReaderException : Exception
     {
         public OsuFileReaderException() { }
 

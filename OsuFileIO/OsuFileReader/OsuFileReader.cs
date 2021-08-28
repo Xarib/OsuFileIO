@@ -14,6 +14,7 @@ namespace OsuFileIO.OsuFileReader
 {
     public abstract class OsuFileReader
     {
+        private const string orderExceptionMessage = "The File was not read in the correct order. ReadMethods have to be ordere like: 'Genral -> Editor -> Metadata -> Difficulty -> Events -> TimingPoints -> Colours -> HitObjects' or with 'ReadFile'. No repetions";
         protected readonly StreamReader sr;
         protected string line;
         private readonly OsuFileReaderOverride overrides;
@@ -45,6 +46,12 @@ namespace OsuFileIO.OsuFileReader
 
         public void Dispose()
             => this.sr.Dispose();
+
+        public void ResetReader()
+        {
+            this.sr.BaseStream.Position = 0;
+            this.sr.DiscardBufferedData();
+        }
 
         protected int ParseInt(string line)
         {
@@ -81,7 +88,7 @@ namespace OsuFileIO.OsuFileReader
                 this.line = this.sr.ReadLineStartingWithOrNull(dilimiter);
 
             if (this.line is null)
-                throw new OsuFileReaderException("The File was not read in the correct order. ReadMethods have to be ordere like: 'Genral -> Editor -> Metadata -> Difficulty -> Events -> TimingPoints -> Colours -> HitObjects' or with 'ReadFile'");
+                throw new OsuFileReaderException(orderExceptionMessage);
 
             var tagDict = new Dictionary<string, string>();
 
@@ -104,6 +111,10 @@ namespace OsuFileIO.OsuFileReader
             var general = new General();
 
             this.line = sr.ReadLineStartingWithOrNull("osu file format");
+
+            if (this.line is null)
+                throw new OsuFileReaderException(orderExceptionMessage);
+
             general.OsuFileFormat = ParseIntNullable(this.line.Substring(this.line.LastIndexOf("v", StringComparison.OrdinalIgnoreCase) + 1));
 
             general.Mode = GameMode.Standard;
@@ -153,6 +164,10 @@ namespace OsuFileIO.OsuFileReader
             var points = new List<TimingPoint>();
 
             this.line = this.sr.ReadLineStartingWithOrNull("[TimingPoints]");
+
+            if (this.line is null)
+                throw new OsuFileReaderException(orderExceptionMessage);
+
             this.line = this.sr.ReadLine();
 
             while (this.line.Trim() != "" && !this.line.StartsWith('['))

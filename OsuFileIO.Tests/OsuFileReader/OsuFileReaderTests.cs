@@ -2,6 +2,7 @@
 using OsuFileIO.Enums;
 using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader;
+using OsuFileIO.OsuFileReader.Exceptions;
 using OsuFileIO.OsuFileReader.HitObjectReader;
 using System;
 using System.Collections.Generic;
@@ -108,7 +109,7 @@ namespace OsuFileIO.Tests.OsuFileReader
 
         [TestMethod]
         [DeploymentItem(fileLocation + tutorialFile)]
-        public void ReadTimingPoints_OsuFile_ReturnsReadTimingPoints()
+        public void ReadTimingPoints_OsuFile_ReturnsTimingPoints()
         {
             //Arrange
             var reader = new OsuFileReaderFactory(tutorialFile).Build();
@@ -119,6 +120,81 @@ namespace OsuFileIO.Tests.OsuFileReader
             //Assert
             var expectedCount = 17;
             Assert.IsTrue(actual.Count == expectedCount, $"Expected a list with {expectedCount} TimingPoints");
+        }
+
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        public void ReadGeneral_OsuFileReadWrongOrder_ThrowsException()
+        {
+            //Arrange
+            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+
+            //Act
+            _ = reader.ReadTimingPoints();
+            void actual() => reader.ReadGeneral();
+
+            Assert.ThrowsException<OsuFileReaderException>(actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        public void ReadMetadata_OsuFileReadWrongOrder_ThrowsException()
+        {
+            //Arrange
+            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+
+            //Act
+            _ = reader.ReadTimingPoints();
+            void actual() => reader.ReadMetadata();
+
+            Assert.ThrowsException<OsuFileReaderException>(actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        public void ReadDifficulty_OsuFileReadWrongOrder_ThrowsException()
+        {
+            //Arrange
+            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+
+            //Act
+            _ = reader.ReadTimingPoints();
+            void actual() => reader.ReadDifficulty();
+
+            Assert.ThrowsException<OsuFileReaderException>(actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        public void ReadTimingPoints_OsuFileReadTwice_ThrowsException()
+        {
+            //Arrange
+            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+
+            //Act
+            _ = reader.ReadTimingPoints();
+            void actual() => reader.ReadTimingPoints();
+
+            Assert.ThrowsException<OsuFileReaderException>(actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        public void ReadGeneral_OsuFileReadTwiceWithReset_ReturnsGeneral()
+        {
+            //Arrange
+            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+
+            //Act
+            var read1 = reader.ReadGeneral();
+            reader.ResetReader();
+
+            var read2 = reader.ReadGeneral();
+
+            Assert.AreEqual(read1.Mode, read2.Mode, $"Expected the re-read to be the same");
+            Assert.AreEqual(read1.OsuFileFormat, read2.OsuFileFormat, $"Expected the re-read to be the same");
+            Assert.AreEqual(read1.StackLeniency, read2.StackLeniency, $"Expected the re-read to be the same");
         }
     }
 }
