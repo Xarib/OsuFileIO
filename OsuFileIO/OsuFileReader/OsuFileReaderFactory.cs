@@ -13,7 +13,7 @@ namespace OsuFileIO.OsuFileReader
 {
     public class OsuFileReaderFactory : IDisposable
     {
-        private OsuFileReaderFactoryOptions options;
+        private OsuFileReaderOptions options;
         private OsuFileReaderOverride readerOverride;
         private readonly Stream stream;
         private bool willBeDisposedByReader;
@@ -22,7 +22,7 @@ namespace OsuFileIO.OsuFileReader
         /// Opens and reads a .osu file and returns the corresponding reader for the given gamemode
         /// </summary>
         /// <param name="path"></param>
-        public OsuFileReaderFactory([NotNull] string path, OsuFileReaderFactoryOptions options = null)
+        public OsuFileReaderFactory([NotNull] string path, OsuFileReaderOptions options = null)
         {
             if (!path.EndsWith(".osu"))
                 throw new ArgumentException("The given file is not a osu file");
@@ -39,7 +39,7 @@ namespace OsuFileIO.OsuFileReader
             this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
         }
 
-        public void ConfigureOptions(OsuFileReaderFactoryOptions options)
+        public void ConfigureOptions(OsuFileReaderOptions options)
         {
             this.options = options;
         }
@@ -76,7 +76,7 @@ namespace OsuFileIO.OsuFileReader
                 case GameMode.Standard:
                     this.willBeDisposedByReader = true;
 
-                    return new OsuStdFileReader(this.stream);
+                    return new OsuStdFileReader(this.stream, this.options, this.readerOverride);
                 case GameMode.Taiko:
                     this.willBeDisposedByReader = false; //TODO: Change this if implemented
 
@@ -101,13 +101,9 @@ namespace OsuFileIO.OsuFileReader
         }
     }
 
-    public class OsuFileReaderFactoryOptions
+    public enum IntParsing
     {
-        public StringComparison StringComparison { get; set; }
-    }
-
-    public class OsuFileReaderOverride
-    {
-
+        Default = 0,
+        ConvertFloat = 1,
     }
 }

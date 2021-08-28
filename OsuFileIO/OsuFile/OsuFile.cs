@@ -39,7 +39,7 @@ namespace OsuFileIO.OsuFile
         public string Creator { get; set; }
         public string Version { get; set; }
         public string Source { get; set; }
-        public string[] Tags { get; set; }
+        public string Tags { get; set; }
         public int? BeatmapID { get; set; }
         public int? BeatmapSetID { get; set; }
     }
