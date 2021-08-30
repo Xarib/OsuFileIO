@@ -17,14 +17,24 @@ namespace OsuFileIO.Tests.OsuFileReader
     public class OsuFileReaderTests
     {
         private const string tutorialFile = "new beginnings.osu";
+        private const string catchFile = "catch.osu";
+        private const string maniaFile = "mania.osu";
+        private const string taikoFile = "taiko.osu";
         private const string fileLocation = "OsuFileReader/TestFiles/";
 
         [TestMethod]
         [DeploymentItem(fileLocation + tutorialFile)]
-        public void ReadGeneral_OsuFile_ReturnsGeneral()
+        [DeploymentItem(fileLocation + catchFile)]
+        [DeploymentItem(fileLocation + maniaFile)]
+        [DeploymentItem(fileLocation + taikoFile)]
+        [DataRow(tutorialFile, GameMode.Standard, 14, 0.7)]
+        [DataRow(catchFile, GameMode.Catch, 14, 0.7)]
+        [DataRow(maniaFile, GameMode.Mania, 14, 0.7)]
+        [DataRow(taikoFile, GameMode.Taiko, 14, 0.5)]
+        public void ReadGeneral_OsuFile_ReturnsGeneral(string fileName, GameMode gameMode, int format, double leniency)
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+            var reader = new OsuFileReaderFactory(fileName).Build();
 
             //Act
             var actual = reader.ReadGeneral();
@@ -32,9 +42,9 @@ namespace OsuFileIO.Tests.OsuFileReader
             //Assert
             var expected = new General
             {
-                Mode = GameMode.Standard,
-                OsuFileFormat = 14,
-                StackLeniency = 0.7,
+                Mode = gameMode,
+                OsuFileFormat = format,
+                StackLeniency = leniency,
             };
 
             Assert.AreEqual(expected.Mode, actual.Mode, $"Expected the file reader to read '{nameof(expected.Mode)}' correctly");
@@ -44,10 +54,17 @@ namespace OsuFileIO.Tests.OsuFileReader
 
         [TestMethod]
         [DeploymentItem(fileLocation + tutorialFile)]
-        public void ReadMetadata_OsuFile_ReturnsMetadata()
+        [DeploymentItem(fileLocation + catchFile)]
+        [DeploymentItem(fileLocation + maniaFile)]
+        [DeploymentItem(fileLocation + taikoFile)]
+        [DataRow(tutorialFile, "new beginnings", "new beginnings", "nekodex", "nekodex", "pishifat", "tutorial", "", "", 2116202, 1011011)]
+        [DataRow(taikoFile, "Amatsu Kitsune", "アマツキツネ", "YURiCa", "ユリカ", "Kyuukai", "Charlotte's Inner Oni", "初音ミク Project mirai 2", "marasy Hanatan 花たん", 1521524, 716642)]
+        [DataRow(catchFile, "Fukagyaku Replace", "不可逆リプレイス", "MY FIRST STORY", "MY FIRST STORY", "Akitoshi", "Chara's Overdose", "信長協奏曲", "Nobunaga Concerto Ending TV Size Asagi Ster koliron Irreversible Chara", 767324, 342218)]
+        [DataRow(maniaFile, "Miracle 5ympho X", "Miracle 5ympho X", "USAO", "USAO", "Mel", "Fullerene's 4K Black Another", "beatmania IIDX 21 SPADA", "frey sionkotori kokodoko ナウい 一年一片 frenchcore dubstep intensity fullerene kurokami gezo", 482546, 137394)]
+        public void ReadMetadata_OsuFile_ReturnsMetadata(string fileName, string title, string titleUnicode, string artist, string artistUnicode, string creator, string version, string source, string tags, int beatmapID, int beatmapSetID)
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+            var reader = new OsuFileReaderFactory(fileName).Build();
 
             //Act
             var actual = reader.ReadMetadata();
@@ -55,16 +72,16 @@ namespace OsuFileIO.Tests.OsuFileReader
             //Assert
             var expected = new MetaData
             {
-                Title = "new beginnings",
-                TitleUnicode = "new beginnings",
-                Artist = "nekodex",
-                ArtistUnicode = "nekodex",
-                Creator = "pishifat",
-                Version = "tutorial",
-                Source = "",
-                Tags = "",
-                BeatmapID = 2116202,
-                BeatmapSetID = 1011011,
+                Title = title,
+                TitleUnicode = titleUnicode,
+                Artist = artist,
+                ArtistUnicode = artistUnicode,
+                Creator = creator,
+                Version = version,
+                Source = source,
+                Tags = tags,
+                BeatmapID = beatmapID,
+                BeatmapSetID = beatmapSetID,
             };
 
             Assert.AreEqual(expected.Title, actual.Title, $"Expected the file reader to read '{nameof(expected.Title)}' correctly");
@@ -81,10 +98,17 @@ namespace OsuFileIO.Tests.OsuFileReader
 
         [TestMethod]
         [DeploymentItem(fileLocation + tutorialFile)]
-        public void ReadDifficulty_OsuFile_ReturnsMetadataDifficulty()
+        [DeploymentItem(fileLocation + catchFile)]
+        [DeploymentItem(fileLocation + maniaFile)]
+        [DeploymentItem(fileLocation + taikoFile)]
+        [DataRow(tutorialFile, 0, 2, 0, 2, 0.7, 1)]
+        [DataRow(catchFile, 7, 4, 9.3, 9.3, 2.4, 2)]
+        [DataRow(maniaFile, 8, 4, 8, 5, 1.4, 1)]
+        [DataRow(taikoFile, 6, 5, 6, 4.5, 1.4, 1)]
+        public void ReadDifficulty_OsuFile_ReturnsMetadataDifficulty(string fileName, double HP, double CS, double OD, double AR, double SM, double STR)
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+            var reader = new OsuFileReaderFactory(fileName).Build();
 
             //Act
             var actual = reader.ReadDifficulty();
@@ -92,12 +116,12 @@ namespace OsuFileIO.Tests.OsuFileReader
             //Assert
             var expected = new Difficulty
             {
-                HPDrainRate = 0,
-                CircleSize = 2,
-                OverallDifficulty = 0,
-                ApproachRate = 2,
-                SliderMultiplier = 0.7,
-                SliderTickRate = 1,
+                HPDrainRate = HP,
+                CircleSize = CS,
+                OverallDifficulty = OD,
+                ApproachRate = AR,
+                SliderMultiplier = SM,
+                SliderTickRate = STR,
             };
 
             Assert.AreEqual(expected.HPDrainRate, actual.HPDrainRate, $"Expected the file reader to read '{nameof(expected.HPDrainRate)}' correctly");
@@ -110,17 +134,23 @@ namespace OsuFileIO.Tests.OsuFileReader
 
         [TestMethod]
         [DeploymentItem(fileLocation + tutorialFile)]
-        public void ReadTimingPoints_OsuFile_ReturnsTimingPoints()
+        [DeploymentItem(fileLocation + catchFile)]
+        [DeploymentItem(fileLocation + maniaFile)]
+        [DeploymentItem(fileLocation + taikoFile)]
+        [DataRow(tutorialFile, 17)]
+        [DataRow(catchFile, 133)]
+        [DataRow(maniaFile, 8)]
+        [DataRow(taikoFile, 15)]
+        public void ReadTimingPoints_OsuFile_ReturnsTimingPoints(string fileName, int count)
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+            var reader = new OsuFileReaderFactory(fileName).Build();
 
             //Act
             var actual = reader.ReadTimingPoints();
 
             //Assert
-            var expectedCount = 17;
-            Assert.IsTrue(actual.Count == expectedCount, $"Expected a list with {expectedCount} TimingPoints");
+            Assert.AreEqual(actual.Count, count, $"Expected a list with {actual.Count} TimingPoints");
         }
 
 
@@ -227,6 +257,26 @@ namespace OsuFileIO.Tests.OsuFileReader
             Assert.AreEqual(read1.Mode, read2.Mode, $"Expected the re-read to be the same");
             Assert.AreEqual(read1.OsuFileFormat, read2.OsuFileFormat, $"Expected the re-read to be the same");
             Assert.AreEqual(read1.StackLeniency, read2.StackLeniency, $"Expected the re-read to be the same");
+        }
+
+        [TestMethod]
+        public void ReadGeneral_NoModeInFile_ReturnsGeneralWithGamemodeStandard()
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.Flush();
+            stream.Position = 0;
+
+            var reader = new OsuFileReaderFactory(stream).Build();
+
+            //Act
+            var general = reader.ReadGeneral();
+
+            //Arrange
+            Assert.AreEqual(GameMode.Standard, general.Mode, $"Expected {GameMode.Standard} because there was no mode given");
         }
     }
 }

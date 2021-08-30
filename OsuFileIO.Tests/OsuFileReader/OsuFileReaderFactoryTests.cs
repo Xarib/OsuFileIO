@@ -91,7 +91,6 @@ namespace OsuFileIO.Tests.OsuFileReader
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
             writer.WriteLine("osu file format v14");
-            writer.WriteLine("Mode: 0");
             writer.Flush();
             stream.Position = 0;
 

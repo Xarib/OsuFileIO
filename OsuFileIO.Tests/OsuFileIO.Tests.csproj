@@ -22,10 +22,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="OsuFileReader\TestFiles\catch.osu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OsuFileReader\TestFiles\mania.osu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="OsuFileReader\TestFiles\new beginnings.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="OsuFileReader\TestFiles\stdShort.osu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="OsuFileReader\TestFiles\taiko.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
