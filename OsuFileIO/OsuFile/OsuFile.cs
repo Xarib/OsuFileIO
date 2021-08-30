@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFile
 {
-    public abstract class OsuFile
+    public class OsuFile
     {
         public General General { get; set; }
         //TODO property Editor
