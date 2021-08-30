@@ -64,10 +64,20 @@ namespace OsuFileIO.OsuFileReader
                 line = sr.ReadLineStartingWithOrNull(searchString, this.options.StringComparison);
             }
 
-            var mode = Enum.Parse<GameMode>(line
+            GameMode mode;
+            if (line is null)
+            {
+                return null;
+                //Assume if no mode = Standard;
+                mode = GameMode.Standard;
+            }
+            else
+            {
+                mode = Enum.Parse<GameMode>(line
                 .TrimStart()
                 .Remove(0, searchString.Length)
                 .Trim());
+            }
 
             this.stream.Position = 0;
 

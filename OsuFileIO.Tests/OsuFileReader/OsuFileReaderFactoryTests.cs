@@ -83,5 +83,23 @@ namespace OsuFileIO.Tests.OsuFileReader
             //Assert
             Assert.ThrowsException<FileNotFoundException>(actual);
         }
+
+        [TestMethod]
+        public void Build_ModeNotInFile_ReturnsOsuFileReader()
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("Mode: 0");
+            writer.Flush();
+            stream.Position = 0;
+
+            //Act
+            var reader = new OsuFileReaderFactory(stream).Build();
+
+            //Asset
+            Assert.IsTrue(reader is OsuStdFileReader, "Expected the osu!Standard file reader");
+        }
     }
 }

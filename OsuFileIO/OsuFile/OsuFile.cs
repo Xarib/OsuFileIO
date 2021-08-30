@@ -25,7 +25,7 @@ namespace OsuFileIO.OsuFile
     {
         //TODO missing props do not forget -> EpilepsyWarning
         public int? OsuFileFormat { get; set; }
-        public GameMode Mode { get; set; }
+        public GameMode? Mode { get; set; }
         public double? StackLeniency { get; set; }
 
         public bool Equals(General other)
