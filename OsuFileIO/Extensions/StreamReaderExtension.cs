@@ -14,7 +14,9 @@ namespace OsuFileIO.Extensions
             string line;
             do
             {
-                line = sr.ReadLine();
+                line = sr
+                    .ReadLine()
+                    .Trim();
             }
             while (!sr.EndOfStream && !line.StartsWith(value, stringComparison));
 

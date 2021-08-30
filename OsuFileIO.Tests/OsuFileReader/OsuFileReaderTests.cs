@@ -278,5 +278,26 @@ namespace OsuFileIO.Tests.OsuFileReader
             //Arrange
             Assert.AreEqual(GameMode.Standard, general.Mode, $"Expected {GameMode.Standard} because there was no mode given");
         }
+
+        [TestMethod]
+        public void ReadGeneral_WithSpaceForFormat_ReturnsGeneralWithGamemodeStandard()
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("     osu file format v14");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.Flush();
+            stream.Position = 0;
+
+            var reader = new OsuFileReaderFactory(stream).Build();
+
+            //Act
+            var general = reader.ReadGeneral();
+
+            //Arrange
+            Assert.AreEqual(14, general.OsuFileFormat, $"Expected {14} because there was no mode given");
+        }
     }
 }

@@ -13,9 +13,13 @@ namespace OsuFileIO.Tests.OsuFileReader
     public class OsuFileReaderFactoryTests
     {
         private const string fileName = "stdShort.osu";
+        private const string catchFile = "catch.osu";
+        private const string maniaFile = "mania.osu";
+        private const string taikoFile = "taiko.osu";
+        private const string fileLocation = "OsuFileReader/TestFiles/";
 
         [TestMethod]
-        [DeploymentItem("OsuFileReader/TestFiles/" + fileName)]
+        [DeploymentItem(fileLocation + fileName)]
         public void Dispose_WhenNoReaderWasBuilt_ThrowsException()
         {
             //Arrange
@@ -33,7 +37,7 @@ namespace OsuFileIO.Tests.OsuFileReader
         }
 
         [TestMethod]
-        [DeploymentItem("OsuFileReader/TestFiles/" + fileName)]
+        [DeploymentItem(fileLocation + fileName)]
         public void Dispose_NoDisposeWhenReaderWasBuilt_DoesNotThrow()
         {
             //Arrange
@@ -50,18 +54,22 @@ namespace OsuFileIO.Tests.OsuFileReader
         }
 
         [TestMethod]
-        [DeploymentItem("OsuFileReader/TestFiles/" + fileName)]
-        public void Build_StrShortFile_ReturnsOsuStdFileReader()
+        [DeploymentItem(fileLocation + fileName)]
+        [DataRow(fileName, typeof(OsuStdFileReader))]
+        [DataRow(taikoFile, typeof(OsuTaikoFileReader))]
+        [DataRow(maniaFile, typeof(OsuManiaFileReader))]
+        [DataRow(catchFile, typeof(OsuCatchFileReader))]
+        public void Build_OsuFile_ReturnsOsuFileReader(string filePath, Type type)
         {
             //Arrange
-            var stream = File.OpenRead(fileName);
+            var stream = File.OpenRead(filePath);
 
             //Act
             var factory = new OsuFileReaderFactory(stream);
             var reader = factory.Build();
             //Assert
 
-            Assert.IsTrue(reader is OsuStdFileReader, $"Expected the {nameof(OsuStdFileReader)} for file but got an nother reader");
+            Assert.IsTrue(reader.GetType() == type, $"Expected the {nameof(type)} for file but got an nother reader");
         }
 
         [TestMethod]
