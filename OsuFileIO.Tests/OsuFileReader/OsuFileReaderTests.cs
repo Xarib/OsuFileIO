@@ -182,7 +182,6 @@ namespace OsuFileIO.Tests.OsuFileReader
             Assert.AreEqual(expected[2], actual.Meter.ToString(), $"Expected the file reader to read '{nameof(actual.Meter)}' correctly");
         }
 
-
         [TestMethod]
         [DeploymentItem(fileLocation + tutorialFile)]
         public void ReadGeneral_OsuFileReadWrongOrder_ThrowsException()
@@ -193,48 +192,6 @@ namespace OsuFileIO.Tests.OsuFileReader
             //Act
             _ = reader.ReadTimingPoints();
             void actual() => reader.ReadGeneral();
-
-            Assert.ThrowsException<OsuFileReaderException>(actual);
-        }
-
-        [TestMethod]
-        [DeploymentItem(fileLocation + tutorialFile)]
-        public void ReadMetadata_OsuFileReadWrongOrder_ThrowsException()
-        {
-            //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
-
-            //Act
-            _ = reader.ReadTimingPoints();
-            void actual() => reader.ReadMetadata();
-
-            Assert.ThrowsException<OsuFileReaderException>(actual);
-        }
-
-        [TestMethod]
-        [DeploymentItem(fileLocation + tutorialFile)]
-        public void ReadDifficulty_OsuFileReadWrongOrder_ThrowsException()
-        {
-            //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
-
-            //Act
-            _ = reader.ReadTimingPoints();
-            void actual() => reader.ReadDifficulty();
-
-            Assert.ThrowsException<OsuFileReaderException>(actual);
-        }
-
-        [TestMethod]
-        [DeploymentItem(fileLocation + tutorialFile)]
-        public void ReadTimingPoints_OsuFileReadTwice_ThrowsException()
-        {
-            //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
-
-            //Act
-            _ = reader.ReadTimingPoints();
-            void actual() => reader.ReadTimingPoints();
 
             Assert.ThrowsException<OsuFileReaderException>(actual);
         }
@@ -298,6 +255,97 @@ namespace OsuFileIO.Tests.OsuFileReader
 
             //Arrange
             Assert.AreEqual(14, general.OsuFileFormat, $"Expected {14} because there was no mode given");
+        }
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        public void ReadMetadata_OsuFileReadWrongOrder_ThrowsException()
+        {
+            //Arrange
+            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+
+            //Act
+            _ = reader.ReadTimingPoints();
+            void actual() => reader.ReadMetadata();
+
+            Assert.ThrowsException<OsuFileReaderException>(actual);
+        }
+
+        [TestMethod]
+        public void ReadMetadata_MetadataRandomNewLine()
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("Title:dddd");
+            writer.WriteLine("Tags:test");
+            writer.WriteLine("randomnewline");
+            writer.WriteLine("Creator:727");
+            writer.Flush();
+            stream.Position = 0;
+
+            var reader = new OsuFileReaderFactory(stream).Build();
+
+            //Act
+            var actual = reader.ReadMetadata();
+
+            //Assert
+            Assert.AreEqual("dddd", actual.Title, $"Expected the file reader to read '{nameof(actual.Title)}' correctly");
+            Assert.AreEqual("test", actual.Tags, $"Expected the file reader to read '{nameof(actual.Tags)}' correctly");
+            Assert.AreEqual("727", actual.Creator, $"Expected the file reader to read '{nameof(actual.Creator)}' correctly");
+        }
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        public void ReadDifficulty_OsuFileReadWrongOrder_ThrowsException()
+        {
+            //Arrange
+            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+
+            //Act
+            _ = reader.ReadTimingPoints();
+            void actual() => reader.ReadDifficulty();
+
+            Assert.ThrowsException<OsuFileReaderException>(actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        public void ReadTimingPoints_OsuFileReadTwice_ThrowsException()
+        {
+            //Arrange
+            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+
+            //Act
+            _ = reader.ReadTimingPoints();
+            void actual() => reader.ReadTimingPoints();
+
+            //Assert
+            Assert.ThrowsException<OsuFileReaderException>(actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + "stdShort.osu")]
+        [DeploymentItem(fileLocation + "stdShortNoNewLines.osu")]
+        public void Read_OsuFileWithoutNewLinesBetween_ReturnsSameResultWithNewLines()
+        {
+            //Arrange
+            var reader1 = new OsuFileReaderFactory("stdShort.osu").Build();
+            var reader2 = new OsuFileReaderFactory("stdShortNoNewLines.osu").Build();
+
+            //Act
+            var actual1 = reader1.ReadFile();
+            var actual2 = reader2.ReadFile();
+
+            //Assert
+            Assert.AreEqual(actual1.General, actual2.General, $"Expected to get the same {nameof(General)}");
+            Assert.AreEqual(actual1.MetaData, actual2.MetaData, $"Expected to get the same {nameof(MetaData)}");
+            Assert.AreEqual(actual1.Difficulty, actual2.Difficulty, $"Expected to get the same {nameof(Difficulty)}");
+            CollectionAssert.AreEqual(actual1.TimingPoints, actual2.TimingPoints, $"Expected to get the same {nameof(TimingPoint)}s");
         }
     }
 }

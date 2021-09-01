@@ -37,7 +37,9 @@ namespace OsuFileIO.OsuFileReader
                 osuStdFile.Difficulty = this.ReadDifficulty();
                 osuStdFile.TimingPoints = this.ReadTimingPoints();
 
-                this.line = this.sr.ReadLineStartingWithOrNull("[HitObjects]");
+                if (this.line is null || !this.line.StartsWith("[HitObjects]"))
+                    this.line = this.sr.ReadLineStartingWithOrNull("[HitObjects]");
+
                 int indexOfComma;
                 while (!this.sr.EndOfStream)
                 {

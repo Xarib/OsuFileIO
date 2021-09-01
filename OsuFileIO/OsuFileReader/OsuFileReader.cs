@@ -103,6 +103,12 @@ namespace OsuFileIO.OsuFileReader
             {
                 indexColon = line.IndexOf(':');
 
+                if (indexColon < 0)
+                {
+                    this.line = this.sr.ReadLine();
+                    continue;
+                }
+
                 tagDict.Add(this.line.Substring(0, indexColon), this.line.Substring(indexColon + 1));
 
                 this.line = this.sr.ReadLine();
@@ -179,7 +185,8 @@ namespace OsuFileIO.OsuFileReader
         {
             var points = new List<TimingPoint>();
 
-            this.line = this.sr.ReadLineStartingWithOrNull("[TimingPoints]");
+            if (this.line is null || !this.line.StartsWith("[TimingPoints]"))
+                this.line = this.sr.ReadLineStartingWithOrNull("[TimingPoints]");
 
             if (this.line is null)
                 throw new OsuFileReaderException(orderExceptionMessage);
