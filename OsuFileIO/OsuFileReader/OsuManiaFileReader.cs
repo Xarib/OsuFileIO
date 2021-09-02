@@ -31,6 +31,8 @@ namespace OsuFileIO.OsuFileReader
                 osuFile.Difficulty = this.ReadDifficulty();
                 osuFile.TimingPoints = this.ReadTimingPoints();
 
+                this.Dispose();
+
                 return osuFile;
             }
             catch (Exception e)

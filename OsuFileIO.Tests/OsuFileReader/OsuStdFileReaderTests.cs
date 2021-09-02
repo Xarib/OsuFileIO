@@ -14,6 +14,7 @@ namespace OsuFileIO.Tests.OsuFileReader
     public class OsuStdFileReaderTests
     {
         private const string fileLocation = "OsuFileReader/TestFiles/";
+        private const string problematic = "OsuFileReader/TestFiles/Problematic/";
 
         [TestMethod]
         [DataRow("364,180,2185,1,2,0:0:0:0:")]
@@ -138,5 +139,20 @@ namespace OsuFileIO.Tests.OsuFileReader
             //Assert
             CollectionAssert.AreEqual(actual1.HitObjects, actual2.HitObjects, $"Expected to get the same HitObjects");
         }
+
+        [TestMethod]
+        [DeploymentItem(problematic + "100.osu")]
+        [DeploymentItem(problematic + "1000168.osu")]
+        [DataRow("100.osu")]
+        [DataRow("1000168.osu")]
+        public void ReadFile_ProblematicFile100_ReturnsOsuFile(string fileName)
+        {
+            //Arrange
+            var reader = new OsuFileReaderFactory(fileName).Build();
+
+            //Act
+            var actual = reader.ReadFile();
+        }
+
     }
 }

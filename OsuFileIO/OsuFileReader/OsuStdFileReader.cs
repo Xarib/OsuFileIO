@@ -83,8 +83,11 @@ namespace OsuFileIO.OsuFileReader
             }
             catch (Exception e)
             {
+                this.Dispose();
                 throw new OsuFileReaderException($"The reader encountert an Error at line: {this.line}, in File with beatmapId: {osuStdFile.MetaData.BeatmapID}, with Title: {osuStdFile.MetaData.Title}", e);
             }
+
+            this.Dispose();
 
             return osuStdFile;
         }

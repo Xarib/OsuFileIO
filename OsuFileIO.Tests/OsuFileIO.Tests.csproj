@@ -31,6 +31,9 @@
     <None Update="OsuFileReader\TestFiles\new beginnings.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="OsuFileReader\TestFiles\Problematic\100.osu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="OsuFileReader\TestFiles\stdShortNoNewLines.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

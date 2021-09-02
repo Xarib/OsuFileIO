@@ -131,6 +131,13 @@ namespace OsuFileIO.OsuFileReader
             this.line = sr.ReadLineStartingWithOrNull("StackLeniency:");
             general.StackLeniency = this.ParseDoubleNullable(this.ReadTagValue());
 
+            //TODO better
+            if (this.line is null)
+            {
+                general.StackLeniency = 0.7;
+                this.ResetReader();
+            }
+
             if (this.overrides?.General?.Mode == null)
             {
                 this.line = sr.ReadLineStartingWithOrNull("Mode:");
