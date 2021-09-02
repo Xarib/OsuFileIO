@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OsuFileIO", "OsuFileIO\OsuFileIO.csproj", "{EA58337F-E90F-49A5-AA55-83781F556A7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuFileIO.Tests", "OsuFileIO.Tests\OsuFileIO.Tests.csproj", "{20F2A4B3-D1E9-474E-B03D-5D4A2765B5F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OsuFileIO.Tests", "OsuFileIO.Tests\OsuFileIO.Tests.csproj", "{20F2A4B3-D1E9-474E-B03D-5D4A2765B5F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuFileIO.Interpreter", "OsuFileIO.Interpreter\OsuFileIO.Interpreter.csproj", "{0768AC6B-1F56-46BF-8836-94AD7138C82D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{20F2A4B3-D1E9-474E-B03D-5D4A2765B5F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20F2A4B3-D1E9-474E-B03D-5D4A2765B5F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20F2A4B3-D1E9-474E-B03D-5D4A2765B5F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0768AC6B-1F56-46BF-8836-94AD7138C82D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0768AC6B-1F56-46BF-8836-94AD7138C82D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0768AC6B-1F56-46BF-8836-94AD7138C82D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0768AC6B-1F56-46BF-8836-94AD7138C82D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

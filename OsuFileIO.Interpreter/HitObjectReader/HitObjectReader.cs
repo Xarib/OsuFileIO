@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.OsuFileReader.HitObjectReader
+namespace OsuFileIO.Interpreter.HitObjectReader
 {
     public abstract class HitObjectReader
     {

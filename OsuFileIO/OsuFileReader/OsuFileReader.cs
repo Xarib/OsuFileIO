@@ -2,7 +2,6 @@
 using OsuFileIO.Extensions;
 using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader.Exceptions;
-using OsuFileIO.OsuFileReader.HitObjectReader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -76,10 +75,10 @@ namespace OsuFileIO.OsuFileReader
         private int? ParseIntNullable(string line)
             => line is null ? null : ParseInt(line);
 
-        protected double ParseDouble(string line)
+        protected static double ParseDouble(string line)
             => double.Parse(line);
 
-        private double? ParseDoubleNullable(string line)
+        private static double? ParseDoubleNullable(string line)
             => line is null ? null : ParseDouble(line);
 
         private string ReadTagValue()
@@ -129,7 +128,7 @@ namespace OsuFileIO.OsuFileReader
             general.OsuFileFormat = ParseIntNullable(this.line.Substring(this.line.LastIndexOf("v", StringComparison.OrdinalIgnoreCase) + 1));
 
             this.line = sr.ReadLineStartingWithOrNull("StackLeniency:");
-            general.StackLeniency = this.ParseDoubleNullable(this.ReadTagValue());
+            general.StackLeniency = ParseDoubleNullable(this.ReadTagValue());
 
             //TODO better
             if (this.line is null)
@@ -179,12 +178,12 @@ namespace OsuFileIO.OsuFileReader
 
             return new Difficulty
             {
-                ApproachRate = this.ParseDoubleNullable(blockDict.GetValueOrDefault("ApproachRate")),
-                CircleSize = this.ParseDoubleNullable(blockDict.GetValueOrDefault("CircleSize")),
-                HPDrainRate = this.ParseDoubleNullable(blockDict.GetValueOrDefault("HPDrainRate")),
-                OverallDifficulty = this.ParseDoubleNullable(blockDict.GetValueOrDefault("OverallDifficulty")),
-                SliderMultiplier = this.ParseDoubleNullable(blockDict.GetValueOrDefault("SliderMultiplier")),
-                SliderTickRate = this.ParseDoubleNullable(blockDict.GetValueOrDefault("SliderTickRate")),
+                ApproachRate = ParseDoubleNullable(blockDict.GetValueOrDefault("ApproachRate")),
+                CircleSize = ParseDoubleNullable(blockDict.GetValueOrDefault("CircleSize")),
+                HPDrainRate = ParseDoubleNullable(blockDict.GetValueOrDefault("HPDrainRate")),
+                OverallDifficulty = ParseDoubleNullable(blockDict.GetValueOrDefault("OverallDifficulty")),
+                SliderMultiplier = ParseDoubleNullable(blockDict.GetValueOrDefault("SliderMultiplier")),
+                SliderTickRate = ParseDoubleNullable(blockDict.GetValueOrDefault("SliderTickRate")),
             };
         }
 

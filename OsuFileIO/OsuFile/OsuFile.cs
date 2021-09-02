@@ -1,6 +1,5 @@
 ﻿using OsuFileIO.Enums;
 using OsuFileIO.HitObject;
-using OsuFileIO.OsuFileReader.HitObjectReader;
 using System;
 using System.Collections.Generic;
 using System.Linq;

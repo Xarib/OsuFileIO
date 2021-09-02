@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OsuFileIO.OsuFile;
-using OsuFileIO.OsuFileReader.HitObjectReader;
 using System;
 using System.Collections.Generic;
 using System.Linq;

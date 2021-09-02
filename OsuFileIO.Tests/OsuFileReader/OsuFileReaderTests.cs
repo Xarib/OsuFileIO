@@ -3,7 +3,6 @@ using OsuFileIO.Enums;
 using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader;
 using OsuFileIO.OsuFileReader.Exceptions;
-using OsuFileIO.OsuFileReader.HitObjectReader;
 using System;
 using System.Collections.Generic;
 using System.IO;

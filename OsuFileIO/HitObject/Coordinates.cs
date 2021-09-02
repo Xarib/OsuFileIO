@@ -29,7 +29,7 @@ namespace OsuFileIO.HitObject
 
         public override bool Equals(object obj)
         {
-            return obj is Coordinates && Equals((Coordinates)obj);
+            return obj is Coordinates coordinates && Equals(coordinates);
         }
     }
 }

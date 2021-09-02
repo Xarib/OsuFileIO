@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OsuFileIO.Interpreter\OsuFileIO.Interpreter.csproj" />
     <ProjectReference Include="..\OsuFileIO\OsuFileIO.csproj" />
   </ItemGroup>
 
