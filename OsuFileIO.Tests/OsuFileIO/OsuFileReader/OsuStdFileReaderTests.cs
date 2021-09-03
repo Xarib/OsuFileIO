@@ -13,8 +13,8 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
     [TestClass]
     public class OsuStdFileReaderTests
     {
-        private const string fileLocation = "OsuFileReader/TestFiles/";
-        private const string problematic = "OsuFileReader/TestFiles/Problematic/";
+        private const string fileLocation = "TestFiles/";
+        private const string problematic = "TestFiles/Problematic/";
 
         [TestMethod]
         [DataRow("364,180,2185,1,2,0:0:0:0:")]

@@ -16,7 +16,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         private const string catchFile = "catch.osu";
         private const string maniaFile = "mania.osu";
         private const string taikoFile = "taiko.osu";
-        private const string fileLocation = "OsuFileReader/TestFiles/";
+        private const string fileLocation = "TestFiles/";
 
         [TestMethod]
         [DeploymentItem(fileLocation + fileName)]
