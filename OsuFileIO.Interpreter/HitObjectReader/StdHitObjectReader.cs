@@ -10,9 +10,14 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 {
     public class StdHitObjectReader : HitObjectReader
     {
-        public StdHitObjectReader(IList<TimingPoint> timingPoints, IList<IHitObject> hitObjects) : base(timingPoints, hitObjects)
+        public StdHitObjectReader(Difficulty difficulty, IList<TimingPoint> timingPoints, IList<IHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
         {
+            this.SetSliderVelocity();
         }
+
+        public double MaxTimeBetweenStreamObjects { get; private init; }
+        public double MaxTimeBetweenJumps { get; private init; }
+        public double SliderVelocity { get; private set; }
 
         /// <summary>
         /// Reads the next <see cref="IHitObject"/> and set the most current <see cref="TimingPoint"/>
@@ -25,20 +30,22 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
             this.indexHitObject++;
 
-            //Get Most current Timingpoint
-            while (this.hitObjects[this.indexHitObject].TimeInMs > this.CurrentTimingPoint.TimeInMs)
-            {
-                this.indexTimingPoint++;
+            this.SetMostCurrentTimingPoint();
 
-                /* 
-                 * Checks if list has next timing point and if the time of the timingPoints are equal.
-                 * In a situation where two timing points with the same time exist it selects the last one.
-                 */
-                if (this.indexTimingPoint != this.timingPoints.Count - 1 && this.timingPoints[this.indexTimingPoint + 1].TimeInMs == this.CurrentTimingPoint.TimeInMs)
-                    this.indexTimingPoint++;
-            }
+            this.SetSliderVelocity();
 
             return true;
+        }
+
+        private void SetSliderVelocity()
+        {
+            this.SliderVelocity = 100d * (this.difficulty.SliderMultiplier ?? 1d); //100 osuPixels per second is the default slider speed before multipliers
+            if (this.CurrentTimingPoint.BeatLength < 0)
+            {
+                //ChildTimingPoint
+                var sliderMultiplier = -100d / this.CurrentTimingPoint.BeatLength;
+                this.SliderVelocity = this.SliderVelocity * sliderMultiplier;
+            }
         }
     }
 }
