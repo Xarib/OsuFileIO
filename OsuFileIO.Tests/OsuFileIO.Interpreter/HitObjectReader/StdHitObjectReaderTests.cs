@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Tests.OsuFileReader.HitObjectReader
+namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
 {
     [TestClass]
     public class StdHitObjectReaderTests
@@ -46,8 +46,10 @@ namespace OsuFileIO.Tests.OsuFileReader.HitObjectReader
                 new Circle(new Coordinates(), 50),
             };
 
+            var difficulty = new Difficulty();
+
             //Act
-            var reader = new StdHitObjectReader(timingPoints, hitObjects);
+            var reader = new StdHitObjectReader(difficulty, timingPoints, hitObjects);
 
             do
             {

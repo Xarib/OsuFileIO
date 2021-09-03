@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Tests.OsuFileReader
+namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
 {
     [TestClass]
     public class OsuFileReaderFactoryTests

@@ -14,34 +14,30 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="OsuFileReader\HitObjectReader\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\OsuFileIO.Interpreter\OsuFileIO.Interpreter.csproj" />
     <ProjectReference Include="..\OsuFileIO\OsuFileIO.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="OsuFileReader\TestFiles\catch.osu">
+    <None Update="OsuFileIO\OsuFileReader\TestFiles\catch.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileReader\TestFiles\mania.osu">
+    <None Update="OsuFileIO\OsuFileReader\TestFiles\mania.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileReader\TestFiles\new beginnings.osu">
+    <None Update="OsuFileIO\OsuFileReader\TestFiles\new beginnings.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileReader\TestFiles\Problematic\100.osu">
+    <None Update="OsuFileIO\OsuFileReader\TestFiles\Problematic\100.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileReader\TestFiles\stdShortNoNewLines.osu">
+    <None Update="OsuFileIO\OsuFileReader\TestFiles\stdShortNoNewLines.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileReader\TestFiles\stdShort.osu">
+    <None Update="OsuFileIO\OsuFileReader\TestFiles\stdShort.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileReader\TestFiles\taiko.osu">
+    <None Update="OsuFileIO\OsuFileReader\TestFiles\taiko.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Tests.HitObject
+namespace OsuFileIO.Tests.OsuFileIO.HitObject
 {
     [TestClass]
     public class HitObjectTests
