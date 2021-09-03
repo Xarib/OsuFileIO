@@ -15,6 +15,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
     public class OsuStdInterpreterTests
     {
         private const string fileLocation = "TestFiles/";
+        private const string tutorialFile = "new beginnings.osu";
 
         //[TestMethod]
         //[DataRow(100d * 1d, 1, "1266,279.06976744186,4,1,9,90,1,0")]
@@ -50,6 +51,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         //}
 
         [TestMethod]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        [DataRow(tutorialFile)]
         public void Interpret_RealMaps_RetunrsLengthOfMap(string fileName)
         {
             //Arrange

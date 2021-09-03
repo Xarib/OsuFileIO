@@ -50,18 +50,15 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
         protected void SetMostCurrentTimingPoint()
         {
-            //Get Most current Timingpoint
-            while (this.hitObjects[this.indexHitObject].TimeInMs > this.CurrentTimingPoint.TimeInMs)
+            var hasChanged = false;
+            while (this.indexTimingPoint < this.timingPoints.Count - 1 && this.CurrentTimingPoint.TimeInMs <= this.CurrentHitObject.TimeInMs)
             {
                 this.indexTimingPoint++;
-
-                /* 
-                 * Checks if list has next timing point and if the time of the timingPoints are equal.
-                 * In a situation where two timing points with the same time exist it selects the last one.
-                 */
-                if (this.indexTimingPoint != this.timingPoints.Count - 1 && this.timingPoints[this.indexTimingPoint + 1].TimeInMs == this.CurrentTimingPoint.TimeInMs)
-                    this.indexTimingPoint++;
+                hasChanged = true;
             }
+
+            if (hasChanged && this.CurrentTimingPoint.TimeInMs != this.CurrentHitObject.TimeInMs)
+                this.indexTimingPoint--;
         }
     }
 }

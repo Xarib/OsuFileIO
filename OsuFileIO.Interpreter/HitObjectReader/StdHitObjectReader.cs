@@ -13,6 +13,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
         public StdHitObjectReader(Difficulty difficulty, IList<TimingPoint> timingPoints, IList<IHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
         {
             this.SetHitObjectType();
+            this.SetMostCurrentTimingPoint();
             this.SetSliderVelocity();
         }
 

@@ -17,7 +17,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
     public class StdHitObjectReaderTests
     {
         [TestMethod]
-        public void ShouldGetMostCurrentTimingPoint()
+        public void SetMostCurrentTimingPoint_SameTime_ReturnsMostCurrentTimingPoint()
         {
             //Arrange
             var timingPoints = new List<TimingPoint>
@@ -40,6 +40,49 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
                 {
                     BeatLength = 200,
                     TimeInMs = 55,
+                },
+            };
+
+            var hitObjects = new List<IHitObject>
+            {
+                new Circle(new Coordinates(), 30),
+                new Circle(new Coordinates(), 50),
+            };
+
+            var difficulty = new Difficulty();
+
+            //Act
+            var reader = new StdHitObjectReader(difficulty, timingPoints, hitObjects);
+
+            do
+            {
+                ;
+            } while (reader.ReadNext());
+
+            //Assert
+            Assert.AreEqual(hitObjects[1].TimeInMs, reader.CurrentTimingPoint.TimeInMs, "Expected a timing point that has a smaller or equal time of the last object");
+            Assert.AreEqual(timingPoints[2].BeatLength, reader.CurrentTimingPoint.BeatLength, "Expected the most current timingPoint");
+        }
+
+        [TestMethod]
+        public void SetMostCurrentTimingPoint_SameTimeAtEnd_ReturnsMostCurrentTimingPoint()
+        {
+            //Arrange
+            var timingPoints = new List<TimingPoint>
+            {
+                new TimingPoint
+                {
+                    TimeInMs = 25,
+                },
+                new TimingPoint
+                {
+                    BeatLength = 100,
+                    TimeInMs = 50,
+                },
+                new TimingPoint
+                {
+                    BeatLength = 200,
+                    TimeInMs = 50,
                 },
             };
 
@@ -96,7 +139,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
 
             //Assert
-            Assert.AreEqual(expected, Math.Round(reader.SliderVelocity, 2), $"Expected to calculate {reader.SliderVelocity} correctly");
+            Assert.AreEqual(expected, Math.Round(reader.SliderVelocity, 2), $"Expected to calculate {nameof(reader.SliderVelocity)} correctly");
         }
 
         [TestMethod]
