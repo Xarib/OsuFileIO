@@ -23,10 +23,12 @@ namespace OsuFileIO.Interpreter
         {
             var reader = new StdHitObjectReader(beatmap.Difficulty, beatmap.TimingPoints, beatmap.HitObjects);
 
-            //while (reader.ReadNext())
-            //{
+            do
+            {
 
-            //}
+            } while (reader.ReadNext());
+
+
         }
 
         private class OsuStdInterpretation : IInterpretation

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static OsuFileIO.Interpreter.HitObjectReader.StdHitObjectReader;
 
 namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
 {
@@ -126,6 +127,39 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
 
             //Act
             var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
+        }
+
+        [TestMethod]
+        [DataRow("255,184,3664,69,4,3:1:0:0:", StdHitObjectType.Circle)]
+        [DataRow("328,80,999999999,2,0,P|412:101|464:168,1,167.999994873047,4|4,0:0|0:0,0:0:0:0:", StdHitObjectType.Slider)]
+        [DataRow("256,192,126433,12,4,129202,3:2:0:0:", StdHitObjectType.Spinner)]
+        public void ReadNext_EmptyFileWithHitObject_ReturnsHitObjectType(string hitObject, StdHitObjectType hitObjectType)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine(hitObject);
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+
+            var file = fileReader.ReadFile();
+
+            //Act
+            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
+
+            //Assert
+            Assert.AreEqual(hitObjectType, reader.HitObjectType, "Expected to get the correct type for the given hitObject string");
         }
     }
 }

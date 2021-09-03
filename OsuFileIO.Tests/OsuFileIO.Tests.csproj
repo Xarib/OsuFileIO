@@ -19,25 +19,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="OsuFileIO\OsuFileReader\TestFiles\catch.osu">
+    <None Update="TestFiles\catch.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileIO\OsuFileReader\TestFiles\mania.osu">
+    <None Update="TestFiles\mania.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileIO\OsuFileReader\TestFiles\new beginnings.osu">
+    <None Update="TestFiles\new beginnings.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileIO\OsuFileReader\TestFiles\Problematic\100.osu">
+    <None Update="TestFiles\Problematic\100.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileIO\OsuFileReader\TestFiles\stdShortNoNewLines.osu">
+    <None Update="TestFiles\stdShortNoNewLines.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileIO\OsuFileReader\TestFiles\stdShort.osu">
+    <None Update="TestFiles\stdShort.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="OsuFileIO\OsuFileReader\TestFiles\taiko.osu">
+    <None Update="TestFiles\taiko.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
