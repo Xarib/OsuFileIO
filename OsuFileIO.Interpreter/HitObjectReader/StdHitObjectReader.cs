@@ -19,6 +19,9 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
         public double MaxTimeBetweenStreamObjects { get; private init; }
         public double MaxTimeBetweenJumps { get; private init; }
+        /// <summary>
+        /// Slider verlocity in pixels per beat
+        /// </summary>
         public double SliderVelocity { get; private set; }
         public StdHitObjectType HitObjectType { get; private set; }
 
@@ -47,6 +50,9 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             this.SliderVelocity = 100d * (this.difficulty.SliderMultiplier ?? 1d); //100 osuPixels per second is the default slider speed before multipliers
             if (this.CurrentTimingPoint.BeatLength < 0)
             {
+                if (this.CurrentHitObject.TimeInMs == 288225)
+                    ;
+
                 //ChildTimingPoint
                 var sliderMultiplier = -100d / this.CurrentTimingPoint.BeatLength;
                 this.SliderVelocity = this.SliderVelocity * sliderMultiplier;
@@ -68,11 +74,13 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             }
         }
 
-        public enum StdHitObjectType
-        {
-            Circle = 1,
-            Slider = 2,
-            Spinner = 3,
-        }
+        
+    }
+
+    public enum StdHitObjectType
+    {
+        Circle = 1,
+        Slider = 2,
+        Spinner = 3,
     }
 }

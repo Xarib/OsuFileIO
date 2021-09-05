@@ -17,94 +17,46 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
     public class StdHitObjectReaderTests
     {
         [TestMethod]
-        public void SetMostCurrentTimingPoint_SameTime_ReturnsMostCurrentTimingPoint()
+        [DataRow(new int[] { -10 }, new int[] { 10 }, 0)]
+        [DataRow(new int[] { 10, 11 }, new int[] { 10 }, 0)]
+        [DataRow(new int[] { 10, 10 }, new int[] { 10 }, 1)]
+        [DataRow(new int[] { 10, 10, 10, 11 }, new int[] { 10 }, 2)]
+        [DataRow(new int[] { 25, 50, 50 }, new int[] { 30, 50 }, 2)]
+        [DataRow(new int[] { 25, 50, 50, 50 }, new int[] { 30, 50 }, 3)]
+        [DataRow(new int[] { 25, 50, 50, 55 }, new int[] { 30, 50 }, 2)]
+        public void SetMostCurrentTimingPoint_MultipleTimingpoints_ReturnsMostCurrentTimingPoint(int[] timingPointTimes, int[] hitObjectTimes, int expectedTimingPointIndex)
         {
             //Arrange
-            var timingPoints = new List<TimingPoint>
-            {
-                new TimingPoint
-                {
-                    TimeInMs = 25,
-                },
-                new TimingPoint
-                {
-                    BeatLength = 100,
-                    TimeInMs = 50,
-                },
-                new TimingPoint
-                {
-                    BeatLength = 200,
-                    TimeInMs = 50,
-                },
-                new TimingPoint
-                {
-                    BeatLength = 200,
-                    TimeInMs = 55,
-                },
-            };
-
-            var hitObjects = new List<IHitObject>
-            {
-                new Circle(new Coordinates(), 30),
-                new Circle(new Coordinates(), 50),
-            };
-
             var difficulty = new Difficulty();
 
-            //Act
+            var timingPoints = new List<TimingPoint>();
+            for (int i = 0; i < timingPointTimes.Length; i++)
+            {
+                timingPoints.Add(new TimingPoint
+                {
+                    BeatLength = i,
+                    TimeInMs = timingPointTimes[i],
+                });
+            }
+
+            var hitObjects = new List<IHitObject>();
+            for (int i = 0; i < hitObjectTimes.Length; i++)
+            {
+                hitObjects.Add(new Circle(new Coordinates(), hitObjectTimes[i]));
+            }
+
             var reader = new StdHitObjectReader(difficulty, timingPoints, hitObjects);
 
+            //Act
             do
             {
-                ;
             } while (reader.ReadNext());
 
-            //Assert
-            Assert.AreEqual(hitObjects[1].TimeInMs, reader.CurrentTimingPoint.TimeInMs, "Expected a timing point that has a smaller or equal time of the last object");
-            Assert.AreEqual(timingPoints[2].BeatLength, reader.CurrentTimingPoint.BeatLength, "Expected the most current timingPoint");
-        }
-
-        [TestMethod]
-        public void SetMostCurrentTimingPoint_SameTimeAtEnd_ReturnsMostCurrentTimingPoint()
-        {
             //Arrange
-            var timingPoints = new List<TimingPoint>
-            {
-                new TimingPoint
-                {
-                    TimeInMs = 25,
-                },
-                new TimingPoint
-                {
-                    BeatLength = 100,
-                    TimeInMs = 50,
-                },
-                new TimingPoint
-                {
-                    BeatLength = 200,
-                    TimeInMs = 50,
-                },
-            };
-
-            var hitObjects = new List<IHitObject>
-            {
-                new Circle(new Coordinates(), 30),
-                new Circle(new Coordinates(), 50),
-            };
-
-            var difficulty = new Difficulty();
-
-            //Act
-            var reader = new StdHitObjectReader(difficulty, timingPoints, hitObjects);
-
-            do
-            {
-                ;
-            } while (reader.ReadNext());
-
-            //Assert
-            Assert.AreEqual(hitObjects[1].TimeInMs, reader.CurrentTimingPoint.TimeInMs, "Expected a timing point that has a smaller or equal time of the last object");
-            Assert.AreEqual(timingPoints[2].BeatLength, reader.CurrentTimingPoint.BeatLength, "Expected the most current timingPoint");
+            var expectedTimingpoint = timingPoints[expectedTimingPointIndex];
+            Assert.AreEqual(expectedTimingpoint.BeatLength, reader.CurrentTimingPoint.BeatLength, "Expected to get the expected timingpoint with the correct index");
+            Assert.AreEqual(expectedTimingpoint.TimeInMs, reader.CurrentTimingPoint.TimeInMs, "Expected to get the expected timingpoint time");
+            Assert.IsTrue(reader.CurrentTimingPoint.TimeInMs <= reader.CurrentHitObject.TimeInMs, "Expected no timingpoint where the time is bigger than hit object time");
         }
 
         [TestMethod]
