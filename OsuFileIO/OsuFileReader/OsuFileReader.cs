@@ -199,6 +199,7 @@ namespace OsuFileIO.OsuFileReader
 
             this.line = this.sr.ReadLine();
 
+            double prevBeatLength = -1;
             while (!string.IsNullOrWhiteSpace(this.line) && !this.line.StartsWith('['))
             {
                 var timingPoint = new TimingPoint();
@@ -213,7 +214,21 @@ namespace OsuFileIO.OsuFileReader
                             timingPoint.TimeInMs = ParseInt(span);
                             continue;
                         case 1:
-                            timingPoint.BeatLength = double.Parse(span);
+                            var beatLength = double.Parse(span);
+
+                            if (beatLength < 0)
+                            {
+                                if (prevBeatLength < 0) //Inherited timingpoint has to have a point to inherit
+                                    throw new OsuFileReaderException($"{nameof(InheritedPoint)} has no {nameof(TimingPoint)} to inherit");
+
+                                timingPoint = new InheritedPoint(timingPoint, beatLength);
+                                timingPoint.BeatLength = prevBeatLength;
+                            }
+                            else
+                            {
+                                timingPoint.BeatLength = prevBeatLength = beatLength;
+                            }
+
                             continue;
                         case 2:
                             timingPoint.Meter = ParseInt(span);

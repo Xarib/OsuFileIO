@@ -48,14 +48,10 @@ namespace OsuFileIO.Interpreter.HitObjectReader
         private void SetSliderVelocity()
         {
             this.SliderVelocity = 100d * (this.difficulty.SliderMultiplier ?? 1d); //100 osuPixels per second is the default slider speed before multipliers
-            if (this.CurrentTimingPoint.BeatLength < 0)
-            {
-                if (this.CurrentHitObject.TimeInMs == 288225)
-                    ;
 
-                //ChildTimingPoint
-                var sliderMultiplier = -100d / this.CurrentTimingPoint.BeatLength;
-                this.SliderVelocity = this.SliderVelocity * sliderMultiplier;
+            if (this.CurrentTimingPoint is InheritedPoint inheritedPoint)
+            {
+                this.SliderVelocity = this.SliderVelocity * inheritedPoint.VelocityMultiplier;
             }
         }
 

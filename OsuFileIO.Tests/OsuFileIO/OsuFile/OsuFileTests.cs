@@ -277,5 +277,31 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFile
             };
             Assert.IsTrue(lhs != rhs, "Expected to be unequal");
         }
+
+        [TestMethod]
+        public void Equal_EqualInheritedPointObjects_ReturnsTrue()
+        {
+            InheritedPoint lhs = null;
+            InheritedPoint rhs = null;
+            Assert.IsTrue(lhs == rhs, "Expected to be equal");
+
+            lhs = new InheritedPoint()
+            {
+                BeatLength = 1,
+                Meter = 2,
+                TimeInMs = 3,
+                VelocityMultiplier = 4,
+            };
+
+            rhs = new InheritedPoint()
+            {
+                BeatLength = 1,
+                Meter = 2,
+                TimeInMs = 3,
+                VelocityMultiplier = 4,
+            };
+
+            Assert.IsTrue(lhs == rhs, "Expected to be equal");
+        }
     }
 }

@@ -57,7 +57,10 @@ namespace OsuFileIO.Interpreter.HitObjectReader
                 hasChanged = true;
             }
 
-            if (hasChanged && this.CurrentTimingPoint.TimeInMs != this.CurrentHitObject.TimeInMs)
+            if (this.indexTimingPoint == this.timingPoints.Count - 1 && this.CurrentTimingPoint.TimeInMs <= this.CurrentHitObject.TimeInMs)
+                return;
+
+            if (hasChanged)
                 this.indexTimingPoint--;
         }
     }

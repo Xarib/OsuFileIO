@@ -155,7 +155,6 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
 
         [TestMethod]
         [DataRow("-28,461.538461538462,4,1,0,100,1,0")]
-        [DataRow("34125,-100,4,1,0,87,0,0")]
         public void ReadTimingPoints_TimingPointData_ReturnsTimingPoint(string timingPoint)
         {
             //Arrange
@@ -179,6 +178,61 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             Assert.AreEqual(expected[0], actual.TimeInMs.ToString(), $"Expected the file reader to read '{nameof(actual.TimeInMs)}' correctly");
             Assert.AreEqual(expected[1], actual.BeatLength.ToString(), $"Expected the file reader to read '{nameof(actual.BeatLength)}' correctly");
             Assert.AreEqual(expected[2], actual.Meter.ToString(), $"Expected the file reader to read '{nameof(actual.Meter)}' correctly");
+        }
+
+        [TestMethod]
+        [DataRow("34125,-100,4,1,0,87,0,0")]
+        [DataRow("36986,-83.3333333333333,4,1,1,70,0,0")]
+        public void ReadTimingPoints_InheritedPointData_ReturnsTimingPoint(string timingPoint)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine("-28,461.538461538462,4,1,0,100,1,0");
+            writer.WriteLine(timingPoint);
+            writer.Flush();
+            stream.Position = 0;
+
+            var reader = new OsuFileReaderFactory(stream).Build();
+
+            //Act
+            var timingPoints = reader.ReadTimingPoints().ToList();
+            var expectedTimingPoint = timingPoints[0];
+            var actual = timingPoints.Last() as InheritedPoint;
+
+            //Assert
+            var expectedInheritedPoint = timingPoint.Split(',');
+            Assert.AreEqual(expectedInheritedPoint[0], actual.TimeInMs.ToString(), $"Expected the file reader to read '{nameof(actual.TimeInMs)}' correctly");
+            Assert.AreEqual(expectedTimingPoint.BeatLength, actual.BeatLength, $"Expected the file reader to read '{nameof(actual.BeatLength)}' correctly");
+            Assert.AreEqual(expectedTimingPoint.Meter, actual.Meter, $"Expected the file reader to read '{nameof(actual.Meter)}' correctly");
+            Assert.AreEqual(-100d / double.Parse(expectedInheritedPoint[1]), actual.VelocityMultiplier, $"Expected the file reader to calculate '{nameof(actual.VelocityMultiplier)}' correctly");
+        }
+
+        [TestMethod]
+        public void ReadTimingPoints_InheritedPointWithNoTimingPoint_ReturnsTimingPoint()
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine("34125,-100,4,1,0,87,0,0");
+            writer.Flush();
+            stream.Position = 0;
+
+            var reader = new OsuFileReaderFactory(stream).Build();
+
+            //Act
+            void actual() => reader.ReadTimingPoints().Single();
+
+            //Assert
+            Assert.ThrowsException<OsuFileReaderException>(actual);
         }
 
         [TestMethod]

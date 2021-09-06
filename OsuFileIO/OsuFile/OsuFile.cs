@@ -220,4 +220,61 @@ namespace OsuFileIO.OsuFile
 
         public static bool operator !=(TimingPoint lhs, TimingPoint rhs) => !(lhs == rhs);
     }
+
+    public class InheritedPoint : TimingPoint, IEquatable<InheritedPoint>
+    {
+        public double VelocityMultiplier { get; set; }
+
+        public InheritedPoint()
+        {
+
+        }
+
+        public InheritedPoint(TimingPoint timingPoint, double multiplier)
+        {
+            this.BeatLength = timingPoint.BeatLength;
+            this.Meter = timingPoint.Meter;
+            this.TimeInMs = timingPoint.TimeInMs;
+            this.VelocityMultiplier = -100d / multiplier;
+        }
+
+        public bool Equals(InheritedPoint other)
+        {
+            if (other is null)
+                return false;
+
+            if (ReferenceEquals(this, other))
+                return true;
+
+            if (this.GetType() != other.GetType())
+                return false;
+
+            return
+                this.TimeInMs == other.TimeInMs &&
+                this.BeatLength == other.BeatLength &&
+                this.Meter == other.Meter &&
+                this.VelocityMultiplier == other.VelocityMultiplier;
+        }
+
+        public override bool Equals(object obj)
+            => Equals(obj as InheritedPoint);
+
+        public override int GetHashCode()
+            => (this.TimeInMs, this.BeatLength, this.Meter, this.VelocityMultiplier).GetHashCode();
+
+        public static bool operator ==(InheritedPoint lhs, InheritedPoint rhs)
+        {
+            if (lhs is null)
+            {
+                if (rhs is null)
+                    return true;
+
+                return false;
+            }
+
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(InheritedPoint lhs, InheritedPoint rhs) => !(lhs == rhs);
+    }
 }

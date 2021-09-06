@@ -24,6 +24,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
         [DataRow(new int[] { 25, 50, 50 }, new int[] { 30, 50 }, 2)]
         [DataRow(new int[] { 25, 50, 50, 50 }, new int[] { 30, 50 }, 3)]
         [DataRow(new int[] { 25, 50, 50, 55 }, new int[] { 30, 50 }, 2)]
+        [DataRow(new int[] { 10, 20 }, new int[] { 33 }, 1)]
         public void SetMostCurrentTimingPoint_MultipleTimingpoints_ReturnsMostCurrentTimingPoint(int[] timingPointTimes, int[] hitObjectTimes, int expectedTimingPointIndex)
         {
             //Arrange
@@ -60,9 +61,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
         }
 
         [TestMethod]
-        [DataRow(1, "1266,279.06976744186,4,1,9,90,1,0", 100d * 1d)]
-        [DataRow(1.6, "1266,279.06976744186,4,1,9,90,1,0", 100d * 1.6d)]
-        [DataRow(0.7, "34125,-100,4,1,0,87,0,0", 100d * 0.7d * 1d)]
+        //[DataRow(1, "1266,279.06976744186,4,1,9,90,1,0", 100d * 1d)]
+        //[DataRow(1.6, "1266,279.06976744186,4,1,9,90,1,0", 100d * 1.6d)]
+        //[DataRow(0.7, "34125,-100,4,1,0,87,0,0", 100d * 0.7d * 1d)]
         [DataRow(0.7, "40472,-83.3333333333333,4,1,0,100,0,0", 100d * 0.7d * 1.2d)]
         public void ReadNext_SliderMultiplierNotNull_ReturnsSliderVelocity(double sliderMultiplier, string timingPoint, double expected)
         {
@@ -77,6 +78,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.WriteLine("[Difficulty]");
             writer.WriteLine("SliderMultiplier:" + sliderMultiplier.ToString());
             writer.WriteLine("[TimingPoints]");
+            writer.WriteLine("1266,10,4,1,9,90,1,0");
             writer.WriteLine(timingPoint);
             writer.WriteLine("[HitObjects]");
             writer.WriteLine("328,80,999999999,2,0,P|412:101|464:168,1,167.999994873047,4|4,0:0|0:0,0:0:0:0:");
