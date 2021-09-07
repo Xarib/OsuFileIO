@@ -27,7 +27,20 @@ namespace OsuFileIO.Interpreter
 
             do
             {
-
+                switch (reader.HitObjectType)
+                {
+                    case StdHitObjectType.Circle:
+                        this.source.HitCircleCount++;
+                        break;
+                    case StdHitObjectType.Slider:
+                        this.source.SliderCount++;
+                        break;
+                    case StdHitObjectType.Spinner:
+                        this.source.SpinnerCount++;
+                        break;
+                    default:
+                        throw new InvalidEnumArgumentException($"Unimplemented enum {reader.HitObjectType}");
+                }
             } while (reader.ReadNext());
 
             switch (reader.HitObjectType)
@@ -52,6 +65,9 @@ namespace OsuFileIO.Interpreter
         private class OsuStdInterpretation : IInterpretation
         {
             public TimeSpan Length { get; set; }
+            public int HitCircleCount { get; set; }
+            public int SliderCount { get; set; }
+            public int SpinnerCount { get; set; }
         }
     }
 }

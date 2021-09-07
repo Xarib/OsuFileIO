@@ -18,6 +18,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         private const string tutorialFile = "new beginnings.osu";
         private const string shortStd = "stdShort.osu";
 
+        #region slider length
         [TestMethod]
         [DataRow("479,194,31356,1,4,0:0:0:0:", 31356)]
         [DataRow("256,192,126433,12,4,129202,3:2:0:0:", 129202)]
@@ -52,12 +53,10 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             Assert.AreEqual(TimeSpan.FromMilliseconds(expectedLength), actual.Length, "Expected to interpret the length correclty");
         }
 
-
-        //TODO look into this again
         [TestMethod]
         [DataRow("550,301.507537688442,4,1,0,100,1,0", "172,142,21052,2,0,P|411:58|133:279,1,1200", 24067)]
-        [DataRow("550,301.507537688442,6,1,0,100,1,0", "189,100,20449,2,0,P|375:74|125:266,1,936", 22801)]
-        [DataRow("550,301.507537688442,7,1,0,100,1,0", "85,82,21655,6,0,B|358:67|358:67|129:270|129:270|393:273,1,840", 23766)]
+        [DataRow("550,301.507537688442,4,1,0,100,1,0", "189,100,20449,2,0,P|375:74|125:266,1,936", 22801)]
+        [DataRow("550,301.507537688442,4,1,0,100,1,0", "85,82,21655,6,0,B|358:67|358:67|129:270|129:270|393:273,1,840", 23766)]
         public void Interpret_Meter_RetunrsLengthOfMap(string timingPoint, string hitObject, double expectedEndTime)
         {
             //Arrange
@@ -112,10 +111,158 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var milisecondDifference = Math.Abs(actual.Length.TotalMilliseconds - endtimeInMs);
             Assert.IsTrue(milisecondDifference < 1, "Expected to calculate the slider end time correctly with max 1ms difference");
         }
+        #endregion
+
+        #region Hitobject count
+
+        [TestMethod]
+        [DataRow(4)]
+        [DataRow(42)]
+        public void Interpret_CirclesOnly_ReturnsHitCircleCount(int count)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 0.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            for (int i = 0; i < count; i++)
+            {
+                writer.WriteLine("63,279,104741,1,2,0:3:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(count, actual.HitCircleCount, $"Expected to count HitCircles correctly");
+        }
+
+        [TestMethod]
+        [DataRow(4)]
+        [DataRow(42)]
+        public void Interpret_SlidersOnly_ReturnsHitSliderCount(int count)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 0.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            for (int i = 0; i < count; i++)
+            {
+                writer.WriteLine("351,36,108894,6,0,L|394:373,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(count, actual.SliderCount, $"Expected to count Sliders correctly");
+        }
+
+        [TestMethod]
+        [DataRow(4)]
+        [DataRow(42)]
+        public void Interpret_SpinnersOnly_ReturnsHitSjpinnerCount(int count)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 0.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            for (int i = 0; i < count; i++)
+            {
+                writer.WriteLine("256,192,126433,12,4,129202,3:2:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(count, actual.SpinnerCount, $"Expected to count Spinners correctly");
+        }
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + "1172819.osu")]
+        [DeploymentItem(fileLocation + "1860169.osu")]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        [DataRow("1172819.osu", 1441, 460, 4)]
+        [DataRow("1860169.osu", 2232, 604, 1)]
+        [DataRow(tutorialFile, 20, 12, 2)]
+        public void Interpret_ActualMaps_ReturnsHitObjectCount(string fileName, int expectedCircleCount, int expectedSliderCount, int expectedSpinnerCount)
+        {
+            //Arrange
+            var fileReader = new OsuFileReaderFactory(fileName).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedCircleCount, actual.HitCircleCount, $"Expected to count HitCircles correctly");
+            Assert.AreEqual(expectedSliderCount, actual.SliderCount, $"Expected to count Sliders correctly");
+            Assert.AreEqual(expectedSpinnerCount, actual.SpinnerCount, $"Expected to count Spinners correctly");
+        }
+        #endregion
 
         private class ActualInterpretation : IInterpretation
         {
             public TimeSpan Length { get; set; }
+            public int HitCircleCount { get; set; }
+            public int SliderCount { get; set; }
+            public int SpinnerCount { get; set; }
         }
     }
 }
