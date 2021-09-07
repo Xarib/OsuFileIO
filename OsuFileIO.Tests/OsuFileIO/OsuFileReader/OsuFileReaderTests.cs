@@ -175,6 +175,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
 
             //Assert
             var expected = timingPoint.Split(',');
+            Assert.IsTrue(actual is not InheritedPoint, $"Expected a {nameof(TimingPoint)} to be created");
             Assert.AreEqual(expected[0], actual.TimeInMs.ToString(), $"Expected the file reader to read '{nameof(actual.TimeInMs)}' correctly");
             Assert.AreEqual(expected[1], actual.BeatLength.ToString(), $"Expected the file reader to read '{nameof(actual.BeatLength)}' correctly");
             Assert.AreEqual(expected[2], actual.Meter.ToString(), $"Expected the file reader to read '{nameof(actual.Meter)}' correctly");
@@ -206,6 +207,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
 
             //Assert
             var expectedInheritedPoint = timingPoint.Split(',');
+            Assert.IsTrue(actual is InheritedPoint, $"Expected a {nameof(InheritedPoint)} to be created");
             Assert.AreEqual(expectedInheritedPoint[0], actual.TimeInMs.ToString(), $"Expected the file reader to read '{nameof(actual.TimeInMs)}' correctly");
             Assert.AreEqual(expectedTimingPoint.BeatLength, actual.BeatLength, $"Expected the file reader to read '{nameof(actual.BeatLength)}' correctly");
             Assert.AreEqual(expectedTimingPoint.Meter, actual.Meter, $"Expected the file reader to read '{nameof(actual.Meter)}' correctly");

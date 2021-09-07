@@ -52,41 +52,52 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             Assert.AreEqual(TimeSpan.FromMilliseconds(expectedLength), actual.Length, "Expected to interpret the length correclty");
         }
 
-        //[TestMethod]
-        //[DataRow(, 1, "1266,279.06976744186,4,1,9,90,1,0", )]
-        //public void Interpret_HitObject_RetunrsLengthOfMap(double expectedLength, double sliderMultiplier, string timingPoint, string hitObject)
-        //{
-        //    //Arrange
-        //    var stream = new MemoryStream();
-        //    var writer = new StreamWriter(stream);
-        //    writer.WriteLine("osu file format v14");
-        //    writer.WriteLine("[General]");
-        //    writer.WriteLine("StackLeniency: 0.7");
-        //    writer.WriteLine("Mode: 0");
-        //    writer.WriteLine("[Metadata]");
-        //    writer.WriteLine("[Difficulty]");
-        //    writer.WriteLine("SliderMultiplier:" + sliderMultiplier.ToString());
-        //    writer.WriteLine("[TimingPoints]");
-        //    writer.WriteLine(timingPoint);
-        //    writer.WriteLine("[HitObjects]");
-        //    writer.WriteLine("328,80,999999999,2,0,P|412:101|464:168,1,167.999994873047,4|4,0:0|0:0,0:0:0:0:");
-        //    writer.Flush();
-        //    stream.Position = 0;
 
-        //    var fileReader = new OsuFileReaderFactory(stream).Build();
+        //TODO look into this again
+        [TestMethod]
+        [DataRow("550,301.507537688442,4,1,0,100,1,0", "172,142,21052,2,0,P|411:58|133:279,1,1200", 24067)]
+        [DataRow("550,301.507537688442,6,1,0,100,1,0", "189,100,20449,2,0,P|375:74|125:266,1,936", 22801)]
+        [DataRow("550,301.507537688442,7,1,0,100,1,0", "85,82,21655,6,0,B|358:67|358:67|129:270|129:270|393:273,1,840", 23766)]
+        public void Interpret_Meter_RetunrsLengthOfMap(string timingPoint, string hitObject, double expectedEndTime)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier:1.2");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine(timingPoint);
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine(hitObject);
+            writer.Flush();
+            stream.Position = 0;
 
-        //    var file = fileReader.ReadFile() as OsuStdFile;
+            var fileReader = new OsuFileReaderFactory(stream).Build();
 
-        //    var actual = new ActualInterpretation();
+            var file = fileReader.ReadFile() as OsuStdFile;
 
-        //    var interpreter = new OsuStdInterpreter(actual);
-        //    interpreter.Interpret(file);
-        //}
+            var actual = new ActualInterpretation();
+
+            //Act
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            var milisecondDifference = Math.Abs(actual.Length.TotalMilliseconds - expectedEndTime);
+            Assert.IsTrue(milisecondDifference < 1, $"Expected to calculate the slider end time correctly with max 1ms difference but got {milisecondDifference}ms");
+        }
 
         [TestMethod]
         [DeploymentItem(fileLocation + "1172819.osu")]
-        [DataRow("1172819.osu")]
-        public void Interpret_RealMaps_RetunrsLengthOfMap(string fileName)
+        [DeploymentItem(fileLocation + "1860169.osu")]
+        [DataRow("1172819.osu", 305271)]
+        [DataRow("1860169.osu", 431132)]
+        public void Interpret_RealMaps_RetunrsLengthOfMap(string fileName, int endtimeInMs)
         {
             //Arrange
             var fileReader = new OsuFileReaderFactory(fileName).Build();
@@ -98,6 +109,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             interpreter.Interpret(file);
 
             //Assert
+            var milisecondDifference = Math.Abs(actual.Length.TotalMilliseconds - endtimeInMs);
+            Assert.IsTrue(milisecondDifference < 1, "Expected to calculate the slider end time correctly with max 1ms difference");
         }
 
         private class ActualInterpretation : IInterpretation

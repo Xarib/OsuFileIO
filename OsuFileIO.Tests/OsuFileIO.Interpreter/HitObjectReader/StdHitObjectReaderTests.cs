@@ -25,6 +25,10 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
         [DataRow(new int[] { 25, 50, 50, 50 }, new int[] { 30, 50 }, 3)]
         [DataRow(new int[] { 25, 50, 50, 55 }, new int[] { 30, 50 }, 2)]
         [DataRow(new int[] { 10, 20 }, new int[] { 33 }, 1)]
+        [DataRow(new int[] { 10, 10, 20 }, new int[] { 33 }, 2)]
+        [DataRow(new int[] { 10, 20, 20 }, new int[] { 33 }, 2)]
+        [DataRow(new int[] { 10, 20, 20 }, new int[] { 17 }, 0)]
+        [DataRow(new int[] { 10, 15, 20 }, new int[] { 17 }, 1)]
         public void SetMostCurrentTimingPoint_MultipleTimingpoints_ReturnsMostCurrentTimingPoint(int[] timingPointTimes, int[] hitObjectTimes, int expectedTimingPointIndex)
         {
             //Arrange
@@ -112,6 +116,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
             writer.WriteLine("[TimingPoints]");
+            writer.WriteLine("1266,10,4,1,9,90,1,0");
             writer.WriteLine(timingPoint);
             writer.WriteLine("[HitObjects]");
             writer.WriteLine("328,80,999999999,2,0,P|412:101|464:168,1,167.999994873047,4|4,0:0|0:0,0:0:0:0:");
