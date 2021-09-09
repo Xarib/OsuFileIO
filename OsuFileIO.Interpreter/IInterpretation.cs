@@ -12,5 +12,8 @@ namespace OsuFileIO.Interpreter
         public int HitCircleCount { get; set; }
         public int SliderCount { get; set; }
         public int SpinnerCount { get; set; }
+        public double Bpm { get; set; }
+        public double BpmMin { get; set; }
+        public double BpmMax { get; set; }
     }
 }

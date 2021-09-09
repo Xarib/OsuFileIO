@@ -257,12 +257,86 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         }
         #endregion
 
+        #region Bpm
+        /*
+         * Bpm
+         * 100Bpm = 600
+         * 150Bpm = 400
+         * 200Bpm = 300
+         * 250Bpm = 240
+         */
+        //TODO make this work
+        //[TestMethod]
+        //[DataRow(new ValueTuple<int, double>[] { new ValueTuple<int, double>(100, 300) })]
+        //public void Interpret_ActualMaps_ReturnBpm(ValueTuple<int, double>[] timingPoints ,double bpm, double bpmMin, double bpmMax)
+        //{
+        //    //Arrange
+        //    var stream = new MemoryStream();
+        //    var writer = new StreamWriter(stream);
+        //    writer.WriteLine("osu file format v14");
+        //    writer.WriteLine("[General]");
+        //    writer.WriteLine("StackLeniency: 0.7");
+        //    writer.WriteLine("Mode: 0");
+        //    writer.WriteLine("[Metadata]");
+        //    writer.WriteLine("[Difficulty]");
+        //    writer.WriteLine("SliderMultiplier: 0.7");
+        //    writer.WriteLine("[TimingPoints]");
+
+        //    int timePassed = 0;
+        //    foreach (var timing in timingPoints)
+        //    {
+        //        writer.WriteLine($"{timing.Item1},{timing.Item2},4,1,9,90,1,0");
+        //        timePassed = timing.Item1;
+        //    }
+
+        //    writer.WriteLine("[HitObjects]");
+        //    writer.WriteLine($"479,194,{timePassed},1,4,0:0:0:0:");
+        //    writer.Flush();
+        //    stream.Position = 0;
+
+        //    var fileReader = new OsuFileReaderFactory(stream).Build();
+        //    var file = fileReader.ReadFile() as OsuStdFile;
+
+        //    //Act
+        //    var actual = new ActualInterpretation();
+        //    var interpreter = new OsuStdInterpreter(actual);
+        //    interpreter.Interpret(file);
+
+        //    //Assert
+        //}
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + "1172819.osu")]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        [DataRow("1172819.osu", 258, 103, 260)]
+        [DataRow(tutorialFile, 130, 130, 130)]
+        public void Interpret_ActualMaps_ReturnBpm(string fileName, double bpm, double bpmMin, double bpmMax)
+        {
+            //Arrange
+            var fileReader = new OsuFileReaderFactory(fileName).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            Assert.AreEqual(bpm, actual.Bpm, $"Expected to get the correct {actual.Bpm}");
+            Assert.AreEqual(bpmMin, actual.BpmMin, $"Expected to get the correct {actual.BpmMin}");
+            Assert.AreEqual(bpmMax, actual.BpmMax, $"Expected to get the correct {actual.BpmMax}");
+        }
+
+        #endregion
+
         private class ActualInterpretation : IInterpretation
         {
             public TimeSpan Length { get; set; }
             public int HitCircleCount { get; set; }
             public int SliderCount { get; set; }
             public int SpinnerCount { get; set; }
+            public double Bpm { get; set; }
+            public double BpmMin { get; set; }
+            public double BpmMax { get; set; }
         }
     }
 }
