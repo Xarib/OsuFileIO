@@ -157,25 +157,25 @@ namespace OsuFileIO.Interpreter
 
             //Only count when stream is finished
 
-            if (this.hitObjectCountStream < 9)
+            //If stream is longer than 8 beats. Has to be beat snap divisor: 1/4
+            if (this.hitObjectCountStream > 32)
             {
-                this.result.BurstCount++;
-                return;
+                this.result.DeathStreamCount++;
             }
-            //If stream is longer than two beats. Has to be beat snap divisor: 1/4
-            else if (this.hitObjectCountStream > 8)
-            {
-                this.result.StreamCount++;
-            }
-            //If stream is longer than four beats. Has to be beat snap divisor: 1/4
+            //If stream is longer than 4 beats. Has to be beat snap divisor: 1/4
             else if (this.hitObjectCountStream > 16)
             {
                 this.result.LongStreamCount++;
             }
-            //If stream is longer than eigth beats. Has to be beat snap divisor: 1/4
-            else if (this.hitObjectCountStream > 32)
+            //If stream is longer than 2 beats. Has to be beat snap divisor: 1/4
+            else if (this.hitObjectCountStream > 8)
             {
-                this.result.DeathStreamCount++;
+                this.result.StreamCount++;
+            }
+            else if (this.hitObjectCountStream > 4 && this.hitObjectCountStream < 9)
+            {
+                this.result.BurstCount++;
+                return;
             }
 
             if (this.hitObjectCountStream > this.result.LongestStream)
