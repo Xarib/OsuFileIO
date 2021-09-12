@@ -328,6 +328,102 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
         #endregion
 
+        #region StreamCounting
+
+        [TestMethod]
+        [DataRow(600, new int[] { 20 }, 0)] //100Bmp
+        [DataRow(400, new int[] { 5 }, 0)] //150Bmp
+        [DataRow(400, new int[] { 20 }, 20)] //150Bmp
+        [DataRow(300, new int[] { 5 }, 0)] //200Bmp
+        [DataRow(300, new int[] { 5, 20 }, 20)] //200Bmp
+        [DataRow(300, new int[] { 5, 20, 10 }, 20)] //200Bmp
+        public void Interpret_Streams_ReturnsLongestStreamCount(double beatLength, int[] streamsLengths, int expectedLength)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 0.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            double timePassed = 0;
+            foreach (var length in streamsLengths)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    writer.WriteLine($"63,279,{Math.Round(timePassed, 0, MidpointRounding.AwayFromZero)},1,2,0:3:0:0:");
+                    timePassed += beatLength / 4;
+                }
+
+                timePassed += 10000;
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedLength, actual.LongestStream, "Expected to find the longest stream");
+        }
+
+        [TestMethod]
+        [DataRow(60000d / 310d, 0)]//310Bpm 
+        [DataRow(60000d / 400d, 0)]//310Bpm 
+        public void Interpret_300BpmPlusBmpOneTwoJumps_ReturnsLongestStreamCount(double beatLength, int expectedLength)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 0.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            double timePassed = 0;
+
+            for (int i = 0; i < 10; i++)
+            {
+                writer.WriteLine($"63,279,{Math.Round(timePassed, 0, MidpointRounding.AwayFromZero)},1,2,0:3:0:0:");
+                timePassed += beatLength / 2;
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedLength, actual.LongestStream, "Expected to find the longest stream");
+        }
+
+        #endregion
+
         private class ActualInterpretation : IInterpretation
         {
             public TimeSpan Length { get; set; }
@@ -337,6 +433,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public double Bpm { get; set; }
             public double BpmMin { get; set; }
             public double BpmMax { get; set; }
+            public int LongestStream { get; set; }
         }
     }
 }

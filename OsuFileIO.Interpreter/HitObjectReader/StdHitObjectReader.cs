@@ -13,12 +13,16 @@ namespace OsuFileIO.Interpreter.HitObjectReader
         public StdHitObjectReader(Difficulty difficulty, IList<TimingPoint> timingPoints, IList<IHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
         {
             this.SetHitObjectType();
+
             this.SetMostCurrentTimingPoint();
+
             this.SetSliderVelocity();
+
+            this.SetTimeBetweens();
         }
 
-        public double MaxTimeBetweenStreamObjects { get; private init; }
-        public double MaxTimeBetweenJumps { get; private init; }
+        public double TimeBetweenStreamObjects { get; private set; }
+        public double TimeBetweenOneTwoJumps { get; private set; }
         /// <summary>
         /// Slider verlocity in pixels per beat
         /// </summary>
@@ -41,6 +45,8 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             this.SetMostCurrentTimingPoint();
 
             this.SetSliderVelocity();
+
+            this.SetTimeBetweens();
 
             return true;
         }
@@ -70,7 +76,11 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             }
         }
 
-        
+        private void SetTimeBetweens()
+        {
+            this.TimeBetweenStreamObjects = this.CurrentTimingPoint.BeatLength / this.CurrentTimingPoint.Meter; //Meter is usually 4
+            this.TimeBetweenOneTwoJumps = this.CurrentTimingPoint.BeatLength / (this.CurrentTimingPoint.Meter / 2);
+        }
     }
 
     public enum StdHitObjectType

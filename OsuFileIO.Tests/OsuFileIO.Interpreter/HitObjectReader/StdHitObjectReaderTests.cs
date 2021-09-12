@@ -163,5 +163,38 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             //Assert
             Assert.AreEqual(hitObjectType, reader.HitObjectType, "Expected to get the correct type for the given hitObject string");
         }
+
+        [TestMethod]
+        [DataRow(400, 200, 100)]//150Bmp
+        [DataRow(600, 300, 150)]//150Bmp
+        public void ReadNext_Bpms_ReturnsMaxTimes(double bmp, double timeOneTwos, double timeStreams)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"1266,{bmp},4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine("255,184,3664,69,4,3:1:0:0:");
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+
+            var file = fileReader.ReadFile();
+
+            //Act
+            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
+
+            //Assert
+            Assert.AreEqual(timeOneTwos, reader.TimeBetweenOneTwoJumps, "Expected to calculate time between 1-2 jumps");
+            Assert.AreEqual(timeStreams, reader.TimeBetweenStreamObjects, "Expected to calculate time between stream objects");
+        }
     }
 }
