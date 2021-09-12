@@ -194,7 +194,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
 
             //Assert
             Assert.AreEqual(timeOneTwos, reader.TimeBetweenOneTwoJumps, "Expected to calculate time between 1-2 jumps");
-            Assert.AreEqual(timeStreams, reader.TimeBetweenStreamObjects, "Expected to calculate time between stream objects");
+            Assert.AreEqual(timeStreams, reader.TimeBetweenStreamAlike, "Expected to calculate time between stream objects");
         }
     }
 }

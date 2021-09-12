@@ -21,7 +21,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             this.SetTimeBetweens();
         }
 
-        public double TimeBetweenStreamObjects { get; private set; }
+        public double TimeBetweenStreamAlike { get; private set; }
         public double TimeBetweenOneTwoJumps { get; private set; }
         /// <summary>
         /// Slider verlocity in pixels per beat
@@ -78,7 +78,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
         private void SetTimeBetweens()
         {
-            this.TimeBetweenStreamObjects = this.CurrentTimingPoint.BeatLength / this.CurrentTimingPoint.Meter; //Meter is usually 4
+            this.TimeBetweenStreamAlike = this.CurrentTimingPoint.BeatLength / this.CurrentTimingPoint.Meter; //Meter is usually 4
             this.TimeBetweenOneTwoJumps = this.CurrentTimingPoint.BeatLength / (this.CurrentTimingPoint.Meter / 2);
         }
     }

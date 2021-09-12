@@ -28,7 +28,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
         public abstract bool ReadNext();
 
-        public TimingPoint GetTimingPoint(int offsetFromCurrent)
+        public TimingPoint GetTimingPointOrNull(int offsetFromCurrent)
         {
             var indexAfterOffset = this.indexTimingPoint + offsetFromCurrent;
 
@@ -38,7 +38,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             return this.timingPoints[indexAfterOffset];
         }
 
-        public IHitObject GetHitObject(int offsetFromCurrent)
+        public IHitObject GetHitObjectOrNull(int offsetFromCurrent)
         {
             var indexAfterOffset = this.indexHitObject + offsetFromCurrent;
 

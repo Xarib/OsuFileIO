@@ -328,6 +328,38 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
         #endregion
 
+        #region SubStreamCounting
+
+        [TestMethod]
+        public void Interpret_Doubles_ReturnsDoubleCount(double beatLength, int countDoubles)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 0.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            double timePassed = 0;
+            for (int i = 0; i < countDoubles; i++)
+            {
+                writer.WriteLine($"63,279,{Math.Round(timePassed, 0, MidpointRounding.AwayFromZero)},1,2,0:3:0:0:");
+                timePassed += beatLength / 4;
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+        }
+
+        #endregion
+
         #region StreamCounting
 
         [TestMethod]
@@ -339,6 +371,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(300, new int[] { 5, 20, 10 }, 20)] //200Bmp
         public void Interpret_Streams_ReturnsLongestStreamCount(double beatLength, int[] streamsLengths, int expectedLength)
         {
+            if (!streamsLengths.All(length => length > 4))
+                Assert.Fail("For this test only use length > 4");
+
             //Arrange
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
@@ -378,6 +413,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Assert
             Assert.AreEqual(expectedLength, actual.LongestStream, "Expected to find the longest stream");
+            Assert.IsTrue(actual.DoubleCount == 0, "Expected no doubles");
+            Assert.IsTrue(actual.TripletCount == 0, "Expected no triplets");
+            Assert.IsTrue(actual.QuadrupletCount == 0, "Expected no quadruplets");
         }
 
         [TestMethod]
@@ -433,6 +471,13 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public double Bpm { get; set; }
             public double BpmMin { get; set; }
             public double BpmMax { get; set; }
+            public int DoubleCount { get; set; }
+            public int TripletCount { get; set; }
+            public int QuadrupletCount { get; set; }
+            public int BurstCount { get; set; }
+            public int StreamCount { get; set; }
+            public int LongStreamCount { get; set; }
+            public int DeathStreamCount { get; set; }
             public int LongestStream { get; set; }
         }
     }

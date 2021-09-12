@@ -14,12 +14,12 @@ namespace OsuFileIO.Interpreter
 {
     public class OsuStdInterpreter
     {
-        private readonly IInterpretation source;
+        private readonly IInterpretation result;
         private StdHitObjectReader reader;
 
         public OsuStdInterpreter(IInterpretation source)
         {
-            this.source = source ?? new OsuStdInterpretation();
+            this.result = source ?? new OsuStdInterpretation();
         }
 
         public void Interpret(OsuStdFile beatmap)
@@ -33,13 +33,13 @@ namespace OsuFileIO.Interpreter
                 switch (this.reader.HitObjectType)
                 {
                     case StdHitObjectType.Circle:
-                        this.source.HitCircleCount++;
+                        this.result.HitCircleCount++;
                         break;
                     case StdHitObjectType.Slider:
-                        this.source.SliderCount++;
+                        this.result.SliderCount++;
                         break;
                     case StdHitObjectType.Spinner:
-                        this.source.SpinnerCount++;
+                        this.result.SpinnerCount++;
                         break;
                     default:
                         throw new InvalidEnumArgumentException($"Unimplemented enum {this.reader.HitObjectType}");
@@ -71,48 +71,48 @@ namespace OsuFileIO.Interpreter
             switch (this.reader.HitObjectType)
             {
                 case StdHitObjectType.Circle:
-                    this.source.Length = TimeSpan.FromMilliseconds(this.reader.CurrentHitObject.TimeInMs);
+                    this.result.Length = TimeSpan.FromMilliseconds(this.reader.CurrentHitObject.TimeInMs);
                     break;
                 case StdHitObjectType.Slider:
                     var slider = this.reader.CurrentHitObject as Slider;
                     double sliderTime = slider.Length / this.reader.SliderVelocity * this.reader.CurrentTimingPoint.BeatLength;
-                    this.source.Length = TimeSpan.FromMilliseconds(sliderTime + slider.TimeInMs);
+                    this.result.Length = TimeSpan.FromMilliseconds(sliderTime + slider.TimeInMs);
                     break;
                 case StdHitObjectType.Spinner:
                     var spinner = this.reader.CurrentHitObject as Spinner;
-                    this.source.Length = TimeSpan.FromMilliseconds(spinner.EndTimeInMs);
+                    this.result.Length = TimeSpan.FromMilliseconds(spinner.EndTimeInMs);
                     break;
                 default:
                     throw new InvalidEnumArgumentException($"Unimplemented enum {this.reader.HitObjectType}");
             }
 
-            totalTimeByBpm[lastRedTimingPoint.BeatLength] += Convert.ToInt32(this.source.Length.TotalMilliseconds - lastRedTimingPoint.TimeInMs);
+            totalTimeByBpm[lastRedTimingPoint.BeatLength] += Convert.ToInt32(this.result.Length.TotalMilliseconds - lastRedTimingPoint.TimeInMs);
 
             var longestTimeForBpms = 0;
-            this.source.BpmMax = int.MinValue;
-            this.source.BpmMin = int.MaxValue;
+            this.result.BpmMax = int.MinValue;
+            this.result.BpmMin = int.MaxValue;
             foreach (var item in totalTimeByBpm)
             {
                 var currentBpm = Convert.ToInt32(1 / item.Key * 60000d);
                 if (item.Value > longestTimeForBpms)
                 {
                     longestTimeForBpms = item.Value;
-                    this.source.Bpm = currentBpm;
+                    this.result.Bpm = currentBpm;
                 }
 
-                if (currentBpm > this.source.BpmMax)
-                    this.source.BpmMax = currentBpm;
+                if (currentBpm > this.result.BpmMax)
+                    this.result.BpmMax = currentBpm;
 
-                if (currentBpm < this.source.BpmMin)
-                    this.source.BpmMin = currentBpm;
+                if (currentBpm < this.result.BpmMin)
+                    this.result.BpmMin = currentBpm;
             }
         }
 
-        
-        private const double minimumDifferenceStreamObject = 60000 / 150 / 4; //150 Bmp
+        private const double beatLength100Bpm = 60000 / 100 / 4; //100 Bmp
+        private const double beatLength150Bpm = 60000 / 150 / 4; //150 Bmp
         private void InterpretCountValues()
         {
-            var previousHitObject = this.reader.GetHitObject(offsetFromCurrent: -1);
+            var previousHitObject = this.reader.GetHitObjectOrNull(offsetFromCurrent: -1);
 
             if (previousHitObject is null)
                 return;
@@ -124,15 +124,21 @@ namespace OsuFileIO.Interpreter
             {
                 //InterpretOneTwoCount
             }
-            else if (timeBetweenHitObjects < this.reader.TimeBetweenStreamObjects * 1.1 && timeBetweenHitObjects <= minimumDifferenceStreamObject)
+
+            if (timeBetweenHitObjects < this.reader.TimeBetweenStreamAlike * 1.1 && timeBetweenHitObjects <= beatLength100Bpm)
             {
-                this.InterpretStreamCount();
-            } else
+
+
+                if (timeBetweenHitObjects <= beatLength150Bpm)
+                    this.InterpretStreamCount();
+            }
+            else
             {
                 //If stream ends it goes here
                 this.hitObjectCountStream = 1;
             }
         }
+        
 
         private int hitObjectCountStream = 1;
         private void InterpretStreamCount()
@@ -144,29 +150,40 @@ namespace OsuFileIO.Interpreter
 
             this.hitObjectCountStream++;
 
-            switch (this.hitObjectCountStream)
+            var nextHitObject = this.reader.GetHitObjectOrNull(offsetFromCurrent: 1);
+
+            if (nextHitObject is not null && this.IsMappedLikeStream(nextHitObject.TimeInMs - this.reader.CurrentHitObject.TimeInMs))
+                return;
+
+            //Only count when stream is finished
+
+            if (this.hitObjectCountStream < 9)
             {
-                case 1:
-                    return;
-                case 2:
-                    return;
-                case 3:
-                    return;
-                case 4:
-                    return;
-                //double etc
-                default:
-                    //Stream counting
-                    if (this.hitObjectCountStream < 9)
-                    {
-                        //Butstcount
-                        return;
-                    }
-                    break;
+                this.result.BurstCount++;
+                return;
+            }
+            //If stream is longer than two beats. Has to be beat snap divisor: 1/4
+            else if (this.hitObjectCountStream > 8)
+            {
+                this.result.StreamCount++;
+            }
+            //If stream is longer than four beats. Has to be beat snap divisor: 1/4
+            else if (this.hitObjectCountStream > 16)
+            {
+                this.result.LongStreamCount++;
+            }
+            //If stream is longer than eigth beats. Has to be beat snap divisor: 1/4
+            else if (this.hitObjectCountStream > 32)
+            {
+                this.result.DeathStreamCount++;
             }
 
-            if (this.hitObjectCountStream > this.source.LongestStream)
-                this.source.LongestStream = this.hitObjectCountStream;
+            if (this.hitObjectCountStream > this.result.LongestStream)
+                this.result.LongestStream = this.hitObjectCountStream;
+        }
+        private bool IsMappedLikeStream(double timeDifference)
+        {
+            return timeDifference < this.reader.TimeBetweenStreamAlike * 1.1 && timeDifference <= beatLength150Bpm;
         }
 
         private class OsuStdInterpretation : IInterpretation
@@ -178,6 +195,13 @@ namespace OsuFileIO.Interpreter
             public double Bpm { get; set; }
             public double BpmMin { get; set; }
             public double BpmMax { get; set; }
+            public int DoubleCount { get; set; }
+            public int TripletCount { get; set; }
+            public int QuadrupletCount { get; set; }
+            public int BurstCount { get; set; }
+            public int StreamCount { get; set; }
+            public int LongStreamCount { get; set; }
+            public int DeathStreamCount { get; set; }
             public int LongestStream { get; set; }
         }
     }
