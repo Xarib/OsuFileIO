@@ -125,12 +125,19 @@ namespace OsuFileIO.Interpreter
                 //InterpretOneTwoCount
             }
 
-            if (timeBetweenHitObjects < this.reader.TimeBetweenStreamAlike * 1.1 && timeBetweenHitObjects <= beatLength100Bpm)
+            if (this.IsMappedLikeDoubleToQuad(timeBetweenHitObjects))
             {
+                this.InterpretDoubleToQuadCount();
+            }
+            else
+            {
+                //If it ends it goes here
+                this.hitObjectCountDoubleToQuad = 1;
+            }
 
-
-                if (timeBetweenHitObjects <= beatLength150Bpm)
-                    this.InterpretStreamCount();
+            if (this.IsMappedLikeStream(timeBetweenHitObjects))
+            {
+                this.InterpretStreamCount();
             }
             else
             {
@@ -138,7 +145,41 @@ namespace OsuFileIO.Interpreter
                 this.hitObjectCountStream = 1;
             }
         }
-        
+
+        private int hitObjectCountDoubleToQuad = 1;
+        private void InterpretDoubleToQuadCount()
+        {
+            this.hitObjectCountDoubleToQuad++;
+
+            var nextHitObject = this.reader.GetHitObjectOrNull(offsetFromCurrent: 1);
+
+            if (nextHitObject is not null && this.IsMappedLikeDoubleToQuad(nextHitObject.TimeInMs - this.reader.CurrentHitObject.TimeInMs))
+                return;
+
+            switch (this.hitObjectCountDoubleToQuad)
+            {
+                case 1:
+                    break;
+                case 2:
+                    this.result.DoubleCount++;
+                    break;
+                case 3:
+                    this.result.TripletCount++;
+                    break;
+                case 4:
+                    this.result.QuadrupletCount++;
+                    break;
+                default:
+                    //TODO: Think of something with greater than 4 objects
+                    break;
+            }
+        }
+
+        private bool IsMappedLikeDoubleToQuad(double timeBetweenHitObjects)
+        {
+            return timeBetweenHitObjects < this.reader.TimeBetweenStreamAlike * 1.1 && timeBetweenHitObjects <= beatLength100Bpm;
+        }
+
 
         private int hitObjectCountStream = 1;
         private void InterpretStreamCount()

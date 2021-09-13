@@ -331,9 +331,15 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         #region SubStreamCounting
 
         [TestMethod]
-        public void Interpret_Doubles_ReturnsDoubleCount(double beatLength, int countDoubles)
+        [DataRow(new int[] { 2 }, 1)]
+        [DataRow(new int[] { 2, 2 }, 2)]
+        [DataRow(new int[] { 2, 4 }, 1)]
+        [DataRow(new int[] { 0, 4 }, 0)]
+        public void Interpret_VariousHitObjects_ReturnsDoubleCount(int[] streamsLengths, int expectedCount)
         {
             //Arrange
+            var beatLength = 300;
+
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
             writer.WriteLine("osu file format v14");
@@ -348,14 +354,130 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("[HitObjects]");
 
             double timePassed = 0;
-            for (int i = 0; i < countDoubles; i++)
+            foreach (var length in streamsLengths)
             {
-                writer.WriteLine($"63,279,{Math.Round(timePassed, 0, MidpointRounding.AwayFromZero)},1,2,0:3:0:0:");
-                timePassed += beatLength / 4;
+                for (int i = 0; i < length; i++)
+                {
+                    writer.WriteLine($"63,279,{Math.Round(timePassed, 0, MidpointRounding.AwayFromZero)},1,2,0:3:0:0:");
+                    timePassed += beatLength / 4;
+                }
+
+                timePassed += 10000;
             }
 
             writer.Flush();
             stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedCount, actual.DoubleCount, "Expected to count doubles correctly");
+        }
+
+        [TestMethod]
+        [DataRow(new int[] { 3 }, 1)]
+        [DataRow(new int[] { 3, 3 }, 2)]
+        [DataRow(new int[] { 3, 4 }, 1)]
+        [DataRow(new int[] { 0, 4 }, 0)]
+        public void Interpret_VariousHitObjects_ReturnsTripletCount(int[] streamsLengths, int expectedCount)
+        {
+            //Arrange
+            var beatLength = 300;
+
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 0.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            double timePassed = 0;
+            foreach (var length in streamsLengths)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    writer.WriteLine($"63,279,{Math.Round(timePassed, 0, MidpointRounding.AwayFromZero)},1,2,0:3:0:0:");
+                    timePassed += beatLength / 4;
+                }
+
+                timePassed += 10000;
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedCount, actual.TripletCount, "Expected to count triplets correctly");
+        }
+
+        [TestMethod]
+        [DataRow(new int[] { 4 }, 1)]
+        [DataRow(new int[] { 4, 4 }, 2)]
+        [DataRow(new int[] { 3, 4 }, 1)]
+        [DataRow(new int[] { 3, 5 }, 0)]
+        public void Interpret_VariousHitObjects_ReturnsQuadrupletCount(int[] streamsLengths, int expectedCount)
+        {
+            //Arrange
+            var beatLength = 300;
+
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 0.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            double timePassed = 0;
+            foreach (var length in streamsLengths)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    writer.WriteLine($"63,279,{Math.Round(timePassed, 0, MidpointRounding.AwayFromZero)},1,2,0:3:0:0:");
+                    timePassed += beatLength / 4;
+                }
+
+                timePassed += 10000;
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedCount, actual.QuadrupletCount, "Expected to count quadruplets correctly");
         }
 
         #endregion
@@ -419,6 +541,56 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         }
 
         [TestMethod]
+        [DataRow(new int[] { 4 }, 0)]
+        [DataRow(new int[] { 9 }, 0)]
+        [DataRow(new int[] { 6 }, 1)]
+        [DataRow(new int[] { 5, 6, 7 }, 3)]
+        public void Interpret_VariousStreams200Bpm_ReturnsBurstCount(int[] streamsLengths, int expectedCount)
+        {
+            //Arrange
+            var beatLength = 300;
+
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 0.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            double timePassed = 0;
+            foreach (var length in streamsLengths)
+            {
+                for (int i = 0; i < length; i++)
+                {
+                    writer.WriteLine($"63,279,{Math.Round(timePassed, 0, MidpointRounding.AwayFromZero)},1,2,0:3:0:0:");
+                    timePassed += beatLength / 4;
+                }
+
+                timePassed += 10000;
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedCount, actual.BurstCount, $"Expected count {nameof(actual.BurstCount)} correctly");
+        }
+
+        [TestMethod]
         [DataRow(new int[] { 10 }, 1)]
         [DataRow(new int[] { 10, 5 }, 1)]
         [DataRow(new int[] { 10, 5, 16 }, 2)]
@@ -468,56 +640,6 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Assert
             Assert.AreEqual(expectedCount, actual.StreamCount, $"Expected count {nameof(actual.StreamCount)} correctly");
-        }
-
-        [TestMethod]
-        [DataRow(new int[] { 4 }, 0)]
-        [DataRow(new int[] { 9 }, 0)]
-        [DataRow(new int[] { 6 }, 1)]
-        [DataRow(new int[] { 5, 6, 7 }, 3)]
-        public void Interpret_VariousStreams200Bpm_ReturnsBurstCount(int[] streamsLengths, int expectedCount)
-        {
-            //Arrange
-            var beatLength = 300;
-
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.WriteLine("osu file format v14");
-            writer.WriteLine("[General]");
-            writer.WriteLine("StackLeniency: 0.7");
-            writer.WriteLine("Mode: 0");
-            writer.WriteLine("[Metadata]");
-            writer.WriteLine("[Difficulty]");
-            writer.WriteLine("SliderMultiplier: 0.7");
-            writer.WriteLine("[TimingPoints]");
-            writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
-            writer.WriteLine("[HitObjects]");
-
-            double timePassed = 0;
-            foreach (var length in streamsLengths)
-            {
-                for (int i = 0; i < length; i++)
-                {
-                    writer.WriteLine($"63,279,{Math.Round(timePassed, 0, MidpointRounding.AwayFromZero)},1,2,0:3:0:0:");
-                    timePassed += beatLength / 4;
-                }
-
-                timePassed += 10000;
-            }
-
-            writer.Flush();
-            stream.Position = 0;
-
-            var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
-
-            //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
-            interpreter.Interpret(file);
-
-            //Assert
-            Assert.AreEqual(expectedCount, actual.BurstCount, $"Expected count {nameof(actual.BurstCount)} correctly");
         }
 
         [TestMethod]
