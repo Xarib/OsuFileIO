@@ -110,7 +110,9 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
 
             //Assert
             var expected = line.Split(',');
-            var points = expected[5]
+            var hitObjectLine = expected[5];
+            var curveType = (CurveType)hitObjectLine[0];
+            var points = hitObjectLine
                 .Split('|')
                 .Skip(1)
                 .Distinct()
@@ -121,6 +123,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             Assert.AreEqual(int.Parse(expected[2]), actual.TimeInMs, "Expected to get the correct time");
             CollectionAssert.AreEqual(points, actual.SliderCoordinates, "Expected to get the correct time");
             Assert.AreEqual(double.Parse(expected[7]), actual.Length, "Expected to get the correct slider length");
+            Assert.AreEqual(curveType, actual.CurveType, "Expected to read the correct curve type");
         }
 
         [TestMethod]

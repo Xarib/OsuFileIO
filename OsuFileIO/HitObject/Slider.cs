@@ -12,13 +12,15 @@ namespace OsuFileIO.HitObject
         public int TimeInMs { get; set; }
         public double Length { get; set; }
         public List<Coordinates> SliderCoordinates { get; set; }
+        public CurveType CurveType { get; set; }
 
-        public Slider(Coordinates coordinates, int timeInMs, List<Coordinates> sliderCoordinates, double length)
+        public Slider(Coordinates coordinates, int timeInMs, List<Coordinates> sliderCoordinates, double length, CurveType curveType)
         {
             this.Coordinates = coordinates;
             this.TimeInMs = timeInMs;
             this.SliderCoordinates = sliderCoordinates;
             this.Length = length;
+            this.CurveType = curveType;
         }
 
         public bool Equals(Slider other)
@@ -36,14 +38,15 @@ namespace OsuFileIO.HitObject
                 this.Coordinates == other.Coordinates &&
                 this.TimeInMs == other.TimeInMs &&
                 this.Length == other.Length &&
-                this.SliderCoordinates.SequenceEqual(other.SliderCoordinates);
+                this.SliderCoordinates.SequenceEqual(other.SliderCoordinates) &&
+                this.CurveType == other.CurveType;
         }
 
         public override bool Equals(object obj)
             => Equals(obj as Slider);
 
         public override int GetHashCode()
-            => (this.Coordinates, this.TimeInMs).GetHashCode();
+            => (this.Coordinates, this.TimeInMs, this.SliderCoordinates, this.Length, this.CurveType).GetHashCode();
 
         public static bool operator ==(Slider lhs, Slider rhs)
         {
@@ -59,5 +62,13 @@ namespace OsuFileIO.HitObject
         }
 
         public static bool operator !=(Slider lhs, Slider rhs) => !(lhs == rhs);
+    }
+
+    public enum CurveType
+    {
+        Bézier = 'B',
+        CentripetalCatmullRom = 'C',
+        Linear = 'L',
+        PerfectCircle = 'P',
     }
 }

@@ -76,8 +76,8 @@ namespace OsuFileIO.Tests.OsuFileIO.HitObject
             Slider rhs = null;
             Assert.IsTrue(lhs == rhs, "Expected to be equal");
 
-            rhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4);
-            lhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4);
+            rhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier);
+            lhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier);
 
             Assert.IsTrue(lhs == rhs, "Expected to be equal");
         }
@@ -86,15 +86,15 @@ namespace OsuFileIO.Tests.OsuFileIO.HitObject
         public void NotEqual_UnequalSliders_ReturnsTrue()
         {
             Slider lhs = null;
-            Slider rhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4);
+            Slider rhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier);
             Assert.IsTrue(lhs != rhs, "Expected to be equal");
 
-            lhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4);
+            lhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier);
             rhs = null;
             Assert.IsTrue(lhs != rhs, "Expected to be equal");
 
-            lhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4);
-            rhs = new(new Coordinates(11, 22), 33, new List<Coordinates> { new Coordinates(11, 22), new Coordinates(33, 65) }, 4.6);
+
+            rhs = new(new Coordinates(11, 22), 33, new List<Coordinates> { new Coordinates(11, 22), new Coordinates(33, 65) }, 4.6, CurveType.Linear);
             Assert.IsTrue(lhs != rhs, "Expected to be equal");
         }
     }

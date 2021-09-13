@@ -120,6 +120,8 @@ namespace OsuFileIO.OsuFileReader
             Slider slider = null;
             int spanIndex = -1;
             var sliderPoints = new List<Coordinates>();
+            char curveType = '_';
+
             foreach (var span in rest.SplitLinesAt(','))
             {
                 spanIndex++;
@@ -130,7 +132,11 @@ namespace OsuFileIO.OsuFileReader
                         continue;
                     case 1:
                         var enumerator = span.ToString().SplitLinesAt('|');
+
+                        curveType = span[0];
+
                         enumerator.MoveNext();
+
                         foreach (var point in enumerator)
                         {
                             var x = this.ParseInt(point[0..point.IndexOf(':')]);
@@ -151,7 +157,7 @@ namespace OsuFileIO.OsuFileReader
                     case 2:
                         continue;
                     case 3:
-                        slider = new Slider(coordinates, ms, sliderPoints, double.Parse(span));
+                        slider = new Slider(coordinates, ms, sliderPoints, double.Parse(span), (CurveType)curveType);
                             break;
                     default:
                         break;
