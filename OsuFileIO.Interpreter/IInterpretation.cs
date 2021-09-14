@@ -16,8 +16,11 @@ namespace OsuFileIO.Interpreter
         public double BpmMin { get; set; }
         public double BpmMax { get; set; }
         public int DoubleCount { get; set; }
+        public int TrueDoubleCount { get; set; }
         public int TripletCount { get; set; }
+        public int TrueTripletCount { get; set; }
         public int QuadrupletCount { get; set; }
+        public int TrueQuadrupletCount { get; set; }
         public int BurstCount { get; set; }
         public int StreamCount { get; set; }
         public int LongStreamCount { get; set; }

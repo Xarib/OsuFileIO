@@ -17,6 +17,7 @@ namespace OsuFileIO.Interpreter
         private readonly IInterpretation result;
         private StdHitObjectReader reader;
 
+
         public OsuStdInterpreter(IInterpretation source)
         {
             this.result = source ?? new OsuStdInterpretation();
@@ -71,16 +72,22 @@ namespace OsuFileIO.Interpreter
             switch (this.reader.HitObjectType)
             {
                 case StdHitObjectType.Circle:
+
                     this.result.Length = TimeSpan.FromMilliseconds(this.reader.CurrentHitObject.TimeInMs);
+
                     break;
                 case StdHitObjectType.Slider:
+
                     var slider = this.reader.CurrentHitObject as Slider;
-                    double sliderTime = slider.Length / this.reader.SliderVelocity * this.reader.CurrentTimingPoint.BeatLength;
+                    double sliderTime = this.CalculateSliderEndTime(slider);
                     this.result.Length = TimeSpan.FromMilliseconds(sliderTime + slider.TimeInMs);
+
                     break;
                 case StdHitObjectType.Spinner:
+
                     var spinner = this.reader.CurrentHitObject as Spinner;
                     this.result.Length = TimeSpan.FromMilliseconds(spinner.EndTimeInMs);
+
                     break;
                 default:
                     throw new InvalidEnumArgumentException($"Unimplemented enum {this.reader.HitObjectType}");
@@ -108,6 +115,9 @@ namespace OsuFileIO.Interpreter
             }
         }
 
+        private double CalculateSliderEndTime(Slider slider)
+            => slider.Length / this.reader.SliderVelocity * this.reader.CurrentTimingPoint.BeatLength;
+
         private const double beatLength100Bpm = 60000 / 100 / 4; //100 Bmp
         private const double beatLength150Bpm = 60000 / 150 / 4; //150 Bmp
         private void InterpretCountValues()
@@ -118,7 +128,6 @@ namespace OsuFileIO.Interpreter
                 return;
 
             var timeBetweenHitObjects = this.reader.CurrentHitObject.TimeInMs - previousHitObject.TimeInMs;
-
 
             if (timeBetweenHitObjects < this.reader.TimeBetweenOneTwoJumps && timeBetweenHitObjects > this.reader.TimeBetweenOneTwoJumps)
             {
@@ -133,6 +142,7 @@ namespace OsuFileIO.Interpreter
             {
                 //If it ends it goes here
                 this.hitObjectCountDoubleToQuad = 1;
+                this.IsCircleOnly = true;
             }
 
             if (this.IsMappedLikeStream(timeBetweenHitObjects))
@@ -147,39 +157,69 @@ namespace OsuFileIO.Interpreter
         }
 
         private int hitObjectCountDoubleToQuad = 1;
+        private bool IsCircleOnly = true;
         private void InterpretDoubleToQuadCount()
         {
             this.hitObjectCountDoubleToQuad++;
 
             var nextHitObject = this.reader.GetHitObjectOrNull(offsetFromCurrent: 1);
 
+            if (this.reader.HitObjectType != StdHitObjectType.Circle)
+                this.IsCircleOnly = false;
+
             if (nextHitObject is not null && this.IsMappedLikeDoubleToQuad(nextHitObject.TimeInMs - this.reader.CurrentHitObject.TimeInMs))
                 return;
 
+            IHitObject hitObjectBefore;
             switch (this.hitObjectCountDoubleToQuad)
             {
                 case 1:
                     break;
                 case 2:
                     this.result.DoubleCount++;
+
+                    if (this.IsCircleOnly && !this.IsDirectlyAfterSlider(offsetBeggining: -1))
+                        this.result.TrueDoubleCount++;
+
                     break;
                 case 3:
                     this.result.TripletCount++;
+
+                    if (this.IsCircleOnly && !this.IsDirectlyAfterSlider(offsetBeggining: -2))
+                        this.result.TrueTripletCount++;
+
                     break;
                 case 4:
                     this.result.QuadrupletCount++;
+
+                    if (this.IsCircleOnly && !this.IsDirectlyAfterSlider(offsetBeggining: -3))
+                        this.result.TrueQuadrupletCount++;
+
                     break;
                 default:
-                    //TODO: Think of something with greater than 4 objects
+                    //TODO: Make use of this
                     break;
             }
+        }
+
+        private bool IsDirectlyAfterSlider(int offsetBeggining)
+        {
+            var hitObjectBefore = this.reader.GetHitObjectOrNull(offsetBeggining - 1);
+
+            if (hitObjectBefore is not Slider slider)
+                return false;
+
+            var startingHitObject = this.reader.GetHitObjectOrNull(offsetBeggining);
+
+            var timeDifference = this.CalculateSliderEndTime(slider) - startingHitObject.TimeInMs; //TODO: Use the correct timingpoint for slider and not the current one.
+
+            return timeDifference < this.reader.TimeBetweenStreamAlike * 1.1;
         }
 
         private bool IsMappedLikeDoubleToQuad(double timeBetweenHitObjects)
         {
             return timeBetweenHitObjects < this.reader.TimeBetweenStreamAlike * 1.1 && timeBetweenHitObjects <= beatLength100Bpm;
         }
-
 
         private int hitObjectCountStream = 1;
         private void InterpretStreamCount()
@@ -237,8 +277,11 @@ namespace OsuFileIO.Interpreter
             public double BpmMin { get; set; }
             public double BpmMax { get; set; }
             public int DoubleCount { get; set; }
+            public int TrueDoubleCount { get; set; }
             public int TripletCount { get; set; }
+            public int TrueTripletCount { get; set; }
             public int QuadrupletCount { get; set; }
+            public int TrueQuadrupletCount { get; set; }
             public int BurstCount { get; set; }
             public int StreamCount { get; set; }
             public int LongStreamCount { get; set; }

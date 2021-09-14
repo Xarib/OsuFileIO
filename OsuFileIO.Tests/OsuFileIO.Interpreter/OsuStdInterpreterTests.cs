@@ -378,6 +378,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Assert
             Assert.AreEqual(expectedCount, actual.DoubleCount, "Expected to count doubles correctly");
+            Assert.AreEqual(expectedCount, actual.TrueDoubleCount, "Expected to count true doubles correctly");
         }
 
         [TestMethod]
@@ -428,6 +429,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Assert
             Assert.AreEqual(expectedCount, actual.TripletCount, "Expected to count triplets correctly");
+            Assert.AreEqual(expectedCount, actual.TrueTripletCount, "Expected to count true triplets correctly");
         }
 
         [TestMethod]
@@ -478,6 +480,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Assert
             Assert.AreEqual(expectedCount, actual.QuadrupletCount, "Expected to count quadruplets correctly");
+            Assert.AreEqual(expectedCount, actual.TrueQuadrupletCount, "Expected to count true quadruplets correctly");
         }
 
         #endregion
@@ -795,8 +798,11 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public double BpmMin { get; set; }
             public double BpmMax { get; set; }
             public int DoubleCount { get; set; }
+            public int TrueDoubleCount { get; set; }
             public int TripletCount { get; set; }
+            public int TrueTripletCount { get; set; }
             public int QuadrupletCount { get; set; }
+            public int TrueQuadrupletCount { get; set; }
             public int BurstCount { get; set; }
             public int StreamCount { get; set; }
             public int LongStreamCount { get; set; }
