@@ -19,11 +19,14 @@ namespace OsuFileIO.Interpreter.HitObjectReader
         public TimingPoint CurrentTimingPoint { get => this.timingPoints[this.indexTimingPoint]; }
         public IHitObject CurrentHitObject { get => this.hitObjects[this.indexHitObject]; }
 
+        private List<(TimingPoint, IHitObject)> History { get; init; }
+
         public HitObjectReader(Difficulty difficulty, IList<TimingPoint> timingPoints, IList<IHitObject> hitObjects)
         {
             this.difficulty = difficulty ?? throw new ArgumentNullException(nameof(difficulty));
             this.timingPoints = timingPoints ?? throw new ArgumentNullException(nameof(timingPoints));
             this.hitObjects = hitObjects ?? throw new ArgumentNullException(nameof(hitObjects));
+            this.History = new List<(TimingPoint, IHitObject)>();
         }
 
         public abstract bool ReadNext();
@@ -48,6 +51,13 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             return this.hitObjects[indexAfterOffset];
         }
 
+        public (TimingPoint, IHitObject) GetHistoryEntry(int offsetFromCurrent)
+        {
+            var index = this.History.Count - offsetFromCurrent - 1;
+
+            return this.History[index];
+        }
+
         protected void SetMostCurrentTimingPoint()
         {
             var hasChanged = false;
@@ -63,5 +73,8 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             if (hasChanged)
                 this.indexTimingPoint--;
         }
+
+        protected void AddCurrentToHistory()
+            => this.History.Add((this.CurrentTimingPoint, this.CurrentHitObject));
     }
 }

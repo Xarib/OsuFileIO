@@ -16,6 +16,8 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
             this.SetMostCurrentTimingPoint();
 
+            this.AddCurrentToHistory();
+
             this.SetSliderVelocity();
 
             this.SetTimeBetweens();
@@ -43,6 +45,8 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             this.SetHitObjectType();
 
             this.SetMostCurrentTimingPoint();
+
+            this.AddCurrentToHistory();
 
             this.SetSliderVelocity();
 

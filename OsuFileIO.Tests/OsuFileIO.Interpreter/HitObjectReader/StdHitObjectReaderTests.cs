@@ -65,9 +65,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
         }
 
         [TestMethod]
-        //[DataRow(1, "1266,279.06976744186,4,1,9,90,1,0", 100d * 1d)]
-        //[DataRow(1.6, "1266,279.06976744186,4,1,9,90,1,0", 100d * 1.6d)]
-        //[DataRow(0.7, "34125,-100,4,1,0,87,0,0", 100d * 0.7d * 1d)]
+        [DataRow(1, "1266,279.06976744186,4,1,9,90,1,0", 100d * 1d)]
+        [DataRow(1.6, "1266,279.06976744186,4,1,9,90,1,0", 100d * 1.6d)]
+        [DataRow(0.7, "34125,-100,4,1,0,87,0,0", 100d * 0.7d * 1d)]
         [DataRow(0.7, "40472,-83.3333333333333,4,1,0,100,0,0", 100d * 0.7d * 1.2d)]
         public void ReadNext_SliderMultiplierNotNull_ReturnsSliderVelocity(double sliderMultiplier, string timingPoint, double expected)
         {
@@ -195,6 +195,56 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             //Assert
             Assert.AreEqual(timeOneTwos, reader.TimeBetweenOneTwoJumps, "Expected to calculate time between 1-2 jumps");
             Assert.AreEqual(timeStreams, reader.TimeBetweenStreamAlike, "Expected to calculate time between stream objects");
+        }
+
+        [TestMethod]
+        [DataRow(5)]
+        [DataRow(1)]
+        public void ReadNext_HitObjects_LogsHistory(int count)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine("0,279.06976744186,4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            for (int i = 0; i < count; i++)
+            {
+                writer.WriteLine($"255,184,{i},69,4,3:1:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+
+            var file = fileReader.ReadFile();
+
+            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
+
+            //Act
+            while (reader.ReadNext()) { }
+
+            //Assert
+            var actualHistory = new List<IHitObject>();
+
+            for (int i = 0; i < count; i++)
+            {
+                actualHistory.Add(reader.GetHistoryEntry(i).Item2);
+            }
+
+            actualHistory = actualHistory
+                .OrderBy(item => item.TimeInMs)
+                .ToList();
+
+            CollectionAssert.AreEqual(actualHistory, file.HitObjects, "Expected to be the same and log history correctly");
         }
     }
 }
