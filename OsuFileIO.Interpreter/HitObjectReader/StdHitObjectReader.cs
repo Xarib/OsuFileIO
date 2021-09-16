@@ -12,6 +12,22 @@ namespace OsuFileIO.Interpreter.HitObjectReader
     {
         public StdHitObjectReader(Difficulty difficulty, IList<TimingPoint> timingPoints, IList<IHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
         {
+            if (difficulty is null)
+                throw new ArgumentNullException(nameof(difficulty));
+
+            if (timingPoints is null)
+                throw new ArgumentNullException(nameof(timingPoints));
+
+            if (hitObjects is null)
+                throw new ArgumentNullException(nameof(hitObjects));
+
+            if (timingPoints.Count == 0)
+                throw new ArgumentException("Map has to have timingPoints");
+
+            if (hitObjects.Count == 0)
+                throw new ArgumentException("Map has to have hit objects");
+
+
             this.SetHitObjectType();
 
             this.SetMostCurrentTimingPoint();
@@ -61,7 +77,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
             if (this.CurrentTimingPoint is InheritedPoint inheritedPoint)
             {
-                this.SliderVelocity = this.SliderVelocity * inheritedPoint.VelocityMultiplier;
+                this.SliderVelocity *= inheritedPoint.VelocityMultiplier;
             }
         }
 
@@ -70,7 +86,8 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             if (this.CurrentHitObject is Circle)
             {
                 this.HitObjectType = StdHitObjectType.Circle;
-            } else if (this.CurrentHitObject is Slider)
+            }
+            else if (this.CurrentHitObject is Slider)
             {
                 this.HitObjectType = StdHitObjectType.Slider;
             }

@@ -16,7 +16,6 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
     {
         private const string fileLocation = "TestFiles/";
         private const string tutorialFile = "new beginnings.osu";
-        private const string shortStd = "stdShort.osu";
 
         #region slider length
         [TestMethod]
@@ -382,6 +381,44 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         }
 
         [TestMethod]
+        [DataRow("163,150,22258,6,0,L|236:149,1,63.7500002235173", 1)]
+        [DataRow("163,150,22258,2,0,L|253:150,1,85.0000002980232", 0)]
+        [DataRow("163,150,22258,6,0,L|275:152,1,106.250000372529", 0)]
+        public void Interpret_VariousSliderLengths_ReturnsTrueDoubleCount(string slider, int expectedCount)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"550,301.507537688442,4,2,1,60,1,0");
+            writer.WriteLine($"21052,-200,4,2,1,60,0,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine(slider);
+            writer.WriteLine("290,152,22635,1,0,0:0:0:0:");
+            writer.WriteLine("313,154,22710,1,0,0:0:0:0:");
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedCount, actual.TrueDoubleCount, "Expected to count true doubles correctly");
+        }
+
+        [TestMethod]
         [DataRow(new int[] { 3 }, 1)]
         [DataRow(new int[] { 3, 3 }, 2)]
         [DataRow(new int[] { 3, 4 }, 1)]
@@ -433,6 +470,45 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         }
 
         [TestMethod]
+        [DataRow("163,150,22258,6,0,L|236:149,1,63.7500002235173", 1)]
+        [DataRow("163,150,22258,2,0,L|253:150,1,85.0000002980232", 0)]
+        [DataRow("163,150,22258,6,0,L|275:152,1,106.250000372529", 0)]
+        public void Interpret_VariousSliderLengths_ReturnsTrueTripletCount(string slider, int expectedCount)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"550,301.507537688442,4,2,1,60,1,0");
+            writer.WriteLine($"21052,-200,4,2,1,60,0,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine(slider);
+            writer.WriteLine("290,152,22635,1,0,0:0:0:0:");
+            writer.WriteLine("313,154,22710,1,0,0:0:0:0:");
+            writer.WriteLine("333,155,22786,1,0,0:0:0:0:");
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedCount, actual.TrueTripletCount, "Expected to count true doubles correctly");
+        }
+
+        [TestMethod]
         [DataRow(new int[] { 4 }, 1)]
         [DataRow(new int[] { 4, 4 }, 2)]
         [DataRow(new int[] { 3, 4 }, 1)]
@@ -481,6 +557,46 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             //Assert
             Assert.AreEqual(expectedCount, actual.QuadrupletCount, "Expected to count quadruplets correctly");
             Assert.AreEqual(expectedCount, actual.TrueQuadrupletCount, "Expected to count true quadruplets correctly");
+        }
+
+        [TestMethod]
+        [DataRow("163,150,22258,6,0,L|236:149,1,63.7500002235173", 1)]
+        [DataRow("163,150,22258,2,0,L|253:150,1,85.0000002980232", 0)]
+        [DataRow("163,150,22258,6,0,L|275:152,1,106.250000372529", 0)]
+        public void Interpret_VariousSliderLengths_ReturnsTrueQuadrupletCount(string slider, int expectedCount)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"550,301.507537688442,4,2,1,60,1,0");
+            writer.WriteLine($"21052,-200,4,2,1,60,0,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine(slider);
+            writer.WriteLine("290,152,22635,1,0,0:0:0:0:");
+            writer.WriteLine("313,154,22710,1,0,0:0:0:0:");
+            writer.WriteLine("333,155,22786,1,0,0:0:0:0:");
+            writer.WriteLine("349,155,22861,1,0,0:0:0:0:");
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedCount, actual.TrueQuadrupletCount, "Expected to count true doubles correctly");
         }
 
         #endregion
@@ -784,6 +900,40 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Assert
             Assert.AreEqual(expectedLength, actual.LongestStream, "Expected to find the longest stream");
+        }
+
+        #endregion
+
+        #region Miscellaneous
+
+        [TestMethod]
+        public void Interpret_TimingPointAndInheritedPointBeforeHitObject_ShouldNotThrowError()
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"550,301.507537688442,4,2,1,60,1,0");
+            writer.WriteLine($"21052,-200,4,2,1,60,0,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine("290,152,22635,1,0,0:0:0:0:");
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
         }
 
         #endregion

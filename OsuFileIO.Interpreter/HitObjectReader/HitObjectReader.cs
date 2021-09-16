@@ -51,9 +51,12 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             return this.hitObjects[indexAfterOffset];
         }
 
-        public (TimingPoint, IHitObject) GetHistoryEntry(int offsetFromCurrent)
+        public (TimingPoint, IHitObject)? GetHistoryEntryOrNull(int offsetFromCurrent)
         {
-            var index = this.History.Count - offsetFromCurrent - 1;
+            var index = this.History.Count + offsetFromCurrent - 1;
+
+            if (index < 0 || index == this.History.Count)
+                return null;
 
             return this.History[index];
         }

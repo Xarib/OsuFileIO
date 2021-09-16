@@ -46,23 +46,25 @@ namespace OsuFileIO.Interpreter
                         throw new InvalidEnumArgumentException($"Unimplemented enum {this.reader.HitObjectType}");
                 }
 
-                if (this.reader.CurrentTimingPoint is not InheritedPoint)
+                if (lastRedTimingPoint is null && this.reader.CurrentTimingPoint is InheritedPoint)
                 {
-                    if (lastRedTimingPoint is null)
-                    {
+                    lastRedTimingPoint = beatmap.TimingPoints[0];
+                    totalTimeByBpm.Add(lastRedTimingPoint.BeatLength, 0);
+                }
+                else if (lastRedTimingPoint is null && this.reader.CurrentTimingPoint is not InheritedPoint)
+                {
+                    totalTimeByBpm.Add(this.reader.CurrentTimingPoint.BeatLength, 0);
+                    lastRedTimingPoint = this.reader.CurrentTimingPoint;
+                }
+                else
+                {
+                    var timeDurationLastPoint = this.reader.CurrentTimingPoint.TimeInMs - lastRedTimingPoint.TimeInMs;
+                    totalTimeByBpm[lastRedTimingPoint.BeatLength] += timeDurationLastPoint;
+
+                    if (!totalTimeByBpm.ContainsKey(this.reader.CurrentTimingPoint.BeatLength))
                         totalTimeByBpm.Add(this.reader.CurrentTimingPoint.BeatLength, 0);
-                        lastRedTimingPoint = this.reader.CurrentTimingPoint;
-                    }
-                    else
-                    {
-                        var timeDurationLastPoint = this.reader.CurrentTimingPoint.TimeInMs - lastRedTimingPoint.TimeInMs;
-                        totalTimeByBpm[lastRedTimingPoint.BeatLength] += timeDurationLastPoint;
 
-                        if (!totalTimeByBpm.ContainsKey(this.reader.CurrentTimingPoint.BeatLength))
-                            totalTimeByBpm.Add(this.reader.CurrentTimingPoint.BeatLength, 0);
-
-                        lastRedTimingPoint = this.reader.CurrentTimingPoint;
-                    }
+                    lastRedTimingPoint = this.reader.CurrentTimingPoint;
                 }
 
                 this.InterpretCountValues();
@@ -79,8 +81,7 @@ namespace OsuFileIO.Interpreter
                 case StdHitObjectType.Slider:
 
                     var slider = this.reader.CurrentHitObject as Slider;
-                    double sliderTime = this.CalculateSliderEndTime(slider);
-                    this.result.Length = TimeSpan.FromMilliseconds(sliderTime + slider.TimeInMs);
+                    this.result.Length = TimeSpan.FromMilliseconds(this.CalculateSliderEndTime(slider, this.reader.CurrentTimingPoint));
 
                     break;
                 case StdHitObjectType.Spinner:
@@ -115,8 +116,8 @@ namespace OsuFileIO.Interpreter
             }
         }
 
-        private double CalculateSliderEndTime(Slider slider)
-            => slider.Length / this.reader.SliderVelocity * this.reader.CurrentTimingPoint.BeatLength;
+        private double CalculateSliderEndTime(Slider slider, TimingPoint timingPoint)
+            => slider.Length / this.reader.SliderVelocity * timingPoint.BeatLength + slider.TimeInMs;
 
         private const double beatLength100Bpm = 60000 / 100 / 4; //100 Bmp
         private const double beatLength150Bpm = 60000 / 150 / 4; //150 Bmp
@@ -170,7 +171,6 @@ namespace OsuFileIO.Interpreter
             if (nextHitObject is not null && this.IsMappedLikeDoubleToQuad(nextHitObject.TimeInMs - this.reader.CurrentHitObject.TimeInMs))
                 return;
 
-            IHitObject hitObjectBefore;
             switch (this.hitObjectCountDoubleToQuad)
             {
                 case 1:
@@ -204,14 +204,13 @@ namespace OsuFileIO.Interpreter
 
         private bool IsDirectlyAfterSlider(int offsetBeggining)
         {
-            var hitObjectBefore = this.reader.GetHitObjectOrNull(offsetBeggining - 1);
+            var history = this.reader.GetHistoryEntryOrNull(offsetBeggining - 1);
 
-            if (hitObjectBefore is not Slider slider)
+            if (history?.Item2 is not Slider slider)
                 return false;
 
             var startingHitObject = this.reader.GetHitObjectOrNull(offsetBeggining);
-
-            var timeDifference = this.CalculateSliderEndTime(slider) - startingHitObject.TimeInMs; //TODO: Use the correct timingpoint for slider and not the current one.
+            var timeDifference = startingHitObject.TimeInMs - this.CalculateSliderEndTime(slider, history?.Item1);
 
             return timeDifference < this.reader.TimeBetweenStreamAlike * 1.1;
         }

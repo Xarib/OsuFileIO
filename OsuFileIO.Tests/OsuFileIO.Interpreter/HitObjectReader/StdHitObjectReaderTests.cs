@@ -101,37 +101,6 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
         }
 
         [TestMethod]
-        [DataRow("1266,279.06976744186,4,1,9,90,1,0", 100d * 1d)]
-        [DataRow("34125,-100,4,1,0,87,0,0", 100d * 1d * 1d)]
-        [DataRow("40472,-83.3333333333333,4,1,0,100,0,0", 100d * 1d * 1.2d)]
-        public void ReadNext_SliderMultiplierNull_ReturnsSliderVelocity(string timingPoint, double expected)
-        {
-            //Arrange
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.WriteLine("osu file format v14");
-            writer.WriteLine("[General]");
-            writer.WriteLine("StackLeniency: 0.7");
-            writer.WriteLine("Mode: 0");
-            writer.WriteLine("[Metadata]");
-            writer.WriteLine("[Difficulty]");
-            writer.WriteLine("[TimingPoints]");
-            writer.WriteLine("1266,10,4,1,9,90,1,0");
-            writer.WriteLine(timingPoint);
-            writer.WriteLine("[HitObjects]");
-            writer.WriteLine("328,80,999999999,2,0,P|412:101|464:168,1,167.999994873047,4|4,0:0|0:0,0:0:0:0:");
-            writer.Flush();
-            stream.Position = 0;
-
-            var fileReader = new OsuFileReaderFactory(stream).Build();
-
-            var file = fileReader.ReadFile();
-
-            //Act
-            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
-        }
-
-        [TestMethod]
         [DataRow("255,184,3664,69,4,3:1:0:0:", StdHitObjectType.Circle)]
         [DataRow("328,80,999999999,2,0,P|412:101|464:168,1,167.999994873047,4|4,0:0|0:0,0:0:0:0:", StdHitObjectType.Slider)]
         [DataRow("256,192,126433,12,4,129202,3:2:0:0:", StdHitObjectType.Spinner)]
@@ -198,9 +167,52 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
         }
 
         [TestMethod]
+        [DataRow(0)]
+        [DataRow(-1)]
+        [DataRow(-8)]
+        public void GetHistoryEntry_HitObjects_OffsetFromGetHitObjectAndGetHistoryShouldMatch(int offset)
+        {
+            if (offset > 0)
+                throw new ArgumentException("Offset cannot be bigger than 0");
+
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine("0,279.06976744186,4,1,9,90,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            for (int i = 0; i < 10; i++)
+            {
+                writer.WriteLine($"255,184,{i},69,4,3:1:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+
+            var file = fileReader.ReadFile();
+
+            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
+
+            //Act
+            while (reader.ReadNext()) { }
+
+            //Assert
+            Assert.AreEqual(reader.GetHitObjectOrNull(offset), reader.GetHistoryEntryOrNull(offset)?.Item2, "Expected to get the same HitObject");
+        }
+
+        [TestMethod]
         [DataRow(5)]
         [DataRow(1)]
-        public void ReadNext_HitObjects_LogsHistory(int count)
+        public void GetHistoryEntry_HitObjects_LogsHistory(int count)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -237,7 +249,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
 
             for (int i = 0; i < count; i++)
             {
-                actualHistory.Add(reader.GetHistoryEntry(i).Item2);
+                actualHistory.Add(reader.GetHistoryEntryOrNull(i * - 1)?.Item2);
             }
 
             actualHistory = actualHistory
