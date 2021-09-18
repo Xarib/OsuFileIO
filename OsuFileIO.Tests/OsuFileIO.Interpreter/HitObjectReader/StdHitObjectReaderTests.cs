@@ -206,7 +206,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             while (reader.ReadNext()) { }
 
             //Assert
-            Assert.AreEqual(reader.GetHitObjectOrNull(offset), reader.GetHistoryEntryOrNull(offset)?.Item2, "Expected to get the same HitObject");
+            Assert.AreEqual(reader.GetHitObjectFromOffsetOrNull(offset), reader.GetHistoryEntryOrNull(offset)?.Item2, "Expected to get the same HitObject");
         }
 
         [TestMethod]

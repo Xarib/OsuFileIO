@@ -26,5 +26,8 @@ namespace OsuFileIO.Interpreter
         public int LongStreamCount { get; set; }
         public int DeathStreamCount { get; set; }
         public int LongestStream { get; set; }
+        public double TotalStreamAlikePixels { get; set; }
+        public double TotalSpacedStreamAlikePixels { get; set; }
+        public int JumpStreamCount { get; set; }
     }
 }

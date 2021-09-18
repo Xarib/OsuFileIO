@@ -123,7 +123,7 @@ namespace OsuFileIO.Interpreter
         private const double beatLength150Bpm = 60000 / 150 / 4; //150 Bmp
         private void InterpretCountValues()
         {
-            var previousHitObject = this.reader.GetHitObjectOrNull(offsetFromCurrent: -1);
+            var previousHitObject = this.reader.GetHitObjectFromOffsetOrNull(-1);
 
             if (previousHitObject is null)
                 return;
@@ -150,11 +150,6 @@ namespace OsuFileIO.Interpreter
             {
                 this.InterpretStreamCount();
             }
-            else
-            {
-                //If stream ends it goes here
-                this.hitObjectCountStream = 1;
-            }
         }
 
         private int hitObjectCountDoubleToQuad = 1;
@@ -163,7 +158,7 @@ namespace OsuFileIO.Interpreter
         {
             this.hitObjectCountDoubleToQuad++;
 
-            var nextHitObject = this.reader.GetHitObjectOrNull(offsetFromCurrent: 1);
+            var nextHitObject = this.reader.GetHitObjectFromOffsetOrNull(1);
 
             if (this.reader.HitObjectType != StdHitObjectType.Circle)
                 this.IsCircleOnly = false;
@@ -209,7 +204,7 @@ namespace OsuFileIO.Interpreter
             if (history?.Item2 is not Slider slider)
                 return false;
 
-            var startingHitObject = this.reader.GetHitObjectOrNull(offsetBeggining);
+            var startingHitObject = this.reader.GetHitObjectFromOffsetOrNull(offsetBeggining);
             var timeDifference = startingHitObject.TimeInMs - this.CalculateSliderEndTime(slider, history?.Item1);
 
             return timeDifference < this.reader.TimeBetweenStreamAlike * 1.1;
@@ -221,16 +216,19 @@ namespace OsuFileIO.Interpreter
         }
 
         private int hitObjectCountStream = 1;
+        private double streamPixels;
         private void InterpretStreamCount()
         {
             if (this.hitObjectCountStream > 1)
             {
                 //TODO fancy angle calculations
+                var distanceBetweenCuttentAndLastObject = GetDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, this.reader.GetHitObjectFromOffsetOrNull(-1));
+                this.streamPixels += distanceBetweenCuttentAndLastObject;
             }
 
             this.hitObjectCountStream++;
 
-            var nextHitObject = this.reader.GetHitObjectOrNull(offsetFromCurrent: 1);
+            var nextHitObject = this.reader.GetHitObjectFromOffsetOrNull(1);
 
             if (nextHitObject is not null && this.IsMappedLikeStream(nextHitObject.TimeInMs - this.reader.CurrentHitObject.TimeInMs))
                 return;
@@ -255,15 +253,28 @@ namespace OsuFileIO.Interpreter
             else if (this.hitObjectCountStream > 4 && this.hitObjectCountStream < 9)
             {
                 this.result.BurstCount++;
-                return;
             }
 
-            if (this.hitObjectCountStream > this.result.LongestStream)
+            if (this.hitObjectCountStream > 4)
+            {
+                this.result.TotalStreamAlikePixels += this.streamPixels;
+            }
+
+            if (this.hitObjectCountStream > 8 && this.hitObjectCountStream > this.result.LongestStream)
                 this.result.LongestStream = this.hitObjectCountStream;
+
+            //Reset
+            this.hitObjectCountStream = 1;
+            this.streamPixels = 0;
         }
         private bool IsMappedLikeStream(double timeDifference)
         {
             return timeDifference < this.reader.TimeBetweenStreamAlike * 1.1 && timeDifference <= beatLength150Bpm;
+        }
+
+        private static double GetDistanceBetweenTwoHitObjects(IHitObject hitObject1, IHitObject hitObject2)
+        {
+            return Math.Sqrt((hitObject1.Coordinates.X - hitObject2.Coordinates.X) * (hitObject1.Coordinates.X - hitObject2.Coordinates.X) + (hitObject1.Coordinates.Y - hitObject2.Coordinates.Y) * (hitObject1.Coordinates.Y - hitObject2.Coordinates.Y));
         }
 
         private class OsuStdInterpretation : IInterpretation
@@ -286,6 +297,9 @@ namespace OsuFileIO.Interpreter
             public int LongStreamCount { get; set; }
             public int DeathStreamCount { get; set; }
             public int LongestStream { get; set; }
+            public double TotalStreamAlikePixels { get; set; }
+            public double TotalSpacedStreamAlikePixels { get; set; }
+            public int JumpStreamCount { get; set; }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OsuFileIO.HitObject;
 using OsuFileIO.Interpreter;
 using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader;
@@ -938,6 +939,100 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
         #endregion
 
+        #region StreamAlikePixels
+
+        [TestMethod]
+        [DataRow(3, 4, 4, 0)]
+        [DataRow(3, 4, 5, 5)]
+        [DataRow(-3, 4, 5, 5)]
+        [DataRow(3, -4, 5, 5)]
+        [DataRow(-3, -4, 5, 5)]
+        public void Interpret_StreamWithSpacing_ReturnsStreamPixels(int x, int y, int hitObjectCount, double expectedPixels)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            hitObjectCount--;
+            for (int i = 0; i < hitObjectCount; i++)
+            {
+                writer.WriteLine("0,0,0,1,0,0:0:0:0:");
+            }
+
+            writer.WriteLine($"{x},{y},0,1,0,0:0:0:0:");
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedPixels, actual.TotalStreamAlikePixels, $"Expected to calculate {actual.TotalStreamAlikePixels}");
+        }
+
+        [TestMethod]
+        public void Interpret_MultipleStreamWithSpacing_ReturnsStreamPixels()
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            var passedTime = 0;
+            var count = 2;
+            for (int i = 0; i < count; i++)
+            {
+                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
+                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
+                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
+                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
+
+                writer.WriteLine($"{3},{4},{passedTime},1,0,0:0:0:0:");
+
+                passedTime += 10000;
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(5 * count, actual.TotalStreamAlikePixels, $"Expected to calculate {actual.TotalStreamAlikePixels}");
+        }
+
+        #endregion
+
         private class ActualInterpretation : IInterpretation
         {
             public TimeSpan Length { get; set; }
@@ -958,6 +1053,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public int LongStreamCount { get; set; }
             public int DeathStreamCount { get; set; }
             public int LongestStream { get; set; }
+            public double TotalStreamAlikePixels { get; set; }
+            public double TotalSpacedStreamAlikePixels { get; set; }
+            public int JumpStreamCount { get; set; }
         }
     }
 }
