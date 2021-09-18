@@ -27,6 +27,9 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             if (hitObjects.Count == 0)
                 throw new ArgumentException("Map has to have hit objects");
 
+            if (difficulty.CircleSize is null)
+                throw new ArgumentNullException("Difficulty cannot be null");
+
 
             this.SetHitObjectType();
 
@@ -37,6 +40,8 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             this.SetSliderVelocity();
 
             this.SetTimeBetweens();
+
+            this.CircleSize = difficulty.CircleSize.Value;
         }
 
         public double TimeBetweenStreamAlike { get; private set; }
@@ -46,6 +51,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
         /// </summary>
         public double SliderVelocity { get; private set; }
         public StdHitObjectType HitObjectType { get; private set; }
+        public double CircleSize { get; init; }
 
         /// <summary>
         /// Reads the next <see cref="IHitObject"/> and set the most current <see cref="TimingPoint"/>

@@ -217,14 +217,17 @@ namespace OsuFileIO.Interpreter
 
         private int hitObjectCountStream = 1;
         private double streamPixels;
+        private double spacedStreamPixels;
         private void InterpretStreamCount()
         {
-            if (this.hitObjectCountStream > 1)
-            {
-                //TODO fancy angle calculations
-                var distanceBetweenCuttentAndLastObject = GetDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, this.reader.GetHitObjectFromOffsetOrNull(-1));
-                this.streamPixels += distanceBetweenCuttentAndLastObject;
-            }
+            var distanceBetweenCuttentAndLastObject = GetDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, this.reader.GetHitObjectFromOffsetOrNull(-1));
+            this.streamPixels += distanceBetweenCuttentAndLastObject;
+
+            var circleDiameter = 2 * (54.4 - 4.48 * this.reader.CircleSize); //Formula => https://osu.ppy.sh/wiki/en/Beatmapping/Circle_size
+            var spacePixels = distanceBetweenCuttentAndLastObject - circleDiameter;
+
+            if (spacePixels > 0)
+                this.spacedStreamPixels += spacePixels;
 
             this.hitObjectCountStream++;
 
@@ -258,6 +261,8 @@ namespace OsuFileIO.Interpreter
             if (this.hitObjectCountStream > 4)
             {
                 this.result.TotalStreamAlikePixels += this.streamPixels;
+
+                this.result.TotalSpacedStreamAlikePixels += this.spacedStreamPixels;
             }
 
             if (this.hitObjectCountStream > 8 && this.hitObjectCountStream > this.result.LongestStream)
@@ -266,6 +271,7 @@ namespace OsuFileIO.Interpreter
             //Reset
             this.hitObjectCountStream = 1;
             this.streamPixels = 0;
+            this.spacedStreamPixels = 0;
         }
         private bool IsMappedLikeStream(double timeDifference)
         {

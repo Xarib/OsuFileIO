@@ -33,6 +33,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
@@ -68,6 +69,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier:1.2");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine(timingPoint);
@@ -129,6 +131,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
@@ -168,6 +171,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
@@ -207,6 +211,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
@@ -348,6 +353,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
@@ -396,6 +402,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 1.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"550,301.507537688442,4,2,1,60,1,0");
@@ -437,6 +444,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
@@ -485,6 +493,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 1.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"550,301.507537688442,4,2,1,60,1,0");
@@ -527,6 +536,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
@@ -575,6 +585,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 1.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"550,301.507537688442,4,2,1,60,1,0");
@@ -625,6 +636,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
@@ -678,6 +690,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
@@ -730,6 +743,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
@@ -780,6 +794,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
@@ -829,6 +844,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
@@ -875,6 +891,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 0.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"-28,{beatLength},4,1,9,90,1,0");
@@ -905,40 +922,6 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
         #endregion
 
-        #region Miscellaneous
-
-        [TestMethod]
-        public void Interpret_TimingPointAndInheritedPointBeforeHitObject_ShouldNotThrowError()
-        {
-            //Arrange
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.WriteLine("osu file format v14");
-            writer.WriteLine("[General]");
-            writer.WriteLine("StackLeniency: 0.7");
-            writer.WriteLine("Mode: 0");
-            writer.WriteLine("[Metadata]");
-            writer.WriteLine("[Difficulty]");
-            writer.WriteLine("SliderMultiplier: 1.7");
-            writer.WriteLine("[TimingPoints]");
-            writer.WriteLine($"550,301.507537688442,4,2,1,60,1,0");
-            writer.WriteLine($"21052,-200,4,2,1,60,0,0");
-            writer.WriteLine("[HitObjects]");
-            writer.WriteLine("290,152,22635,1,0,0:0:0:0:");
-            writer.Flush();
-            stream.Position = 0;
-
-            var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
-
-            //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
-            interpreter.Interpret(file);
-        }
-
-        #endregion
-
         #region StreamAlikePixels
 
         [TestMethod]
@@ -947,6 +930,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(-3, 4, 5, 5)]
         [DataRow(3, -4, 5, 5)]
         [DataRow(-3, -4, 5, 5)]
+        [DataRow(0, 5, 5, 5)]
+        [DataRow(5, 0, 5, 5)]
         public void Interpret_StreamWithSpacing_ReturnsStreamPixels(int x, int y, int hitObjectCount, double expectedPixels)
         {
             //Arrange
@@ -958,6 +943,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 1.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"0,300,4,2,1,60,1,0");
@@ -997,6 +983,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier: 1.7");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"0,300,4,2,1,60,1,0");
@@ -1006,12 +993,12 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var count = 2;
             for (int i = 0; i < count; i++)
             {
-                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
-                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
-                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
-                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
-
                 writer.WriteLine($"{3},{4},{passedTime},1,0,0:0:0:0:");
+
+                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
+                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
+                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
+                writer.WriteLine($"0,0,{passedTime},1,0,0:0:0:0:");
 
                 passedTime += 10000;
             }
@@ -1028,7 +1015,90 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             interpreter.Interpret(file);
 
             //Assert
-            Assert.AreEqual(5 * count, actual.TotalStreamAlikePixels, $"Expected to calculate {actual.TotalStreamAlikePixels}");
+            Assert.AreEqual(5 * count, actual.TotalStreamAlikePixels, $"Expected to calculate {nameof(actual.TotalStreamAlikePixels)} correctly");
+        }
+
+        #endregion
+
+        #region SpacedStreamPixels
+
+        [TestMethod]
+        [DataRow(-1, 5, 0)]
+        [DataRow(1, 5, 4)]
+        [DataRow(3, 5, 12)]
+        public void Interpret_SpacedStream_ReturnsSpacedStreamPixels(int spacePixels, int hitObjectCount, double expectedSpacePixels)
+        {
+            //Arrange
+            var cs10pxRadius = 555d / 56d;
+
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:" + cs10pxRadius);
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            var x = 0;
+            for (int i = 0; i < hitObjectCount; i++)
+            {
+                writer.WriteLine($"{x},0,0,1,0,0:0:0:0:");
+                x += 10 * 2 + spacePixels;
+            }
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedSpacePixels, Convert.ToInt32(actual.TotalSpacedStreamAlikePixels), $"Expected to calculate {nameof(actual.TotalSpacedStreamAlikePixels)} correctly");
+        }
+
+        #endregion
+
+        #region Miscellaneous
+
+        [TestMethod]
+        public void Interpret_TimingPointAndInheritedPointBeforeHitObject_ShouldNotThrowError()
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"550,301.507537688442,4,2,1,60,1,0");
+            writer.WriteLine($"21052,-200,4,2,1,60,0,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine("290,152,22635,1,0,0:0:0:0:");
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
         }
 
         #endregion

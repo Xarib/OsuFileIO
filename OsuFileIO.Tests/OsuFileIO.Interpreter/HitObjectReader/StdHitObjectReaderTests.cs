@@ -33,6 +33,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
         {
             //Arrange
             var difficulty = new Difficulty();
+            difficulty.CircleSize = 4;
 
             var timingPoints = new List<TimingPoint>();
             for (int i = 0; i < timingPointTimes.Length; i++)
@@ -80,6 +81,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("SliderMultiplier:" + sliderMultiplier.ToString());
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine("1266,10,4,1,9,90,1,0");
@@ -115,6 +117,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
             writer.WriteLine("[HitObjects]");
@@ -147,6 +150,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine($"1266,{bmp},4,1,9,90,1,0");
             writer.WriteLine("[HitObjects]");
@@ -184,6 +188,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine("0,279.06976744186,4,1,9,90,1,0");
             writer.WriteLine("[HitObjects]");
@@ -223,6 +228,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.WriteLine("Mode: 0");
             writer.WriteLine("[Metadata]");
             writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
             writer.WriteLine("[TimingPoints]");
             writer.WriteLine("0,279.06976744186,4,1,9,90,1,0");
             writer.WriteLine("[HitObjects]");
