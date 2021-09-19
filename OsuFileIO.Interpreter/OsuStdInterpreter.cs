@@ -220,21 +220,48 @@ namespace OsuFileIO.Interpreter
         private double spacedStreamPixels;
         private void InterpretStreamCount()
         {
-            var distanceBetweenCuttentAndLastObject = GetDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, this.reader.GetHitObjectFromOffsetOrNull(-1));
-            this.streamPixels += distanceBetweenCuttentAndLastObject;
+            var distanceBetweenCurrentAndLastObject = GetDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, this.reader.GetHitObjectFromOffsetOrNull(-1));
+            this.streamPixels += distanceBetweenCurrentAndLastObject;
 
             var circleDiameter = 2 * (54.4 - 4.48 * this.reader.CircleSize); //Formula => https://osu.ppy.sh/wiki/en/Beatmapping/Circle_size
-            var spacePixels = distanceBetweenCuttentAndLastObject - circleDiameter;
+            var spacePixels = distanceBetweenCurrentAndLastObject - circleDiameter;
 
             if (spacePixels > 0)
                 this.spacedStreamPixels += spacePixels;
 
             this.hitObjectCountStream++;
 
-            var nextHitObject = this.reader.GetHitObjectFromOffsetOrNull(1);
+            var hitObjectNext1 = this.reader.GetHitObjectFromOffsetOrNull(1);
 
-            if (nextHitObject is not null && this.IsMappedLikeStream(nextHitObject.TimeInMs - this.reader.CurrentHitObject.TimeInMs))
+            if (hitObjectNext1 is not null && this.IsMappedLikeStream(hitObjectNext1.TimeInMs - this.reader.CurrentHitObject.TimeInMs))
+            {
+                #region StreamJumps
+
+                var hitObjectNext2 = this.reader.GetHitObjectFromOffsetOrNull(2);//TODO better name
+
+                if (hitObjectNext2 is not null && this.IsMappedLikeStream(hitObjectNext2.TimeInMs - hitObjectNext1.TimeInMs))
+                {
+                    var distanceBetweenCurrentAndNext1 = GetDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, hitObjectNext1);
+                    var distanceBetweenNext1AndNext2 = GetDistanceBetweenTwoHitObjects(hitObjectNext1, hitObjectNext2);
+
+                    var ratioDistanceBeforeJump = distanceBetweenCurrentAndNext1 / distanceBetweenCurrentAndLastObject;
+                    var ratioDistanceAfterJump = distanceBetweenCurrentAndNext1 / distanceBetweenNext1AndNext2;
+
+                    if (distanceBetweenCurrentAndNext1 > circleDiameter &&
+                        distanceBetweenCurrentAndNext1 > distanceBetweenCurrentAndLastObject &&
+                        distanceBetweenCurrentAndNext1 > distanceBetweenNext1AndNext2 &&
+                        ratioDistanceBeforeJump >= 1.2 &&
+                        ratioDistanceAfterJump >= 1.2
+                        )
+                    {
+                        this.result.StreamJumpCount++;
+                    }
+                }
+
+                #endregion
+
                 return;
+            }
 
             //Only count when stream is finished
 
@@ -305,7 +332,7 @@ namespace OsuFileIO.Interpreter
             public int LongestStream { get; set; }
             public double TotalStreamAlikePixels { get; set; }
             public double TotalSpacedStreamAlikePixels { get; set; }
-            public int JumpStreamCount { get; set; }
+            public int StreamJumpCount { get; set; }
         }
     }
 }
