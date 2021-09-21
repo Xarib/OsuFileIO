@@ -1068,7 +1068,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
         #endregion
 
-        #region StreamJumps
+        #region StreamMiscellaneous
 
         [TestMethod]
         [DeploymentItem(fileLocation + "2371698_mod.osu")]
@@ -1083,14 +1083,14 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var interpreter = new OsuStdInterpreter(actual);
             interpreter.Interpret(file);
 
-            Assert.AreEqual(1, actual.StreamJumpCount, "Expected one stream jump");
+            Assert.AreEqual(1, actual.StreamCutsCount, "Expected one stream jump");
         }
 
         [TestMethod]
         [DataRow(5, 1)]
         [DataRow(4, 1)]
         [DataRow(3, 0)]
-        public void Interpret_JumpStreamWithVariousJumpLength_ReturnsStreamJumpCount(int jumpLengthPixels, double expectedJumps)
+        public void Interpret_JumpStreamWithVariousJumpLength_ReturnsStreamJumpCount(int jumpLengthPixels, double expectedCuts)
         {
             //Arrange
             var cs10pxRadius = 555d / 56d;
@@ -1127,7 +1127,54 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             writer.Flush();
             stream.Position = 0;
 
-            //var sr = new StreamReader(stream);
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedCuts, actual.StreamCutsCount, "Expected to count cuts in streams");
+        }
+
+        [TestMethod]
+        //[DataRow(1, 0)]
+        [DataRow(2, 2)]
+        [DataRow(7, 7)]
+        public void Interpret_StreamWithSliders_ReturnsSlidersInStreams(int sliderCount, int epxtedCount)
+        {
+            //Arrange
+            var bpm200 = 300;
+
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,{bpm200},4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine("95,66,75,5,4,0:0:0:0:");
+            writer.WriteLine("95,66,150,5,4,0:0:0:0:");
+            writer.WriteLine("95,66,225,5,4,0:0:0:0:");
+
+            var timePassed = 225;
+
+            for (int i = 0; i < sliderCount; i++)
+            {
+                timePassed += bpm200 / 4;
+                writer.WriteLine($"333,159,{timePassed},6,0,P|256:40|175:157,1,335.999989746094,4|4,0:0|0:2,3:0:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
             var file = fileReader.ReadFile() as OsuStdFile;
@@ -1136,6 +1183,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var actual = new ActualInterpretation();
             var interpreter = new OsuStdInterpreter(actual);
             interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(epxtedCount, actual.SlidersInStreamAlike, "Expected to count sliders in streams");
         }
 
         #endregion
@@ -1197,7 +1247,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public int LongestStream { get; set; }
             public double TotalStreamAlikePixels { get; set; }
             public double TotalSpacedStreamAlikePixels { get; set; }
-            public int StreamJumpCount { get; set; }
+            public int StreamCutsCount { get; set; }
+            public int SlidersInStreamAlike { get; set; }
         }
     }
 }

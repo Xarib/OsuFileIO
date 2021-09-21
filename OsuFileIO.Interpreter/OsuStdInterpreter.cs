@@ -216,8 +216,9 @@ namespace OsuFileIO.Interpreter
         }
 
         private int hitObjectCountStream = 1;
-        private double streamPixels;
-        private double spacedStreamPixels;
+        private double streamPixels = 0;
+        private double spacedStreamPixels = 0;
+        private int slidersInStream = 0;
         private void InterpretStreamCount()
         {
             var distanceBetweenCurrentAndLastObject = GetDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, this.reader.GetHitObjectFromOffsetOrNull(-1));
@@ -231,13 +232,16 @@ namespace OsuFileIO.Interpreter
 
             this.hitObjectCountStream++;
 
+            if (this.reader.HitObjectType == StdHitObjectType.Slider)
+                this.slidersInStream++;
+
             var hitObjectNext1 = this.reader.GetHitObjectFromOffsetOrNull(1);
 
             if (hitObjectNext1 is not null && this.IsMappedLikeStream(hitObjectNext1.TimeInMs - this.reader.CurrentHitObject.TimeInMs))
             {
                 #region StreamJumps
 
-                var hitObjectNext2 = this.reader.GetHitObjectFromOffsetOrNull(2);//TODO better name
+                var hitObjectNext2 = this.reader.GetHitObjectFromOffsetOrNull(2);
 
                 if (hitObjectNext2 is not null && this.IsMappedLikeStream(hitObjectNext2.TimeInMs - hitObjectNext1.TimeInMs))
                 {
@@ -254,7 +258,7 @@ namespace OsuFileIO.Interpreter
                         ratioDistanceAfterJump >= 1.2
                         )
                     {
-                        this.result.StreamJumpCount++;
+                        this.result.StreamCutsCount++;
                     }
                 }
 
@@ -290,6 +294,8 @@ namespace OsuFileIO.Interpreter
                 this.result.TotalStreamAlikePixels += this.streamPixels;
 
                 this.result.TotalSpacedStreamAlikePixels += this.spacedStreamPixels;
+
+                this.result.SlidersInStreamAlike += this.slidersInStream;
             }
 
             if (this.hitObjectCountStream > 8 && this.hitObjectCountStream > this.result.LongestStream)
@@ -299,6 +305,7 @@ namespace OsuFileIO.Interpreter
             this.hitObjectCountStream = 1;
             this.streamPixels = 0;
             this.spacedStreamPixels = 0;
+            this.slidersInStream = 0;
         }
         private bool IsMappedLikeStream(double timeDifference)
         {
@@ -332,7 +339,8 @@ namespace OsuFileIO.Interpreter
             public int LongestStream { get; set; }
             public double TotalStreamAlikePixels { get; set; }
             public double TotalSpacedStreamAlikePixels { get; set; }
-            public int StreamJumpCount { get; set; }
+            public int StreamCutsCount { get; set; }
+            public int SlidersInStreamAlike { get; set; }
         }
     }
 }
