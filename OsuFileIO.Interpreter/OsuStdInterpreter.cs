@@ -69,6 +69,8 @@ namespace OsuFileIO.Interpreter
 
                 this.InterpretCountValues();
 
+                this.InterpretAngleJumps();
+
             } while (this.reader.ReadNext());
 
             switch (this.reader.HitObjectType)
@@ -221,7 +223,7 @@ namespace OsuFileIO.Interpreter
         private int slidersInStream = 0;
         private void InterpretStreamCount()
         {
-            var distanceBetweenCurrentAndLastObject = GetDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, this.reader.GetHitObjectFromOffsetOrNull(-1));
+            var distanceBetweenCurrentAndLastObject = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, this.reader.GetHitObjectFromOffsetOrNull(-1));
             this.streamPixels += distanceBetweenCurrentAndLastObject;
 
             var circleDiameter = 2 * (54.4 - 4.48 * this.reader.CircleSize); //Formula => https://osu.ppy.sh/wiki/en/Beatmapping/Circle_size
@@ -245,8 +247,8 @@ namespace OsuFileIO.Interpreter
 
                 if (hitObjectNext2 is not null && this.IsMappedLikeStream(hitObjectNext2.TimeInMs - hitObjectNext1.TimeInMs))
                 {
-                    var distanceBetweenCurrentAndNext1 = GetDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, hitObjectNext1);
-                    var distanceBetweenNext1AndNext2 = GetDistanceBetweenTwoHitObjects(hitObjectNext1, hitObjectNext2);
+                    var distanceBetweenCurrentAndNext1 = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, hitObjectNext1);
+                    var distanceBetweenNext1AndNext2 = CalculateDistanceBetweenTwoHitObjects(hitObjectNext1, hitObjectNext2);
 
                     var ratioDistanceBeforeJump = distanceBetweenCurrentAndNext1 / distanceBetweenCurrentAndLastObject;
                     var ratioDistanceAfterJump = distanceBetweenCurrentAndNext1 / distanceBetweenNext1AndNext2;
@@ -312,9 +314,54 @@ namespace OsuFileIO.Interpreter
             return timeDifference < this.reader.TimeBetweenStreamAlike * 1.1 && timeDifference <= beatLength150Bpm;
         }
 
-        private static double GetDistanceBetweenTwoHitObjects(IHitObject hitObject1, IHitObject hitObject2)
+        private void InterpretAngleJumps()
+        {
+            var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull(-1);
+            var hitObjectPrev2 = this.reader.GetHitObjectFromOffsetOrNull(-2);
+
+            if (hitObjectPrev2 is null ||
+                CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, hitObjectPrev1) < 100 ||
+                CalculateDistanceBetweenTwoHitObjects(hitObjectPrev1, hitObjectPrev2) < 100 ||
+                !this.IsMappedLikeJump(this.reader.CurrentHitObject.TimeInMs - hitObjectPrev1.TimeInMs) ||
+                !this.IsMappedLikeJump(hitObjectPrev1.TimeInMs - hitObjectPrev2.TimeInMs))
+                return;
+
+            var degrees = CalcualteAngle(this.reader.CurrentHitObject.Coordinates, hitObjectPrev1.Coordinates, hitObjectPrev2.Coordinates);
+
+            if (degrees <= 5 || degrees >= 175)
+            {
+                this.result.Jump180DegreesCount++;
+            }
+            else if (degrees >= 85 && degrees <= 95)
+            {
+                this.result.Jump90DegreesCount++;
+            }
+        }
+
+        private bool IsMappedLikeJump(double timeDifference)
+        {
+            return timeDifference < this.reader.TimeBetweenOneTwoJumps * 1.1;
+        }
+
+        private static double CalculateDistanceBetweenTwoHitObjects(IHitObject hitObject1, IHitObject hitObject2)
         {
             return Math.Sqrt((hitObject1.Coordinates.X - hitObject2.Coordinates.X) * (hitObject1.Coordinates.X - hitObject2.Coordinates.X) + (hitObject1.Coordinates.Y - hitObject2.Coordinates.Y) * (hitObject1.Coordinates.Y - hitObject2.Coordinates.Y));
+        }
+
+        private static double CalcualteAngle(Coordinates current, Coordinates prev1, Coordinates prev2)
+        {
+            var degrees = Math.Atan2(prev2.Y - prev1.Y, prev2.X - prev1.X) -
+                Math.Atan2(current.Y - prev1.Y, current.X - prev1.X);
+
+            degrees *= 180d / Math.PI;
+
+            if (degrees < 0)
+                degrees *= -1d;
+
+            if (degrees > 180)
+                degrees = 360d - degrees;
+
+            return degrees;
         }
 
         private class OsuStdInterpretation : IInterpretation
@@ -341,6 +388,8 @@ namespace OsuFileIO.Interpreter
             public double TotalSpacedStreamAlikePixels { get; set; }
             public int StreamCutsCount { get; set; }
             public int SlidersInStreamAlike { get; set; }
+            public int Jump90DegreesCount { get; set; }
+            public int Jump180DegreesCount { get; set; }
         }
     }
 }

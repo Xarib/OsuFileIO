@@ -1140,7 +1140,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         }
 
         [TestMethod]
-        //[DataRow(1, 0)]
+        [DataRow(1, 0)]
         [DataRow(2, 2)]
         [DataRow(7, 7)]
         public void Interpret_StreamWithSliders_ReturnsSlidersInStreams(int sliderCount, int epxtedCount)
@@ -1186,6 +1186,158 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Assert
             Assert.AreEqual(epxtedCount, actual.SlidersInStreamAlike, "Expected to count sliders in streams");
+        }
+
+        #endregion
+
+        #region DegreesCounting
+
+        [TestMethod]
+        [DataRow(100, 100, 1)]
+        [DataRow(100, -100, 1)]
+        [DataRow(100, 10, 0)]
+        [DataRow(0, 50, 0)]
+        public void Interpret_90DegreeJumps_ReturnsCount90DegreeJumps(int x, int y, int expectedCount)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine("0,0,0,5,4,0:0:0:0:");
+            writer.WriteLine("100,0,0,5,4,0:0:0:0:");
+            writer.WriteLine($"{x},{y},0,5,4,0:0:0:0:");
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            Assert.AreEqual(expectedCount, actual.Jump90DegreesCount, "Expected to find all 90 Degree jumps");
+        }
+
+        [TestMethod]
+        [DataRow(0, 0, 1)]
+        [DataRow(0, 90, 0)]
+        [DataRow(100, 100, 0)]
+        [DataRow(100, -100, 0)]
+        public void Interpret_180DegreeJumps_ReturnsCount180DegreeJumps(int x, int y, int expectedCount)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine("0,0,0,5,4,0:0:0:0:");
+            writer.WriteLine("100,0,0,5,4,0:0:0:0:");
+            writer.WriteLine($"{x},{y},0,5,4,0:0:0:0:");
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            Assert.AreEqual(expectedCount, actual.Jump180DegreesCount, "Expected to find all 180 Degree jumps");
+        }
+
+        [TestMethod]
+        public void Interpret_FirstJumpToLong_ReturnsCount180DegreeJumps()
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine("0,0,0,5,4,0:0:0:0:");
+            writer.WriteLine("100,0,1000,5,4,0:0:0:0:");
+            writer.WriteLine("0,0,1000,5,4,0:0:0:0:");
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            Assert.IsTrue(actual.Jump180DegreesCount == 0, "Expected no 180 Degree jumps");
+        }
+
+        [TestMethod]
+        public void Interpret_SecondJumpToLong_ReturnsCount180DegreeJumps()
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine("0,0,0,5,4,0:0:0:0:");
+            writer.WriteLine("100,0,0,5,4,0:0:0:0:");
+            writer.WriteLine("0,0,1000,5,4,0:0:0:0:");
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            Assert.IsTrue(actual.Jump180DegreesCount == 0, "Expected no 180 Degree jumps");
         }
 
         #endregion
@@ -1249,6 +1401,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public double TotalSpacedStreamAlikePixels { get; set; }
             public int StreamCutsCount { get; set; }
             public int SlidersInStreamAlike { get; set; }
+            public int Jump90DegreesCount { get; set; }
+            public int Jump180DegreesCount { get; set; }
         }
     }
 }
