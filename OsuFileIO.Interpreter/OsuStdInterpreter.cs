@@ -223,7 +223,7 @@ namespace OsuFileIO.Interpreter
         private int slidersInStream = 0;
         private void InterpretStreamCount()
         {
-            var distanceBetweenCurrentAndLastObject = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, this.reader.GetHitObjectFromOffsetOrNull(-1));
+            var distanceBetweenCurrentAndLastObject = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.Coordinates, this.reader.GetHitObjectFromOffsetOrNull(-1).Coordinates);
             this.streamPixels += distanceBetweenCurrentAndLastObject;
 
             var circleDiameter = 2 * (54.4 - 4.48 * this.reader.CircleSize); //Formula => https://osu.ppy.sh/wiki/en/Beatmapping/Circle_size
@@ -247,8 +247,8 @@ namespace OsuFileIO.Interpreter
 
                 if (hitObjectNext2 is not null && this.IsMappedLikeStream(hitObjectNext2.TimeInMs - hitObjectNext1.TimeInMs))
                 {
-                    var distanceBetweenCurrentAndNext1 = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, hitObjectNext1);
-                    var distanceBetweenNext1AndNext2 = CalculateDistanceBetweenTwoHitObjects(hitObjectNext1, hitObjectNext2);
+                    var distanceBetweenCurrentAndNext1 = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.Coordinates, hitObjectNext1.Coordinates);
+                    var distanceBetweenNext1AndNext2 = CalculateDistanceBetweenTwoHitObjects(hitObjectNext1.Coordinates, hitObjectNext2.Coordinates);
 
                     var ratioDistanceBeforeJump = distanceBetweenCurrentAndNext1 / distanceBetweenCurrentAndLastObject;
                     var ratioDistanceAfterJump = distanceBetweenCurrentAndNext1 / distanceBetweenNext1AndNext2;
@@ -320,8 +320,8 @@ namespace OsuFileIO.Interpreter
             var hitObjectPrev2 = this.reader.GetHitObjectFromOffsetOrNull(-2);
 
             if (hitObjectPrev2 is null ||
-                CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject, hitObjectPrev1) < 100 ||
-                CalculateDistanceBetweenTwoHitObjects(hitObjectPrev1, hitObjectPrev2) < 100 ||
+                CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.Coordinates, hitObjectPrev1.Coordinates) < 100 ||
+                CalculateDistanceBetweenTwoHitObjects(hitObjectPrev1.Coordinates, hitObjectPrev2.Coordinates) < 100 ||
                 !this.IsMappedLikeJump(this.reader.CurrentHitObject.TimeInMs - hitObjectPrev1.TimeInMs) ||
                 !this.IsMappedLikeJump(hitObjectPrev1.TimeInMs - hitObjectPrev2.TimeInMs))
                 return;
@@ -343,9 +343,9 @@ namespace OsuFileIO.Interpreter
             return timeDifference < this.reader.TimeBetweenOneTwoJumps * 1.1;
         }
 
-        private static double CalculateDistanceBetweenTwoHitObjects(IHitObject hitObject1, IHitObject hitObject2)
+        private static double CalculateDistanceBetweenTwoHitObjects(Coordinates coordinates1, Coordinates coordinates2)
         {
-            return Math.Sqrt((hitObject1.Coordinates.X - hitObject2.Coordinates.X) * (hitObject1.Coordinates.X - hitObject2.Coordinates.X) + (hitObject1.Coordinates.Y - hitObject2.Coordinates.Y) * (hitObject1.Coordinates.Y - hitObject2.Coordinates.Y));
+            return Math.Sqrt((coordinates1.X - coordinates2.X) * (coordinates1.X - coordinates2.X) + (coordinates1.Y - coordinates2.Y) * (coordinates1.Y - coordinates2.Y));
         }
 
         private static double CalcualteAngle(Coordinates current, Coordinates prev1, Coordinates prev2)
