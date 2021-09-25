@@ -32,5 +32,6 @@ namespace OsuFileIO.Interpreter
         public int SlidersInStreamAlike { get; set; }
         public int Jump90DegreesCount { get; set; }
         public int Jump180DegreesCount { get; set; }
+        public int CrossScreenJumpCount { get; set; }
     }
 }

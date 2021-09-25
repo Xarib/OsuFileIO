@@ -69,7 +69,7 @@ namespace OsuFileIO.Interpreter
 
                 this.InterpretCountValues();
 
-                this.InterpretAngleJumps();
+                this.InterpretJumps();
 
             } while (this.reader.ReadNext());
 
@@ -314,13 +314,21 @@ namespace OsuFileIO.Interpreter
             return timeDifference < this.reader.TimeBetweenStreamAlike * 1.1 && timeDifference <= beatLength150Bpm;
         }
 
-        private void InterpretAngleJumps()
+        private void InterpretJumps()
         {
             var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull(-1);
             var hitObjectPrev2 = this.reader.GetHitObjectFromOffsetOrNull(-2);
 
+            if (hitObjectPrev1 is null)
+                return;
+
+            var distanceBetweenCurrentAndPrev = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.Coordinates, hitObjectPrev1.Coordinates);
+
+            if (distanceBetweenCurrentAndPrev > 325)
+                this.result.CrossScreenJumpCount++;
+
             if (hitObjectPrev2 is null ||
-                CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.Coordinates, hitObjectPrev1.Coordinates) < 100 ||
+                distanceBetweenCurrentAndPrev < 100 ||
                 CalculateDistanceBetweenTwoHitObjects(hitObjectPrev1.Coordinates, hitObjectPrev2.Coordinates) < 100 ||
                 !this.IsMappedLikeJump(this.reader.CurrentHitObject.TimeInMs - hitObjectPrev1.TimeInMs) ||
                 !this.IsMappedLikeJump(hitObjectPrev1.TimeInMs - hitObjectPrev2.TimeInMs))
@@ -390,6 +398,7 @@ namespace OsuFileIO.Interpreter
             public int SlidersInStreamAlike { get; set; }
             public int Jump90DegreesCount { get; set; }
             public int Jump180DegreesCount { get; set; }
+            public int CrossScreenJumpCount { get; set; }
         }
     }
 }
