@@ -71,6 +71,8 @@ namespace OsuFileIO.Interpreter
 
                 this.InterpretJumps();
 
+                this.InterpretSliders();
+
             } while (this.reader.ReadNext());
 
             switch (this.reader.HitObjectType)
@@ -116,6 +118,8 @@ namespace OsuFileIO.Interpreter
                 if (currentBpm < this.result.BpmMin)
                     this.result.BpmMin = currentBpm;
             }
+
+            this.result.AvgSliderPointCount = (double)this.result.SliderPointCount / this.result.SliderCount;
         }
 
         private double CalculateSliderEndTime(Slider slider, TimingPoint timingPoint)
@@ -345,6 +349,35 @@ namespace OsuFileIO.Interpreter
                 this.result.Jump90DegreesCount++;
             }
         }
+        private void InterpretSliders()
+        {
+            if (this.reader.HitObjectType != StdHitObjectType.Slider)
+                return;
+
+            var slider = this.reader.CurrentHitObject as Slider;
+
+            this.result.TotalSliderLength += slider.Length;
+
+            this.result.SliderPointCount += slider.SliderCoordinates.Count;
+
+            switch (slider.CurveType)
+            {
+                case CurveType.Bézier:
+                    this.result.BèzierSliderCount++;
+                    break;
+                case CurveType.CentripetalCatmullRom:
+                    this.result.CatmullSliderCount++;
+                    break;
+                case CurveType.Linear:
+                    this.result.LinearSliderCount++;
+                    break;
+                case CurveType.PerfectCircle:
+                    this.result.PerfectCicleSliderCount++;
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException("Unimplemented case: " + slider.CurveType);
+            }
+        }
 
         private bool IsMappedLikeJump(double timeDifference)
         {
@@ -399,6 +432,13 @@ namespace OsuFileIO.Interpreter
             public int Jump90DegreesCount { get; set; }
             public int Jump180DegreesCount { get; set; }
             public int CrossScreenJumpCount { get; set; }
+            public double TotalSliderLength { get; set; }
+            public int SliderPointCount { get; set; }
+            public double AvgSliderPointCount { get; set; }
+            public int BèzierSliderCount { get; set; }
+            public int CatmullSliderCount { get; set; }
+            public int LinearSliderCount { get; set; }
+            public int PerfectCicleSliderCount { get; set; }
         }
     }
 }

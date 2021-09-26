@@ -33,5 +33,12 @@ namespace OsuFileIO.Interpreter
         public int Jump90DegreesCount { get; set; }
         public int Jump180DegreesCount { get; set; }
         public int CrossScreenJumpCount { get; set; }
+        public double TotalSliderLength { get; set; }
+        public int BèzierSliderCount { get; set; }
+        public int CatmullSliderCount { get; set; }
+        public int LinearSliderCount { get; set; }
+        public int PerfectCicleSliderCount { get; set; }
+        public int SliderPointCount { get; set; }
+        public double AvgSliderPointCount { get; set; }
     }
 }

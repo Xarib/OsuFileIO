@@ -1382,7 +1382,304 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var interpreter = new OsuStdInterpreter(actual);
             interpreter.Interpret(file);
 
-            Assert.AreEqual(expectedCount, actual.CrossScreenJumpCount, "Expected no 180 Degree jumps");
+            Assert.AreEqual(expectedCount, actual.CrossScreenJumpCount, "Expected find all cross screen jumps");
+        }
+
+        #endregion
+
+        #region Sliders
+
+        [TestMethod]
+        [DataRow(new double[] { 349, 3, 44 })]
+        [DataRow(new double[] { 10, 35.55, 343434 })]
+        public void Interpret_SlidersWithVariousLengths_ReturnsTotalSliderLength(double[] sliderLengths)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            foreach (var length in sliderLengths)
+            {
+                writer.WriteLine($"0,0,10,6,0,L|394:373,1,{length},4|4,0:0|0:3,3:0:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(sliderLengths.Sum(), actual.TotalSliderLength, "Expected to sum up all slider lengths");
+        }
+
+        [TestMethod]
+        [DataRow(new int[] { 5, 7 })]
+        [DataRow(new int[] { 2, 6, 5, 7 })]
+        public void Interpret_SlidersWithVariousSliderPoints_ReturnsSliderPointCount(int[] sliderPoints)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            foreach (var pointCount in sliderPoints)
+            {
+                var sb = new StringBuilder();
+                for (int i = 0; i < pointCount; i++)
+                {
+                    sb.Append($"|{i}:{i}");
+                }
+
+                writer.WriteLine("0,0,10,6,0,L" + sb.ToString() + ",1,10,4|4,0:0|0:3,3:0:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(sliderPoints.Sum(), actual.SliderPointCount, "Expected to sum up all slider points");
+        }
+
+        [TestMethod]
+        [DataRow(new int[] { 5, 7 })]
+        [DataRow(new int[] { 2, 6, 5 })]
+        [DataRow(new int[] { 2, 6, 5, 7 })]
+        public void Interpret_SlidersWithVariousSliderPoints_AvgSliderPointCount(int[] sliderPoints)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            foreach (var pointCount in sliderPoints)
+            {
+                var sb = new StringBuilder();
+                for (int i = 0; i < pointCount; i++)
+                {
+                    sb.Append($"|{i}:{i}");
+                }
+
+                writer.WriteLine("0,0,10,6,0,L" + sb.ToString() + ",1,10,4|4,0:0|0:3,3:0:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual((double)sliderPoints.Sum() / sliderPoints.Length, actual.AvgSliderPointCount, "Expected to get avg slider point count");
+        }
+
+        [TestMethod]
+        [DataRow(4)]
+        [DataRow(8)]
+        public void Interpret_BèzierSliders_ReturnsBèzierSliderCount(int count)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            for (int i = 0; i < count; i++)
+            {
+                writer.WriteLine($"0,0,10,6,0,B|394:373,1,10,4|4,0:0|0:3,3:0:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(count, actual.BèzierSliderCount, "Expected to count bèzier sliders");
+        }
+
+        [TestMethod]
+        [DataRow(4)]
+        [DataRow(8)]
+        public void Interpret_CatmullSliders_ReturnsCatmullSliderCount(int count)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            for (int i = 0; i < count; i++)
+            {
+                writer.WriteLine($"0,0,10,6,0,C|394:373,1,10,4|4,0:0|0:3,3:0:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(count, actual.CatmullSliderCount, "Expected to count catmull sliders");
+        }
+
+        [TestMethod]
+        [DataRow(4)]
+        [DataRow(8)]
+        public void Interpret_LinearSliders_ReturnsLinearSliderCount(int count)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            for (int i = 0; i < count; i++)
+            {
+                writer.WriteLine($"0,0,10,6,0,L|394:373,1,10,4|4,0:0|0:3,3:0:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(count, actual.LinearSliderCount, "Expected to count linear sliders");
+        }
+
+        [TestMethod]
+        [DataRow(4)]
+        [DataRow(8)]
+        public void Interpret_PerfectCicleSliders_PerfectCicleSliderCount(int count)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            for (int i = 0; i < count; i++)
+            {
+                writer.WriteLine($"0,0,10,6,0,P|394:373,1,10,4|4,0:0|0:3,3:0:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(count, actual.PerfectCicleSliderCount, "Expected to count perfect circle sliders");
         }
 
         #endregion
@@ -1449,6 +1746,13 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public int Jump90DegreesCount { get; set; }
             public int Jump180DegreesCount { get; set; }
             public int CrossScreenJumpCount { get; set; }
+            public double TotalSliderLength { get; set; }
+            public int SliderPointCount { get; set; }
+            public int BèzierSliderCount { get; set; }
+            public int CatmullSliderCount { get; set; }
+            public int LinearSliderCount { get; set; }
+            public int PerfectCicleSliderCount { get; set; }
+            public double AvgSliderPointCount { get; set; }
         }
     }
 }
