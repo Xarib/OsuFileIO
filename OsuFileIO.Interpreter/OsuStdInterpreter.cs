@@ -29,6 +29,7 @@ namespace OsuFileIO.Interpreter
 
             Dictionary<double, int> totalTimeByBpm = new();
             TimingPoint lastRedTimingPoint = null;
+
             do
             {
                 switch (this.reader.HitObjectType)
@@ -74,6 +75,8 @@ namespace OsuFileIO.Interpreter
                 this.InterpretSliders();
 
             } while (this.reader.ReadNext());
+
+            //Stuff at end of map
 
             switch (this.reader.HitObjectType)
             {
@@ -124,6 +127,8 @@ namespace OsuFileIO.Interpreter
 
         private double CalculateSliderEndTime(Slider slider, TimingPoint timingPoint)
             => slider.Length / this.reader.SliderVelocity * timingPoint.BeatLength + slider.TimeInMs;
+        private double CalculateSliderTime(Slider slider, TimingPoint timingPoint)
+            => slider.Length / this.reader.SliderVelocity * timingPoint.BeatLength;
 
         private const double beatLength100Bpm = 60000 / 100 / 4; //100 Bmp
         private const double beatLength150Bpm = 60000 / 150 / 4; //150 Bmp
@@ -202,7 +207,6 @@ namespace OsuFileIO.Interpreter
                     break;
             }
         }
-
         private bool IsDirectlyAfterSlider(int offsetBeggining)
         {
             var history = this.reader.GetHistoryEntryOrNull(offsetBeggining - 1);
@@ -328,7 +332,10 @@ namespace OsuFileIO.Interpreter
 
             var distanceBetweenCurrentAndPrev = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.Coordinates, hitObjectPrev1.Coordinates);
 
-            if (distanceBetweenCurrentAndPrev > 325)
+            if (distanceBetweenCurrentAndPrev >= 100)
+                this.result.TotalJumpPixels += distanceBetweenCurrentAndPrev;
+
+            if (distanceBetweenCurrentAndPrev >= 325)
                 this.result.CrossScreenJumpCount++;
 
             if (hitObjectPrev2 is null ||
@@ -349,6 +356,7 @@ namespace OsuFileIO.Interpreter
                 this.result.Jump90DegreesCount++;
             }
         }
+
         private void InterpretSliders()
         {
             if (this.reader.HitObjectType != StdHitObjectType.Slider)
@@ -431,6 +439,7 @@ namespace OsuFileIO.Interpreter
             public int SlidersInStreamAlike { get; set; }
             public int Jump90DegreesCount { get; set; }
             public int Jump180DegreesCount { get; set; }
+            public double TotalJumpPixels { get; set; }
             public int CrossScreenJumpCount { get; set; }
             public double TotalSliderLength { get; set; }
             public int SliderPointCount { get; set; }

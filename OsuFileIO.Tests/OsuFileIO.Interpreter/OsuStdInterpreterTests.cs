@@ -1385,6 +1385,45 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             Assert.AreEqual(expectedCount, actual.CrossScreenJumpCount, "Expected find all cross screen jumps");
         }
 
+        [TestMethod]
+        [DataRow(new int[] { 0, 350 }, 350)]
+        [DataRow(new int[] { 0, 350, 100 }, 600)]
+        public void Interpret_AnyJumps_ReturnsTotalJumpPixels(int[] xCoords, double expectedLength)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+
+            foreach (var x in xCoords)
+            {
+                writer.WriteLine($"{x},0,0,5,4,0:0:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            Assert.AreEqual(expectedLength, actual.TotalJumpPixels, "Expected to get Jump length");
+        }
+
         #endregion
 
         #region Sliders
@@ -1745,6 +1784,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public int SlidersInStreamAlike { get; set; }
             public int Jump90DegreesCount { get; set; }
             public int Jump180DegreesCount { get; set; }
+            public double TotalJumpPixels { get; set; }
             public int CrossScreenJumpCount { get; set; }
             public double TotalSliderLength { get; set; }
             public int SliderPointCount { get; set; }
