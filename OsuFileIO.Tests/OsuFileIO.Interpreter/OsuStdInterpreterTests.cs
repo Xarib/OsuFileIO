@@ -1684,7 +1684,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(4)]
         [DataRow(8)]
-        public void Interpret_PerfectCicleSliders_PerfectCicleSliderCount(int count)
+        public void Interpret_PerfectCicleSliders_ReturnsPerfectCicleSliderCount(int count)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1724,6 +1724,88 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         #endregion
 
         #region Miscellaneous
+
+        [TestMethod]
+        [DataRow("0,0,0,5,4,0:0:0:0:", 1)]
+        [DataRow("0,1,0,5,4,0:0:0:0:", 0)]
+        [DataRow("0,0,0,12,4,0,3:2:0:0:", 0)]
+        [DataRow("0,0,0,6,0,L|0:0,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 0)]
+        public void Interpret_CirclePerfectStack_ReturnCirclePerfectStackCount(string hitObject, int prefectStackCount)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine("0,0,0,5,4,0:0:0:0:");
+            writer.WriteLine(hitObject);
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(prefectStackCount, actual.CirclePerfectStackCount, "Expected to count perfect circle stacks correctly");
+        }
+
+        [TestMethod]
+        [DataRow("0,0,0,6,0,L|10:10,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 1)]
+        [DataRow("10,10,0,6,0,L|0:0,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 1)]
+        [DataRow("0,1,0,6,0,L|10:10,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 0)]
+        [DataRow("0,0,0,6,0,L|10:11,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 0)]
+        [DataRow("10,11,0,6,0,L|0:0,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 0)]
+        [DataRow("10,10,0,6,0,L|0:10,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 0)]
+        [DataRow("0,0,0,5,4,0:0:0:0:", 0)]
+        [DataRow("0,0,0,12,4,0,3:2:0:0:", 0)]
+        public void Interpret_SliderPerfectStack_ReturnCirclePerfectStackCount(string hitObject, int prefectStackCount)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine("0,0,0,6,0,L|10:10,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:");
+            writer.WriteLine(hitObject);
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(prefectStackCount, actual.SliderPerfectStackCount, "Expected to count perfect slider stacks correctly");
+        }
 
         [TestMethod]
         public void Interpret_TimingPointAndInheritedPointBeforeHitObject_ShouldNotThrowError()
@@ -1793,6 +1875,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public int LinearSliderCount { get; set; }
             public int PerfectCicleSliderCount { get; set; }
             public double AvgSliderPointCount { get; set; }
+            public int CirclePerfectStackCount { get; set; }
+            public int SliderPerfectStackCount { get; set; }
         }
     }
 }

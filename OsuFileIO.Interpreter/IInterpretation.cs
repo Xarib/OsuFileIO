@@ -41,5 +41,7 @@ namespace OsuFileIO.Interpreter
         public int PerfectCicleSliderCount { get; set; }
         public int SliderPointCount { get; set; }
         public double AvgSliderPointCount { get; set; }
+        public int CirclePerfectStackCount { get; set; }
+        public int SliderPerfectStackCount { get; set; }
     }
 }

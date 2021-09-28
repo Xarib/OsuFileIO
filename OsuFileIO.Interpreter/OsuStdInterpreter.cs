@@ -74,6 +74,8 @@ namespace OsuFileIO.Interpreter
 
                 this.InterpretSliders();
 
+                this.InterpretMiscellaneous();
+
             } while (this.reader.ReadNext());
 
             //Stuff at end of map
@@ -127,8 +129,6 @@ namespace OsuFileIO.Interpreter
 
         private double CalculateSliderEndTime(Slider slider, TimingPoint timingPoint)
             => slider.Length / this.reader.SliderVelocity * timingPoint.BeatLength + slider.TimeInMs;
-        private double CalculateSliderTime(Slider slider, TimingPoint timingPoint)
-            => slider.Length / this.reader.SliderVelocity * timingPoint.BeatLength;
 
         private const double beatLength100Bpm = 60000 / 100 / 4; //100 Bmp
         private const double beatLength150Bpm = 60000 / 150 / 4; //150 Bmp
@@ -392,6 +392,26 @@ namespace OsuFileIO.Interpreter
             return timeDifference < this.reader.TimeBetweenOneTwoJumps * 1.1;
         }
 
+        private void InterpretMiscellaneous()
+        {
+            var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull(-1);
+
+            if (hitObjectPrev1 is null || hitObjectPrev1 is Spinner)
+                return;
+
+            if (this.reader.HitObjectType == StdHitObjectType.Circle && hitObjectPrev1 is Circle circle)
+            {
+                if (circle.Coordinates == this.reader.CurrentHitObject.Coordinates)
+                    this.result.CirclePerfectStackCount++;
+            }
+            else if (hitObjectPrev1 is Slider prevSlider && this.reader.CurrentHitObject is Slider currentSlider)
+            {
+                if ((currentSlider.Coordinates == prevSlider.Coordinates && currentSlider.SliderCoordinates.Last() == prevSlider.SliderCoordinates.Last()) || 
+                    (currentSlider.Coordinates == prevSlider.SliderCoordinates.Last() && currentSlider.SliderCoordinates.Last() == prevSlider.Coordinates))
+                    this.result.SliderPerfectStackCount++;
+            }
+        }
+
         private static double CalculateDistanceBetweenTwoHitObjects(Coordinates coordinates1, Coordinates coordinates2)
         {
             return Math.Sqrt((coordinates1.X - coordinates2.X) * (coordinates1.X - coordinates2.X) + (coordinates1.Y - coordinates2.Y) * (coordinates1.Y - coordinates2.Y));
@@ -448,6 +468,8 @@ namespace OsuFileIO.Interpreter
             public int CatmullSliderCount { get; set; }
             public int LinearSliderCount { get; set; }
             public int PerfectCicleSliderCount { get; set; }
+            public int CirclePerfectStackCount { get; set; }
+            public int SliderPerfectStackCount { get; set; }
         }
     }
 }
