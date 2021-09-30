@@ -187,21 +187,21 @@ namespace OsuFileIO.Interpreter
                     this.result.DoubleCount++;
 
                     if (this.IsCircleOnly && !this.IsDirectlyAfterSlider(offsetBeggining: -1))
-                        this.result.TrueDoubleCount++;
+                        this.result.StandaloneDoubleCount++;
 
                     break;
                 case 3:
                     this.result.TripletCount++;
 
                     if (this.IsCircleOnly && !this.IsDirectlyAfterSlider(offsetBeggining: -2))
-                        this.result.TrueTripletCount++;
+                        this.result.StandaloneTripletCount++;
 
                     break;
                 case 4:
                     this.result.QuadrupletCount++;
 
                     if (this.IsCircleOnly && !this.IsDirectlyAfterSlider(offsetBeggining: -3))
-                        this.result.TrueQuadrupletCount++;
+                        this.result.StandaloneQuadrupletCount++;
 
                     break;
                 default:
@@ -224,7 +224,7 @@ namespace OsuFileIO.Interpreter
 
         private bool IsMappedLikeDoubleToQuad(double timeBetweenHitObjects)
         {
-            return timeBetweenHitObjects < this.reader.TimeQuarterBeat * 1.1 && timeBetweenHitObjects <= beatLength100Bpm;
+            return timeBetweenHitObjects < this.reader.TimeQuarterBeat * 1.1;
         }
 
         private int hitObjectCountStream = 1;
@@ -281,17 +281,17 @@ namespace OsuFileIO.Interpreter
 
             //Only count when stream is finished
 
-            //If stream is longer than 8 beats. Has to be beat snap divisor: 1/4
+            //If stream is longer than 8 beats.
             if (this.hitObjectCountStream > 32)
             {
                 this.result.DeathStreamCount++;
             }
-            //If stream is longer than 4 beats. Has to be beat snap divisor: 1/4
+            //If stream is longer than 4 beats.
             else if (this.hitObjectCountStream > 16)
             {
                 this.result.LongStreamCount++;
             }
-            //If stream is longer than 2 beats. Has to be beat snap divisor: 1/4
+            //If stream is longer than 2 beats.
             else if (this.hitObjectCountStream > 8)
             {
                 this.result.StreamCount++;
@@ -321,7 +321,7 @@ namespace OsuFileIO.Interpreter
         }
         private bool IsMappedLikeStream(double timeDifference)
         {
-            return timeDifference < this.reader.TimeQuarterBeat * 1.1 && timeDifference <= beatLength150Bpm;
+            return timeDifference < this.reader.TimeQuarterBeat * 1.1 && timeDifference <= beatLength100Bpm;
         }
 
         private void InterpretJumps()
@@ -450,11 +450,11 @@ namespace OsuFileIO.Interpreter
             public double BpmMin { get; set; }
             public double BpmMax { get; set; }
             public int DoubleCount { get; set; }
-            public int TrueDoubleCount { get; set; }
+            public int StandaloneDoubleCount { get; set; }
             public int TripletCount { get; set; }
-            public int TrueTripletCount { get; set; }
+            public int StandaloneTripletCount { get; set; }
             public int QuadrupletCount { get; set; }
-            public int TrueQuadrupletCount { get; set; }
+            public int StandaloneQuadrupletCount { get; set; }
             public int BurstCount { get; set; }
             public int StreamCount { get; set; }
             public int LongStreamCount { get; set; }

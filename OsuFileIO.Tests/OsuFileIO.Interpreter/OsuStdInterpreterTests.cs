@@ -387,7 +387,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Assert
             Assert.AreEqual(expectedCount, actual.DoubleCount, "Expected to count doubles correctly");
-            Assert.AreEqual(expectedCount, actual.TrueDoubleCount, "Expected to count true doubles correctly");
+            Assert.AreEqual(expectedCount, actual.StandaloneDoubleCount, "Expected to count true doubles correctly");
         }
 
         [TestMethod]
@@ -426,7 +426,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             interpreter.Interpret(file);
 
             //Assert
-            Assert.AreEqual(expectedCount, actual.TrueDoubleCount, "Expected to count true doubles correctly");
+            Assert.AreEqual(expectedCount, actual.StandaloneDoubleCount, "Expected to count true doubles correctly");
         }
 
         [TestMethod]
@@ -478,7 +478,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Assert
             Assert.AreEqual(expectedCount, actual.TripletCount, "Expected to count triplets correctly");
-            Assert.AreEqual(expectedCount, actual.TrueTripletCount, "Expected to count true triplets correctly");
+            Assert.AreEqual(expectedCount, actual.StandaloneTripletCount, "Expected to count true triplets correctly");
         }
 
         [TestMethod]
@@ -518,7 +518,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             interpreter.Interpret(file);
 
             //Assert
-            Assert.AreEqual(expectedCount, actual.TrueTripletCount, "Expected to count true doubles correctly");
+            Assert.AreEqual(expectedCount, actual.StandaloneTripletCount, "Expected to count true doubles correctly");
         }
 
         [TestMethod]
@@ -570,7 +570,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Assert
             Assert.AreEqual(expectedCount, actual.QuadrupletCount, "Expected to count quadruplets correctly");
-            Assert.AreEqual(expectedCount, actual.TrueQuadrupletCount, "Expected to count true quadruplets correctly");
+            Assert.AreEqual(expectedCount, actual.StandaloneQuadrupletCount, "Expected to count true quadruplets correctly");
         }
 
         [TestMethod]
@@ -611,7 +611,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             interpreter.Interpret(file);
 
             //Assert
-            Assert.AreEqual(expectedCount, actual.TrueQuadrupletCount, "Expected to count true doubles correctly");
+            Assert.AreEqual(expectedCount, actual.StandaloneQuadrupletCount, "Expected to count true doubles correctly");
         }
 
         #endregion
@@ -619,7 +619,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         #region StreamCounting
 
         [TestMethod]
-        [DataRow(600, new int[] { 20 }, 0)] //100Bmp
+        [DataRow(601, new int[] { 20 }, 0)] // less than 100Bmp
+        [DataRow(600, new int[] { 20 }, 20)] //100Bmp
         [DataRow(400, new int[] { 5 }, 0)] //150Bmp
         [DataRow(400, new int[] { 20 }, 20)] //150Bmp
         [DataRow(300, new int[] { 5 }, 0)] //200Bmp
@@ -1894,11 +1895,11 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public double BpmMin { get; set; }
             public double BpmMax { get; set; }
             public int DoubleCount { get; set; }
-            public int TrueDoubleCount { get; set; }
+            public int StandaloneDoubleCount { get; set; }
             public int TripletCount { get; set; }
-            public int TrueTripletCount { get; set; }
+            public int StandaloneTripletCount { get; set; }
             public int QuadrupletCount { get; set; }
-            public int TrueQuadrupletCount { get; set; }
+            public int StandaloneQuadrupletCount { get; set; }
             public int BurstCount { get; set; }
             public int StreamCount { get; set; }
             public int LongStreamCount { get; set; }
