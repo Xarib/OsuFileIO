@@ -129,6 +129,8 @@ namespace OsuFileIO.Interpreter
 
         private double CalculateSliderEndTime(Slider slider, TimingPoint timingPoint)
             => slider.Length / this.reader.SliderVelocity * timingPoint.BeatLength + slider.TimeInMs;
+        private double CalculateSliderDuration(Slider slider, TimingPoint timingPoint)
+            => slider.Length / this.reader.SliderVelocity * timingPoint.BeatLength;
 
         private const double beatLength100Bpm = 60000 / 100 / 4; //100 Bmp
         private const double beatLength150Bpm = 60000 / 150 / 4; //150 Bmp
@@ -141,7 +143,7 @@ namespace OsuFileIO.Interpreter
 
             var timeBetweenHitObjects = this.reader.CurrentHitObject.TimeInMs - previousHitObject.TimeInMs;
 
-            if (timeBetweenHitObjects < this.reader.TimeBetweenOneTwoJumps && timeBetweenHitObjects > this.reader.TimeBetweenOneTwoJumps)
+            if (timeBetweenHitObjects < this.reader.TimeHalfBeat && timeBetweenHitObjects > this.reader.TimeHalfBeat)
             {
                 //InterpretOneTwoCount
             }
@@ -217,12 +219,12 @@ namespace OsuFileIO.Interpreter
             var startingHitObject = this.reader.GetHitObjectFromOffsetOrNull(offsetBeggining);
             var timeDifference = startingHitObject.TimeInMs - this.CalculateSliderEndTime(slider, history?.Item1);
 
-            return timeDifference < this.reader.TimeBetweenStreamAlike * 1.1;
+            return timeDifference < this.reader.TimeQuarterBeat * 1.1;
         }
 
         private bool IsMappedLikeDoubleToQuad(double timeBetweenHitObjects)
         {
-            return timeBetweenHitObjects < this.reader.TimeBetweenStreamAlike * 1.1 && timeBetweenHitObjects <= beatLength100Bpm;
+            return timeBetweenHitObjects < this.reader.TimeQuarterBeat * 1.1 && timeBetweenHitObjects <= beatLength100Bpm;
         }
 
         private int hitObjectCountStream = 1;
@@ -319,7 +321,7 @@ namespace OsuFileIO.Interpreter
         }
         private bool IsMappedLikeStream(double timeDifference)
         {
-            return timeDifference < this.reader.TimeBetweenStreamAlike * 1.1 && timeDifference <= beatLength150Bpm;
+            return timeDifference < this.reader.TimeQuarterBeat * 1.1 && timeDifference <= beatLength150Bpm;
         }
 
         private void InterpretJumps()
@@ -368,6 +370,11 @@ namespace OsuFileIO.Interpreter
 
             this.result.SliderPointCount += slider.SliderCoordinates.Count;
 
+            var sliderDuration = this.CalculateSliderDuration(slider, this.reader.CurrentTimingPoint);
+
+            if (sliderDuration > this.reader.TimeEighthOfBeat * 1.5 && sliderDuration < this.reader.TimeQuarterBeat * 1.1)
+                this.result.KickSliderCount++;
+
             switch (slider.CurveType)
             {
                 case CurveType.Bézier:
@@ -389,7 +396,7 @@ namespace OsuFileIO.Interpreter
 
         private bool IsMappedLikeJump(double timeDifference)
         {
-            return timeDifference < this.reader.TimeBetweenOneTwoJumps * 1.1;
+            return timeDifference < this.reader.TimeHalfBeat * 1.1;
         }
 
         private void InterpretMiscellaneous()
@@ -468,6 +475,7 @@ namespace OsuFileIO.Interpreter
             public int CatmullSliderCount { get; set; }
             public int LinearSliderCount { get; set; }
             public int PerfectCicleSliderCount { get; set; }
+            public int KickSliderCount { get; set; }
             public int CirclePerfectStackCount { get; set; }
             public int SliderPerfectStackCount { get; set; }
         }

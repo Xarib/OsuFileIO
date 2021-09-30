@@ -44,8 +44,10 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             this.CircleSize = difficulty.CircleSize.Value;
         }
 
-        public double TimeBetweenStreamAlike { get; private set; }
-        public double TimeBetweenOneTwoJumps { get; private set; }
+        public double TimeQuarterBeat { get; private set; }
+        public double TimeHalfBeat { get; private set; }
+        public double TimeEighthOfBeat { get; private set; }
+
         /// <summary>
         /// Slider verlocity in pixels per beat
         /// </summary>
@@ -105,8 +107,9 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
         private void SetTimeBetweens()
         {
-            this.TimeBetweenStreamAlike = this.CurrentTimingPoint.BeatLength / this.CurrentTimingPoint.Meter; //Meter is usually 4
-            this.TimeBetweenOneTwoJumps = this.CurrentTimingPoint.BeatLength / (this.CurrentTimingPoint.Meter / 2);
+            this.TimeQuarterBeat = this.CurrentTimingPoint.BeatLength / 4;
+            this.TimeHalfBeat = this.CurrentTimingPoint.BeatLength / 2;
+            this.TimeEighthOfBeat = this.CurrentTimingPoint.BeatLength / 8;
         }
     }
 

@@ -166,8 +166,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
 
             //Assert
-            Assert.AreEqual(timeOneTwos, reader.TimeBetweenOneTwoJumps, "Expected to calculate time between 1-2 jumps");
-            Assert.AreEqual(timeStreams, reader.TimeBetweenStreamAlike, "Expected to calculate time between stream objects");
+            Assert.AreEqual(timeOneTwos, reader.TimeHalfBeat, "Expected to calculate time between 1-2 jumps");
+            Assert.AreEqual(timeStreams, reader.TimeQuarterBeat, "Expected to calculate time between stream objects");
         }
 
         [TestMethod]

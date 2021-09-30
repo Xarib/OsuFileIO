@@ -104,6 +104,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var fileReader = new OsuFileReaderFactory(fileName).Build();
             var file = fileReader.ReadFile() as OsuStdFile;
 
+            var d = file.TimingPoints.Where(tp => tp is InheritedPoint).Select(tp => tp as InheritedPoint).Select(tp => tp.VelocityMultiplier).ToList();
+            var s = string.Join(", ", d);
+
             //Act
             var actual = new ActualInterpretation();
             var interpreter = new OsuStdInterpreter(actual);
@@ -1078,6 +1081,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var fileReader = new OsuFileReaderFactory("2371698_mod.osu").Build();
             var file = fileReader.ReadFile() as OsuStdFile;
 
+            var d = file.TimingPoints.Where(tp => tp is InheritedPoint).Select(tp => tp as InheritedPoint).Select(tp => tp.VelocityMultiplier).ToList();
+            var s = string.Join(", ", d);
+
             //Act
             var actual = new ActualInterpretation();
             var interpreter = new OsuStdInterpreter(actual);
@@ -1721,6 +1727,44 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             Assert.AreEqual(count, actual.PerfectCicleSliderCount, "Expected to count perfect circle sliders");
         }
 
+        [TestMethod]
+        [DataRow(34, 0)] // 1/8
+        [DataRow(68, 1)] // 1/4
+        [DataRow(100, 0)]
+        public void Interpret_KickSliders_ReturnsKickSliderCount(int length, int expectedCount)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.6");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("1,-58.8235294117647,4,2,1,55,0,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine($"0,0,10,6,0,P|394:373,1,{length},4|4,0:0|0:3,3:0:0:0:");
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedCount, actual.KickSliderCount, "Should count kicksliders correclty");
+        }
+
         #endregion
 
         #region Miscellaneous
@@ -1875,6 +1919,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public int LinearSliderCount { get; set; }
             public int PerfectCicleSliderCount { get; set; }
             public double AvgSliderPointCount { get; set; }
+            public int KickSliderCount { get; set; }
             public int CirclePerfectStackCount { get; set; }
             public int SliderPerfectStackCount { get; set; }
         }
