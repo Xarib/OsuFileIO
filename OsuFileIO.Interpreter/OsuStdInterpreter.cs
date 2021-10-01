@@ -1,4 +1,5 @@
 ﻿using OsuFileIO.HitObject;
+using OsuFileIO.HitObject.OsuStd;
 using OsuFileIO.Interpreter.HitObjectReader;
 using OsuFileIO.OsuFile;
 using System;
@@ -84,18 +85,18 @@ namespace OsuFileIO.Interpreter
             {
                 case StdHitObjectType.Circle:
 
-                    this.result.Length = TimeSpan.FromMilliseconds(this.reader.CurrentHitObject.TimeInMs);
+                    this.result.Length = TimeSpan.FromMilliseconds(this.reader.CurrentStdHitObject.TimeInMs);
 
                     break;
                 case StdHitObjectType.Slider:
 
-                    var slider = this.reader.CurrentHitObject as Slider;
+                    var slider = this.reader.CurrentStdHitObject as Slider;
                     this.result.Length = TimeSpan.FromMilliseconds(this.CalculateSliderEndTime(slider, this.reader.CurrentTimingPoint));
 
                     break;
                 case StdHitObjectType.Spinner:
 
-                    var spinner = this.reader.CurrentHitObject as Spinner;
+                    var spinner = this.reader.CurrentStdHitObject as Spinner;
                     this.result.Length = TimeSpan.FromMilliseconds(spinner.EndTimeInMs);
 
                     break;
@@ -136,12 +137,12 @@ namespace OsuFileIO.Interpreter
         private const double beatLength150Bpm = 60000 / 150 / 4; //150 Bmp
         private void InterpretCountValues()
         {
-            var previousHitObject = this.reader.GetHitObjectFromOffsetOrNull(-1);
+            var previousHitObject = this.reader.GetHitObjectFromOffsetOrNull<StdHitObject>(-1);
 
             if (previousHitObject is null)
                 return;
 
-            var timeBetweenHitObjects = this.reader.CurrentHitObject.TimeInMs - previousHitObject.TimeInMs;
+            var timeBetweenHitObjects = this.reader.CurrentStdHitObject.TimeInMs - previousHitObject.TimeInMs;
 
             if (timeBetweenHitObjects < this.reader.TimeHalfBeat && timeBetweenHitObjects > this.reader.TimeHalfBeat)
             {
@@ -171,12 +172,12 @@ namespace OsuFileIO.Interpreter
         {
             this.hitObjectCountDoubleToQuad++;
 
-            var nextHitObject = this.reader.GetHitObjectFromOffsetOrNull(1);
+            var nextHitObject = this.reader.GetHitObjectFromOffsetOrNull<StdHitObject>(1);
 
             if (this.reader.HitObjectType != StdHitObjectType.Circle)
                 this.IsCircleOnly = false;
 
-            if (nextHitObject is not null && this.IsMappedLikeDoubleToQuad(nextHitObject.TimeInMs - this.reader.CurrentHitObject.TimeInMs))
+            if (nextHitObject is not null && this.IsMappedLikeDoubleToQuad(nextHitObject.TimeInMs - this.reader.CurrentStdHitObject.TimeInMs))
                 return;
 
             switch (this.hitObjectCountDoubleToQuad)
@@ -211,12 +212,12 @@ namespace OsuFileIO.Interpreter
         }
         private bool IsDirectlyAfterSlider(int offsetBeggining)
         {
-            var history = this.reader.GetHistoryEntryOrNull(offsetBeggining - 1);
+            var history = this.reader.GetHistoryEntryOrNull<StdHitObject>(offsetBeggining - 1);
 
             if (history?.Item2 is not Slider slider)
                 return false;
 
-            var startingHitObject = this.reader.GetHitObjectFromOffsetOrNull(offsetBeggining);
+            var startingHitObject = this.reader.GetHitObjectFromOffsetOrNull<StdHitObject>(offsetBeggining);
             var timeDifference = startingHitObject.TimeInMs - this.CalculateSliderEndTime(slider, history?.Item1);
 
             return timeDifference < this.reader.TimeQuarterBeat * 1.1;
@@ -233,7 +234,7 @@ namespace OsuFileIO.Interpreter
         private int slidersInStream = 0;
         private void InterpretStreamCount()
         {
-            var distanceBetweenCurrentAndLastObject = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.Coordinates, this.reader.GetHitObjectFromOffsetOrNull(-1).Coordinates);
+            var distanceBetweenCurrentAndLastObject = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentStdHitObject.Coordinates, this.reader.GetHitObjectFromOffsetOrNull<StdHitObject>(-1).Coordinates);
             this.streamPixels += distanceBetweenCurrentAndLastObject;
 
             var circleDiameter = 2 * (54.4 - 4.48 * this.reader.CircleSize); //Formula => https://osu.ppy.sh/wiki/en/Beatmapping/Circle_size
@@ -247,17 +248,17 @@ namespace OsuFileIO.Interpreter
             if (this.reader.HitObjectType == StdHitObjectType.Slider)
                 this.slidersInStream++;
 
-            var hitObjectNext1 = this.reader.GetHitObjectFromOffsetOrNull(1);
+            var hitObjectNext1 = this.reader.GetHitObjectFromOffsetOrNull<StdHitObject>(1);
 
-            if (hitObjectNext1 is not null && this.IsMappedLikeStream(hitObjectNext1.TimeInMs - this.reader.CurrentHitObject.TimeInMs))
+            if (hitObjectNext1 is not null && this.IsMappedLikeStream(hitObjectNext1.TimeInMs - this.reader.CurrentStdHitObject.TimeInMs))
             {
                 #region StreamJumps
 
-                var hitObjectNext2 = this.reader.GetHitObjectFromOffsetOrNull(2);
+                var hitObjectNext2 = this.reader.GetHitObjectFromOffsetOrNull<StdHitObject>(2);
 
                 if (hitObjectNext2 is not null && this.IsMappedLikeStream(hitObjectNext2.TimeInMs - hitObjectNext1.TimeInMs))
                 {
-                    var distanceBetweenCurrentAndNext1 = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.Coordinates, hitObjectNext1.Coordinates);
+                    var distanceBetweenCurrentAndNext1 = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentStdHitObject.Coordinates, hitObjectNext1.Coordinates);
                     var distanceBetweenNext1AndNext2 = CalculateDistanceBetweenTwoHitObjects(hitObjectNext1.Coordinates, hitObjectNext2.Coordinates);
 
                     var ratioDistanceBeforeJump = distanceBetweenCurrentAndNext1 / distanceBetweenCurrentAndLastObject;
@@ -326,13 +327,13 @@ namespace OsuFileIO.Interpreter
 
         private void InterpretJumps()
         {
-            var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull(-1);
-            var hitObjectPrev2 = this.reader.GetHitObjectFromOffsetOrNull(-2);
+            var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull<StdHitObject>(-1);
+            var hitObjectPrev2 = this.reader.GetHitObjectFromOffsetOrNull<StdHitObject>(-2);
 
             if (hitObjectPrev1 is null)
                 return;
 
-            var distanceBetweenCurrentAndPrev = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.Coordinates, hitObjectPrev1.Coordinates);
+            var distanceBetweenCurrentAndPrev = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentStdHitObject.Coordinates, hitObjectPrev1.Coordinates);
 
             if (distanceBetweenCurrentAndPrev >= 100)
                 this.result.TotalJumpPixels += distanceBetweenCurrentAndPrev;
@@ -343,11 +344,11 @@ namespace OsuFileIO.Interpreter
             if (hitObjectPrev2 is null ||
                 distanceBetweenCurrentAndPrev < 100 ||
                 CalculateDistanceBetweenTwoHitObjects(hitObjectPrev1.Coordinates, hitObjectPrev2.Coordinates) < 100 ||
-                !this.IsMappedLikeJump(this.reader.CurrentHitObject.TimeInMs - hitObjectPrev1.TimeInMs) ||
+                !this.IsMappedLikeJump(this.reader.CurrentStdHitObject.TimeInMs - hitObjectPrev1.TimeInMs) ||
                 !this.IsMappedLikeJump(hitObjectPrev1.TimeInMs - hitObjectPrev2.TimeInMs))
                 return;
 
-            var degrees = CalcualteAngle(this.reader.CurrentHitObject.Coordinates, hitObjectPrev1.Coordinates, hitObjectPrev2.Coordinates);
+            var degrees = CalcualteAngle(this.reader.CurrentStdHitObject.Coordinates, hitObjectPrev1.Coordinates, hitObjectPrev2.Coordinates);
 
             if (degrees <= 5 || degrees >= 175)
             {
@@ -364,7 +365,7 @@ namespace OsuFileIO.Interpreter
             if (this.reader.HitObjectType != StdHitObjectType.Slider)
                 return;
 
-            var slider = this.reader.CurrentHitObject as Slider;
+            var slider = this.reader.CurrentStdHitObject as Slider;
 
             this.result.TotalSliderLength += slider.Length;
 
@@ -401,17 +402,17 @@ namespace OsuFileIO.Interpreter
 
         private void InterpretMiscellaneous()
         {
-            var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull(-1);
+            var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull<StdHitObject>(-1);
 
             if (hitObjectPrev1 is null || hitObjectPrev1 is Spinner)
                 return;
 
             if (this.reader.HitObjectType == StdHitObjectType.Circle && hitObjectPrev1 is Circle circle)
             {
-                if (circle.Coordinates == this.reader.CurrentHitObject.Coordinates)
+                if (circle.Coordinates == this.reader.CurrentStdHitObject.Coordinates)
                     this.result.CirclePerfectStackCount++;
             }
-            else if (hitObjectPrev1 is Slider prevSlider && this.reader.CurrentHitObject is Slider currentSlider)
+            else if (hitObjectPrev1 is Slider prevSlider && this.reader.CurrentStdHitObject is Slider currentSlider)
             {
                 if ((currentSlider.Coordinates == prevSlider.Coordinates && currentSlider.SliderCoordinates.Last() == prevSlider.SliderCoordinates.Last()) || 
                     (currentSlider.Coordinates == prevSlider.SliderCoordinates.Last() && currentSlider.SliderCoordinates.Last() == prevSlider.Coordinates))

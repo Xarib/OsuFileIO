@@ -4,18 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.HitObject
+namespace OsuFileIO.HitObject.OsuStd
 {
-    public class Spinner : IHitObject, IEquatable<Spinner>
+    public class Spinner : StdHitObject, IEquatable<Spinner>
     {
-        public Coordinates Coordinates { get; set; }
-        public int TimeInMs { get; set; }
         public int EndTimeInMs { get; set; }
 
-        public Spinner(Coordinates coordinates, int timeInMs, int endTimeInMs)
+        public Spinner(Coordinates coordinates, int timeInMs, int endTimeInMs) : base(coordinates, timeInMs)
         {
-            this.Coordinates = coordinates;
-            this.TimeInMs = timeInMs;
             this.EndTimeInMs = endTimeInMs;
         }
 

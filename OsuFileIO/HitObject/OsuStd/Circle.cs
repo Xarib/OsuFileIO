@@ -4,18 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.HitObject
+namespace OsuFileIO.HitObject.OsuStd
 {
-    public class Circle : IHitObject, IEquatable<Circle>
+    public class Circle : StdHitObject, IEquatable<Circle>
     {
-        public Coordinates Coordinates { get; set; }
-        public int TimeInMs { get; set; }
-
-        public Circle(Coordinates coordinates, int timeInMs)
-        {
-            this.Coordinates = coordinates;
-            this.TimeInMs = timeInMs;
-        }
+        public Circle(Coordinates coordinates, int timeInMs) : base(coordinates, timeInMs) { }
 
         public bool Equals(Circle other)
         {

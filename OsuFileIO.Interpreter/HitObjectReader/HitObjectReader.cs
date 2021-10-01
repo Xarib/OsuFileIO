@@ -41,24 +41,26 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             return this.timingPoints[indexAfterOffset];
         }
 
-        public IHitObject GetHitObjectFromOffsetOrNull(int offsetFromCurrent)
+        public THitObject GetHitObjectFromOffsetOrNull<THitObject>(int offsetFromCurrent) where THitObject : IHitObject
         {
             var indexAfterOffset = this.indexHitObject + offsetFromCurrent;
 
             if (indexAfterOffset < 0 || indexAfterOffset >= this.hitObjects.Count)
-                return null;
+                return default;
 
-            return this.hitObjects[indexAfterOffset];
+            return (THitObject)this.hitObjects[indexAfterOffset];
         }
 
-        public (TimingPoint, IHitObject)? GetHistoryEntryOrNull(int offsetFromCurrent)
+        public (TimingPoint, THitObject)? GetHistoryEntryOrNull<THitObject>(int offsetFromCurrent) where THitObject : IHitObject
         {
             var index = this.History.Count + offsetFromCurrent - 1;
 
             if (index < 0 || index == this.History.Count)
                 return null;
 
-            return this.History[index];
+            var item = this.History[index];
+
+            return (item.Item1, (THitObject)item.Item2);
         }
 
         protected void SetMostCurrentTimingPoint()

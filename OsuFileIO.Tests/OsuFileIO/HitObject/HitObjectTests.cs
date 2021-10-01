@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OsuFileIO.HitObject;
+using OsuFileIO.HitObject.OsuStd;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,8 +77,8 @@ namespace OsuFileIO.Tests.OsuFileIO.HitObject
             Slider rhs = null;
             Assert.IsTrue(lhs == rhs, "Expected to be equal");
 
-            rhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier);
-            lhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier);
+            rhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier, 3);
+            lhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier, 3);
 
             Assert.IsTrue(lhs == rhs, "Expected to be equal");
         }
@@ -86,16 +87,16 @@ namespace OsuFileIO.Tests.OsuFileIO.HitObject
         public void NotEqual_UnequalSliders_ReturnsTrue()
         {
             Slider lhs = null;
-            Slider rhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier);
-            Assert.IsTrue(lhs != rhs, "Expected to be equal");
+            Slider rhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier, 3);
+            Assert.IsTrue(lhs != rhs, "Expected to be unequal");
 
-            lhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier);
+            lhs = new(new Coordinates(1, 2), 3, new List<Coordinates> { new Coordinates(1, 2), new Coordinates(4, 6) }, 4.4, CurveType.Bézier, 3);
             rhs = null;
-            Assert.IsTrue(lhs != rhs, "Expected to be equal");
+            Assert.IsTrue(lhs != rhs, "Expected to be unequal");
 
 
-            rhs = new(new Coordinates(11, 22), 33, new List<Coordinates> { new Coordinates(11, 22), new Coordinates(33, 65) }, 4.6, CurveType.Linear);
-            Assert.IsTrue(lhs != rhs, "Expected to be equal");
+            rhs = new(new Coordinates(11, 22), 33, new List<Coordinates> { new Coordinates(11, 22), new Coordinates(33, 65) }, 4.6, CurveType.Linear, 4);
+            Assert.IsTrue(lhs != rhs, "Expected to be unequal");
         }
     }
 }

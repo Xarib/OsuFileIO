@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
-namespace OsuFileIO.HitObject
+namespace OsuFileIO.HitObject.Mania
 {
-    public interface IHitObject
+    public class ManiaHitObject : IHitObject
     {
         public int TimeInMs { get; set; }
     }

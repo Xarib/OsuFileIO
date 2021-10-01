@@ -1,6 +1,7 @@
 ﻿using OsuFileIO.Enums;
 using OsuFileIO.Extensions;
 using OsuFileIO.HitObject;
+using OsuFileIO.HitObject.OsuStd;
 using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader.Exceptions;
 using System;
@@ -121,6 +122,7 @@ namespace OsuFileIO.OsuFileReader
             int spanIndex = -1;
             var sliderPoints = new List<Coordinates>();
             char curveType = '_';
+            int slides = -1;
 
             foreach (var span in rest.SplitLinesAt(','))
             {
@@ -155,9 +157,10 @@ namespace OsuFileIO.OsuFileReader
                         }
                         continue;
                     case 2:
+                        slides = int.Parse(span);
                         continue;
                     case 3:
-                        slider = new Slider(coordinates, ms, sliderPoints, double.Parse(span), (CurveType)curveType);
+                        slider = new Slider(coordinates, ms, sliderPoints, double.Parse(span), (CurveType)curveType, slides);
                             break;
                     default:
                         break;

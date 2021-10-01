@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OsuFileIO.HitObject;
+using OsuFileIO.HitObject.OsuStd;
 using OsuFileIO.OsuFileReader;
 using System;
 using System.Collections.Generic;
@@ -83,8 +84,8 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         }
 
         [TestMethod]
-        [DataRow("80,136,133207,2,0,B|114:147|114:147|164:128|164:128|240:144,1,142.5,10|0,0:0|0:0,0:0:0:0:")]
-        [DataRow("235,22,173662,6,0,L|295:146,1,113.999996520996,14|2,0:0|0:0,0:0:0:0:")]
+        [DataRow("80,136,133207,2,0,B|114:147|114:147|164:128|164:128|240:144,11,142.5,10|0,0:0|0:0,0:0:0:0:")]
+        [DataRow("235,22,173662,6,0,L|295:146,8,113.999996520996,14|2,0:0|0:0,0:0:0:0:")]
         public void ReadFile_HitObjectData_ReturnsSlider(string line)
         {
             //Arrange
@@ -118,12 +119,20 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
                 .Distinct()
                 .Select(str => new Coordinates(int.Parse(str[0..str.IndexOf(':')]), int.Parse(str[(str.IndexOf(':') + 1)..])))
                 .ToList();
+            var slides = int.Parse(expected[6]);
+            var length = double.Parse(expected[7]);
+            var coords = new Coordinates(int.Parse(expected[0]), int.Parse(expected[1]));
+            var expectedCoords = slides % 2 == 1 ? coords : points.Last();
+
             Assert.IsTrue(actual is Slider, $"Expected a {nameof(Slider)}");
-            Assert.AreEqual(new Coordinates(int.Parse(expected[0]), int.Parse(expected[1])), actual.Coordinates, "Expected to read coordiantes correctly");
+            Assert.AreEqual(coords, actual.Coordinates, "Expected to read coordiantes correctly");
             Assert.AreEqual(int.Parse(expected[2]), actual.TimeInMs, "Expected to get the correct time");
             CollectionAssert.AreEqual(points, actual.SliderCoordinates, "Expected to get the correct time");
-            Assert.AreEqual(double.Parse(expected[7]), actual.Length, "Expected to get the correct slider length");
+            Assert.AreEqual(length, actual.Length, "Expected to get the correct slider length");
             Assert.AreEqual(curveType, actual.CurveType, "Expected to read the correct curve type");
+            Assert.AreEqual(slides, actual.Slides, "Expected to read slides correctly");
+            Assert.AreEqual(length * slides, actual.TravelLenth, "Expected to calculate travel length");
+            Assert.AreEqual(expectedCoords, actual.EndCoordinates, "Expected to get the correct end coords");
         }
 
         [TestMethod]

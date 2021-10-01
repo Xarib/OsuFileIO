@@ -1,4 +1,5 @@
 ﻿using OsuFileIO.HitObject;
+using OsuFileIO.HitObject.OsuStd;
 using OsuFileIO.OsuFile;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,8 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
             this.CircleSize = difficulty.CircleSize.Value;
         }
+
+        public StdHitObject CurrentStdHitObject { get => this.hitObjects[this.indexHitObject] as StdHitObject; }
 
         public double TimeQuarterBeat { get; private set; }
         public double TimeHalfBeat { get; private set; }
@@ -91,11 +94,11 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
         private void SetHitObjectType()
         {
-            if (this.CurrentHitObject is Circle)
+            if (this.CurrentStdHitObject is Circle)
             {
                 this.HitObjectType = StdHitObjectType.Circle;
             }
-            else if (this.CurrentHitObject is Slider)
+            else if (this.CurrentStdHitObject is Slider)
             {
                 this.HitObjectType = StdHitObjectType.Slider;
             }

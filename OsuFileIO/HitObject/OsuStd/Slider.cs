@@ -4,23 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.HitObject
+namespace OsuFileIO.HitObject.OsuStd
 {
-    public class Slider : IHitObject, IEquatable<Slider>
+    public class Slider : StdHitObject, IEquatable<Slider>
     {
-        public Coordinates Coordinates { get; set; }
-        public int TimeInMs { get; set; }
         public double Length { get; set; }
         public List<Coordinates> SliderCoordinates { get; set; }
         public CurveType CurveType { get; set; }
+        public int Slides { get; set; }
+        public double TravelLenth { get; set; }
 
-        public Slider(Coordinates coordinates, int timeInMs, List<Coordinates> sliderCoordinates, double length, CurveType curveType)
+        public Slider(Coordinates coordinates, int timeInMs, List<Coordinates> sliderCoordinates, double length, CurveType curveType, int slides) : base(coordinates, timeInMs)
         {
             this.Coordinates = coordinates;
             this.TimeInMs = timeInMs;
             this.SliderCoordinates = sliderCoordinates;
             this.Length = length;
             this.CurveType = curveType;
+            this.TravelLenth = length * slides;
+            this.Slides = slides;
+
+            if (slides % 2 == 1)
+            {
+                this.EndCoordinates = coordinates;
+            }
+            else
+            {
+                this.EndCoordinates = sliderCoordinates.Last();
+            }
         }
 
         public bool Equals(Slider other)
