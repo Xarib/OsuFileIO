@@ -8,25 +8,34 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Interpreter.HitObjectReader
 {
-    public abstract class HitObjectReader
+    public abstract class HitObjectReader<THitObject> where THitObject : IHitObject
     {
         protected readonly Difficulty difficulty;
-        protected readonly IList<TimingPoint> timingPoints;
-        protected readonly IList<IHitObject> hitObjects;
+        protected readonly List<TimingPoint> timingPoints;
+        protected readonly List<THitObject> hitObjects;
         protected int indexHitObject;
         protected int indexTimingPoint;
 
         public TimingPoint CurrentTimingPoint { get => this.timingPoints[this.indexTimingPoint]; }
-        public IHitObject CurrentHitObject { get => this.hitObjects[this.indexHitObject]; }
+        public THitObject CurrentHitObject { get => this.hitObjects[this.indexHitObject]; }
 
-        private List<(TimingPoint, IHitObject)> History { get; init; }
+        private List<(TimingPoint, THitObject)> History { get; init; }
 
-        public HitObjectReader(Difficulty difficulty, IList<TimingPoint> timingPoints, IList<IHitObject> hitObjects)
+        public HitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, List<IHitObject> hitObjects)
         {
             this.difficulty = difficulty ?? throw new ArgumentNullException(nameof(difficulty));
             this.timingPoints = timingPoints ?? throw new ArgumentNullException(nameof(timingPoints));
-            this.hitObjects = hitObjects ?? throw new ArgumentNullException(nameof(hitObjects));
-            this.History = new List<(TimingPoint, IHitObject)>();
+            this.History = new List<(TimingPoint, THitObject)>();
+
+            if (hitObjects is null)
+            {
+                throw new ArgumentNullException(nameof(hitObjects));
+            }
+            else
+            {
+                //TODO look how much of an isssue this is.
+                this.hitObjects = hitObjects.Cast<THitObject>().ToList();
+            }
         }
 
         public abstract bool ReadNext();
@@ -41,26 +50,24 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             return this.timingPoints[indexAfterOffset];
         }
 
-        public THitObject GetHitObjectFromOffsetOrNull<THitObject>(int offsetFromCurrent) where THitObject : IHitObject
+        public THitObject GetHitObjectFromOffsetOrNull(int offsetFromCurrent)
         {
             var indexAfterOffset = this.indexHitObject + offsetFromCurrent;
 
             if (indexAfterOffset < 0 || indexAfterOffset >= this.hitObjects.Count)
                 return default;
 
-            return (THitObject)this.hitObjects[indexAfterOffset];
+            return this.hitObjects[indexAfterOffset];
         }
 
-        public (TimingPoint, THitObject)? GetHistoryEntryOrNull<THitObject>(int offsetFromCurrent) where THitObject : IHitObject
+        public (TimingPoint, THitObject)? GetHistoryEntryOrNull(int offsetFromCurrent)
         {
             var index = this.History.Count + offsetFromCurrent - 1;
 
             if (index < 0 || index == this.History.Count)
                 return null;
 
-            var item = this.History[index];
-
-            return (item.Item1, (THitObject)item.Item2);
+            return this.History[index];
         }
 
         protected void SetMostCurrentTimingPoint()

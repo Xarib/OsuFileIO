@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Interpreter.HitObjectReader
 {
-    public class StdHitObjectReader : HitObjectReader
+    public class StdHitObjectReader : HitObjectReader<StdHitObject>
     {
-        public StdHitObjectReader(Difficulty difficulty, IList<TimingPoint> timingPoints, IList<IHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
+        public StdHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, List<IHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
         {
             if (difficulty is null)
                 throw new ArgumentNullException(nameof(difficulty));
@@ -44,8 +44,6 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
             this.CircleSize = difficulty.CircleSize.Value;
         }
-
-        public StdHitObject CurrentStdHitObject { get => this.hitObjects[this.indexHitObject] as StdHitObject; }
 
         public double TimeQuarterBeat { get; private set; }
         public double TimeHalfBeat { get; private set; }
@@ -94,11 +92,11 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
         private void SetHitObjectType()
         {
-            if (this.CurrentStdHitObject is Circle)
+            if (this.CurrentHitObject is Circle)
             {
                 this.HitObjectType = StdHitObjectType.Circle;
             }
-            else if (this.CurrentStdHitObject is Slider)
+            else if (this.CurrentHitObject is Slider)
             {
                 this.HitObjectType = StdHitObjectType.Slider;
             }

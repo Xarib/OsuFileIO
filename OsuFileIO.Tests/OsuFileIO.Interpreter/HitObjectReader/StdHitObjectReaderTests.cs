@@ -63,7 +63,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             var expectedTimingpoint = timingPoints[expectedTimingPointIndex];
             Assert.AreEqual(expectedTimingpoint.BeatLength, reader.CurrentTimingPoint.BeatLength, "Expected to get the expected timingpoint with the correct index");
             Assert.AreEqual(expectedTimingpoint.TimeInMs, reader.CurrentTimingPoint.TimeInMs, "Expected to get the expected timingpoint time");
-            Assert.IsTrue(reader.CurrentTimingPoint.TimeInMs <= reader.CurrentStdHitObject.TimeInMs, "Expected no timingpoint where the time is bigger than hit object time");
+            Assert.IsTrue(reader.CurrentTimingPoint.TimeInMs <= reader.CurrentHitObject.TimeInMs, "Expected no timingpoint where the time is bigger than hit object time");
         }
 
         [TestMethod]
@@ -212,7 +212,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             while (reader.ReadNext()) { }
 
             //Assert
-            Assert.AreEqual(reader.GetHitObjectFromOffsetOrNull<StdHitObject>(offset), reader.GetHistoryEntryOrNull<StdHitObject>(offset)?.Item2, "Expected to get the same HitObject");
+            Assert.AreEqual(reader.GetHitObjectFromOffsetOrNull(offset), reader.GetHistoryEntryOrNull(offset)?.Item2, "Expected to get the same HitObject");
         }
 
         [TestMethod]
@@ -256,7 +256,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
 
             for (int i = 0; i < count; i++)
             {
-                actualHistory.Add(reader.GetHistoryEntryOrNull<StdHitObject>(i * - 1)?.Item2);
+                actualHistory.Add(reader.GetHistoryEntryOrNull(i * - 1)?.Item2);
             }
 
             actualHistory = actualHistory
