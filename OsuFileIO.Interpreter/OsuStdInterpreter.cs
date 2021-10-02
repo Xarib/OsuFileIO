@@ -213,11 +213,11 @@ namespace OsuFileIO.Interpreter
         {
             var history = this.reader.GetHistoryEntryOrNull(offsetBeggining - 1);
 
-            if (history?.Item2 is not Slider slider)
+            if (history?.hitObject is not Slider slider)
                 return false;
 
             var startingHitObject = this.reader.GetHitObjectFromOffsetOrNull(offsetBeggining);
-            var timeDifference = startingHitObject.TimeInMs - this.CalculateSliderEndTime(slider, history?.Item1);
+            var timeDifference = startingHitObject.TimeInMs - this.CalculateSliderEndTime(slider, history?.timingPoint);
 
             return timeDifference < this.reader.TimeQuarterBeat * 1.1;
         }

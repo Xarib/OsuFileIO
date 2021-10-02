@@ -212,7 +212,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             while (reader.ReadNext()) { }
 
             //Assert
-            Assert.AreEqual(reader.GetHitObjectFromOffsetOrNull(offset), reader.GetHistoryEntryOrNull(offset)?.Item2, "Expected to get the same HitObject");
+            Assert.AreEqual(reader.GetHitObjectFromOffsetOrNull(offset), reader.GetHistoryEntryOrNull(offset)?.hitObject, "Expected to get the same HitObject");
         }
 
         [TestMethod]
@@ -256,7 +256,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
 
             for (int i = 0; i < count; i++)
             {
-                actualHistory.Add(reader.GetHistoryEntryOrNull(i * - 1)?.Item2);
+                actualHistory.Add(reader.GetHistoryEntryOrNull(i * - 1)?.hitObject);
             }
 
             actualHistory = actualHistory

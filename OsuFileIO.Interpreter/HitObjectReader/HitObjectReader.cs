@@ -60,7 +60,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             return this.hitObjects[indexAfterOffset];
         }
 
-        public (TimingPoint, THitObject)? GetHistoryEntryOrNull(int offsetFromCurrent)
+        public (TimingPoint timingPoint, THitObject hitObject)? GetHistoryEntryOrNull(int offsetFromCurrent)
         {
             var index = this.History.Count + offsetFromCurrent - 1;
 

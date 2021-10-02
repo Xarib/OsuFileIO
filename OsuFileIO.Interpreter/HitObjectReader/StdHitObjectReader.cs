@@ -32,15 +32,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
                 throw new ArgumentNullException("Difficulty cannot be null");
 
 
-            this.SetHitObjectType();
-
-            this.SetMostCurrentTimingPoint();
-
-            this.AddCurrentToHistory();
-
-            this.SetSliderVelocity();
-
-            this.SetTimeBetweens();
+            this.SetValues();
 
             this.CircleSize = difficulty.CircleSize.Value;
         }
@@ -56,6 +48,19 @@ namespace OsuFileIO.Interpreter.HitObjectReader
         public StdHitObjectType HitObjectType { get; private set; }
         public double CircleSize { get; init; }
 
+        private void SetValues()
+        {
+            this.SetHitObjectType();
+
+            this.SetMostCurrentTimingPoint();
+
+            this.AddCurrentToHistory();
+
+            this.SetSliderVelocity();
+
+            this.SetTimeBetweens();
+        }
+
         /// <summary>
         /// Reads the next <see cref="IHitObject"/> and set the most current <see cref="TimingPoint"/>
         /// </summary>
@@ -67,15 +72,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
             this.indexHitObject++;
 
-            this.SetHitObjectType();
-
-            this.SetMostCurrentTimingPoint();
-
-            this.AddCurrentToHistory();
-
-            this.SetSliderVelocity();
-
-            this.SetTimeBetweens();
+            this.SetValues();
 
             return true;
         }
