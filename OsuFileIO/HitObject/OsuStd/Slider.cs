@@ -57,7 +57,7 @@ namespace OsuFileIO.HitObject.OsuStd
             => Equals(obj as Slider);
 
         public override int GetHashCode()
-            => (this.Coordinates, this.TimeInMs, this.SliderCoordinates, this.Length, this.CurveType).GetHashCode();
+            => (this.Coordinates, this.TimeInMs, this.SliderCoordinates, this.Length, this.CurveType, this.Slides, this.TravelLenth, this.EndCoordinates).GetHashCode();
 
         public static bool operator ==(Slider lhs, Slider rhs)
         {

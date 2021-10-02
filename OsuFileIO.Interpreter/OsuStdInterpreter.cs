@@ -33,21 +33,6 @@ namespace OsuFileIO.Interpreter
 
             do
             {
-                switch (this.reader.HitObjectType)
-                {
-                    case StdHitObjectType.Circle:
-                        this.result.HitCircleCount++;
-                        break;
-                    case StdHitObjectType.Slider:
-                        this.result.SliderCount++;
-                        break;
-                    case StdHitObjectType.Spinner:
-                        this.result.SpinnerCount++;
-                        break;
-                    default:
-                        throw new InvalidEnumArgumentException($"Unimplemented enum {this.reader.HitObjectType}");
-                }
-
                 if (lastRedTimingPoint is null && this.reader.CurrentTimingPoint is InheritedPoint)
                 {
                     lastRedTimingPoint = beatmap.TimingPoints[0];
@@ -136,6 +121,22 @@ namespace OsuFileIO.Interpreter
         private const double beatLength100Bpm = 60000 / 100 / 4; //100 Bmp
         private void InterpretCountValues()
         {
+
+            switch (this.reader.HitObjectType)
+            {
+                case StdHitObjectType.Circle:
+                    this.result.HitCircleCount++;
+                    break;
+                case StdHitObjectType.Slider:
+                    this.result.SliderCount++;
+                    break;
+                case StdHitObjectType.Spinner:
+                    this.result.SpinnerCount++;
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException($"Unimplemented enum {this.reader.HitObjectType}");
+            }
+
             var previousHitObject = this.reader.GetHitObjectFromOffsetOrNull(-1);
 
             if (previousHitObject is null)

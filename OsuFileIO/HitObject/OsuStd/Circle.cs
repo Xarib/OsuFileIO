@@ -8,7 +8,10 @@ namespace OsuFileIO.HitObject.OsuStd
 {
     public class Circle : StdHitObject, IEquatable<Circle>
     {
-        public Circle(Coordinates coordinates, int timeInMs) : base(coordinates, timeInMs) { }
+        public Circle(Coordinates coordinates, int timeInMs) : base(coordinates, timeInMs)
+        {
+            this.EndCoordinates = coordinates;
+        }
 
         public bool Equals(Circle other)
         {
@@ -30,7 +33,7 @@ namespace OsuFileIO.HitObject.OsuStd
             => Equals(obj as Circle);
 
         public override int GetHashCode()
-            => (this.Coordinates, this.TimeInMs).GetHashCode();
+            => (this.Coordinates, this.TimeInMs, this.EndCoordinates).GetHashCode();
 
         public static bool operator ==(Circle lhs, Circle rhs)
         {

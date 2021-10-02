@@ -36,7 +36,7 @@ namespace OsuFileIO.HitObject.OsuStd
             => Equals(obj as Spinner);
 
         public override int GetHashCode()
-            => (this.Coordinates, this.TimeInMs).GetHashCode();
+            => (this.Coordinates, this.TimeInMs, this.EndCoordinates, this.EndTimeInMs).GetHashCode();
 
         public static bool operator ==(Spinner lhs, Spinner rhs)
         {
