@@ -58,6 +58,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow("550,301.507537688442,4,1,0,100,1,0", "172,142,21052,2,0,P|411:58|133:279,1,1200", 24067)]
         [DataRow("550,301.507537688442,4,1,0,100,1,0", "189,100,20449,2,0,P|375:74|125:266,1,936", 22801)]
         [DataRow("550,301.507537688442,4,1,0,100,1,0", "85,82,21655,6,0,B|358:67|358:67|129:270|129:270|393:273,1,840", 23766)]
+        [DataRow("550,301.507537688442,4,2,1,60,1,0", "29,192,550,2,0,L|150:192,2,120.000000596046", 1153)]
+        [DataRow("550,301.507537688442,4,2,1,60,1,0", "29,192,550,2,0,L|150:192,4,120.000000596046", 1756)]
         public void Interpret_Meter_RetunrsLengthOfMap(string timingPoint, string hitObject, double expectedEndTime)
         {
             //Arrange
@@ -266,52 +268,6 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         #endregion
 
         #region Bpm
-        /*
-         * Bpm
-         * 100Bpm = 600
-         * 150Bpm = 400
-         * 200Bpm = 300
-         * 250Bpm = 240
-         */
-        //TODO make this work
-        //[TestMethod]
-        //[DataRow(new ValueTuple<int, double>[] { new ValueTuple<int, double>(100, 300) })]
-        //public void Interpret_ActualMaps_ReturnBpm(ValueTuple<int, double>[] timingPoints ,double bpm, double bpmMin, double bpmMax)
-        //{
-        //    //Arrange
-        //    var stream = new MemoryStream();
-        //    var writer = new StreamWriter(stream);
-        //    writer.WriteLine("osu file format v14");
-        //    writer.WriteLine("[General]");
-        //    writer.WriteLine("StackLeniency: 0.7");
-        //    writer.WriteLine("Mode: 0");
-        //    writer.WriteLine("[Metadata]");
-        //    writer.WriteLine("[Difficulty]");
-        //    writer.WriteLine("SliderMultiplier: 0.7");
-        //    writer.WriteLine("[TimingPoints]");
-
-        //    int timePassed = 0;
-        //    foreach (var timing in timingPoints)
-        //    {
-        //        writer.WriteLine($"{timing.Item1},{timing.Item2},4,1,9,90,1,0");
-        //        timePassed = timing.Item1;
-        //    }
-
-        //    writer.WriteLine("[HitObjects]");
-        //    writer.WriteLine($"479,194,{timePassed},1,4,0:0:0:0:");
-        //    writer.Flush();
-        //    stream.Position = 0;
-
-        //    var fileReader = new OsuFileReaderFactory(stream).Build();
-        //    var file = fileReader.ReadFile() as OsuStdFile;
-
-        //    //Act
-        //    var actual = new ActualInterpretation();
-        //    var interpreter = new OsuStdInterpreter(actual);
-        //    interpreter.Interpret(file);
-
-        //    //Assert
-        //}
 
         [TestMethod]
         [DeploymentItem(fileLocation + "1172819.osu")]

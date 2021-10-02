@@ -114,9 +114,9 @@ namespace OsuFileIO.Interpreter
         }
 
         private double CalculateSliderEndTime(Slider slider, TimingPoint timingPoint)
-            => slider.Length / this.reader.SliderVelocity * timingPoint.BeatLength + slider.TimeInMs;
+            => this.CalculateSliderDuration(slider, timingPoint) + slider.TimeInMs;
         private double CalculateSliderDuration(Slider slider, TimingPoint timingPoint)
-            => slider.Length / this.reader.SliderVelocity * timingPoint.BeatLength;
+            => slider.TravelLenth / this.reader.SliderVelocity * timingPoint.BeatLength;
 
         private const double beatLength100Bpm = 60000 / 100 / 4; //100 Bmp
         private void InterpretCountValues()
@@ -333,7 +333,7 @@ namespace OsuFileIO.Interpreter
             if (hitObjectPrev1 is null)
                 return;
 
-            var distanceBetweenCurrentAndPrev = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.Coordinates, hitObjectPrev1.Coordinates);
+            var distanceBetweenCurrentAndPrev = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.EndCoordinates, hitObjectPrev1.EndCoordinates);
 
             if (distanceBetweenCurrentAndPrev >= 100)
                 this.result.TotalJumpPixels += distanceBetweenCurrentAndPrev;
@@ -343,12 +343,12 @@ namespace OsuFileIO.Interpreter
 
             if (hitObjectPrev2 is null ||
                 distanceBetweenCurrentAndPrev < 100 ||
-                CalculateDistanceBetweenTwoHitObjects(hitObjectPrev1.Coordinates, hitObjectPrev2.Coordinates) < 100 ||
+                CalculateDistanceBetweenTwoHitObjects(hitObjectPrev1.EndCoordinates, hitObjectPrev2.EndCoordinates) < 100 ||
                 !this.IsMappedLikeJump(this.reader.CurrentHitObject.TimeInMs - hitObjectPrev1.TimeInMs) ||
                 !this.IsMappedLikeJump(hitObjectPrev1.TimeInMs - hitObjectPrev2.TimeInMs))
                 return;
 
-            var degrees = CalcualteAngle(this.reader.CurrentHitObject.Coordinates, hitObjectPrev1.Coordinates, hitObjectPrev2.Coordinates);
+            var degrees = CalcualteAngle(this.reader.CurrentHitObject.Coordinates, hitObjectPrev1.Coordinates, hitObjectPrev2.Coordinates); //Normal coordiantes are preferred here
 
             if (degrees <= 5 || degrees >= 175)
             {

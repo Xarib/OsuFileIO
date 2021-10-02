@@ -47,6 +47,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             Assert.IsTrue(actual is Circle, $"Expected a {nameof(Circle)}");
             Assert.AreEqual(new Coordinates(int.Parse(expected[0]), int.Parse(expected[1])), actual.Coordinates, "Expected to read coordiantes correctly");
             Assert.AreEqual(int.Parse(expected[2]), actual.TimeInMs, "Expected to get the correct time");
+            Assert.AreEqual(actual.Coordinates, actual.EndCoordinates, "Must be same");
         }
 
         [TestMethod]
@@ -81,6 +82,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             Assert.AreEqual(new Coordinates(int.Parse(expected[0]), int.Parse(expected[1])), actual.Coordinates, "Expected to read coordiantes correctly");
             Assert.AreEqual(int.Parse(expected[2]), actual.TimeInMs, "Expected to get the correct time");
             Assert.AreEqual(int.Parse(expected[5]), actual.EndTimeInMs, "Expected to get the correct end time");
+            Assert.AreEqual(actual.Coordinates, actual.EndCoordinates, "Must be same");
         }
 
         [TestMethod]
@@ -164,6 +166,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
 
             //Act
             var actual = reader.ReadFile();
+            //Should not throw
         }
 
     }
