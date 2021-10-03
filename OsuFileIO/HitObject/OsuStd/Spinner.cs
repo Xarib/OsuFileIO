@@ -13,6 +13,7 @@ namespace OsuFileIO.HitObject.OsuStd
         public Spinner(Coordinates coordinates, int timeInMs, int endTimeInMs) : base(coordinates, timeInMs)
         {
             this.EndTimeInMs = endTimeInMs;
+            this.EndCoordinates = coordinates;
         }
 
         public bool Equals(Spinner other)

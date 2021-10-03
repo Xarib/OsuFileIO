@@ -106,9 +106,6 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var fileReader = new OsuFileReaderFactory(fileName).Build();
             var file = fileReader.ReadFile() as OsuStdFile;
 
-            var d = file.TimingPoints.Where(tp => tp is InheritedPoint).Select(tp => tp as InheritedPoint).Select(tp => tp.VelocityMultiplier).ToList();
-            var s = string.Join(", ", d);
-
             //Act
             var actual = new ActualInterpretation();
             var interpreter = new OsuStdInterpreter(actual);
@@ -1345,6 +1342,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var interpreter = new OsuStdInterpreter(actual);
             interpreter.Interpret(file);
 
+            //Assert
             Assert.AreEqual(expectedCount, actual.CrossScreenJumpCount, "Expected find all cross screen jumps");
         }
 
@@ -1384,7 +1382,86 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var interpreter = new OsuStdInterpreter(actual);
             interpreter.Interpret(file);
 
+            //Assert
             Assert.AreEqual(expectedLength, actual.TotalJumpPixels, "Expected to get Jump length");
+        }
+
+        [TestMethod]
+        [DataRow(120, 120)]
+        public void Interpret_JumpFromSlider_ReturnsTotalJumpPixels(int xCoord, double expectedLength)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine($"-120,0,550,2,0,L|0:0,4,120.000000596046");
+            writer.WriteLine($"{xCoord},0,0,5,4,0:0:0:0:");
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedLength, actual.TotalJumpPixels, "Expected to calculate jump pixels from slider end");
+        }
+
+        [TestMethod]
+        [DataRow(new int[] { 10 }, 1)]
+        [DataRow(new int[] { 10, 0 }, 1)]
+        [DataRow(new int[] { 10, -10, 0, 30 }, 3)] // Jumps: 10px -20px 10px 30px
+        public void Interpret_VariousJumpLengths(int[] xCoords, int expectedCount)
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.7");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine("0,0,0,5,4,0:0:0:0:");
+
+            foreach (var x in xCoords)
+            {
+                writer.WriteLine($"{x},0,0,5,4,0:0:0:0:");
+            }
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(expectedCount, actual.UniqueDistancesCount, "Expected to find all unique jumps lenghts");
         }
 
         #endregion
@@ -1841,7 +1918,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
         #endregion
 
-        private class ActualInterpretation : IInterpretation
+        private class ActualInterpretation : IOsuStdInterpretation
         {
             public TimeSpan Length { get; set; }
             public int HitCircleCount { get; set; }
@@ -1879,6 +1956,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public int KickSliderCount { get; set; }
             public int CirclePerfectStackCount { get; set; }
             public int SliderPerfectStackCount { get; set; }
+            public int UniqueDistancesCount { get; set; }
         }
     }
 }

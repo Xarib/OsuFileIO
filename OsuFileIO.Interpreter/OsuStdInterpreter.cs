@@ -15,11 +15,11 @@ namespace OsuFileIO.Interpreter
 {
     public class OsuStdInterpreter
     {
-        private readonly IInterpretation result;
+        private readonly IOsuStdInterpretation result;
         private StdHitObjectReader reader;
 
 
-        public OsuStdInterpreter(IInterpretation source)
+        public OsuStdInterpreter(IOsuStdInterpretation source)
         {
             this.result = source ?? new OsuStdInterpretation();
         }
@@ -111,6 +111,7 @@ namespace OsuFileIO.Interpreter
             }
 
             this.result.AvgSliderPointCount = (double)this.result.SliderPointCount / this.result.SliderCount;
+            this.result.UniqueDistancesCount = this.jumpLengthFrequency.Count;
         }
 
         private double CalculateSliderEndTime(Slider slider, TimingPoint timingPoint)
@@ -325,6 +326,7 @@ namespace OsuFileIO.Interpreter
             return timeDifference < this.reader.TimeQuarterBeat * 1.1 && timeDifference <= beatLength100Bpm;
         }
 
+        private Dictionary<double, int> jumpLengthFrequency = new();
         private void InterpretJumps()
         {
             var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull(-1);
@@ -334,6 +336,17 @@ namespace OsuFileIO.Interpreter
                 return;
 
             var distanceBetweenCurrentAndPrev = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.EndCoordinates, hitObjectPrev1.EndCoordinates);
+
+            //var roundedDistance = Convert.ToInt32(distanceBetweenCurrentAndPrev);
+            var roundedDistance = Math.Round(distanceBetweenCurrentAndPrev, 2);
+            if (this.jumpLengthFrequency.ContainsKey(roundedDistance))
+            {
+                this.jumpLengthFrequency[roundedDistance]++;
+            }
+            else
+            {
+                this.jumpLengthFrequency.Add(roundedDistance, 1);
+            }
 
             if (distanceBetweenCurrentAndPrev >= 100)
                 this.result.TotalJumpPixels += distanceBetweenCurrentAndPrev;
@@ -402,6 +415,7 @@ namespace OsuFileIO.Interpreter
 
         private void InterpretMiscellaneous()
         {
+            //Perfect Stacks
             var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull(-1);
 
             if (hitObjectPrev1 is null || hitObjectPrev1 is Spinner)
@@ -441,7 +455,7 @@ namespace OsuFileIO.Interpreter
             return degrees;
         }
 
-        private class OsuStdInterpretation : IInterpretation
+        private class OsuStdInterpretation : IOsuStdInterpretation
         {
             public TimeSpan Length { get; set; }
             public int HitCircleCount { get; set; }
@@ -479,6 +493,7 @@ namespace OsuFileIO.Interpreter
             public int KickSliderCount { get; set; }
             public int CirclePerfectStackCount { get; set; }
             public int SliderPerfectStackCount { get; set; }
+            public int UniqueDistancesCount { get; set; }
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Interpreter
 {
-    public interface IInterpretation
+    public interface IOsuStdInterpretation
     {
         public TimeSpan Length { get; set; }
         public int HitCircleCount { get; set; }
@@ -44,5 +44,6 @@ namespace OsuFileIO.Interpreter
         public int KickSliderCount { get; set; }
         public int CirclePerfectStackCount { get; set; }
         public int SliderPerfectStackCount { get; set; }
+        public int UniqueDistancesCount { get; set; }
     }
 }
