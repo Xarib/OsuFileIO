@@ -112,6 +112,19 @@ namespace OsuFileIO.Interpreter
 
             this.result.AvgSliderPointCount = (double)this.result.SliderPointCount / this.result.SliderCount;
             this.result.UniqueDistancesCount = this.jumpLengthFrequency.Count;
+
+            if (this.sliderVelocityFrequency.Count != 0)
+            {
+                var avgSliderFrequency = this.sliderVelocityFrequency.Average(freq => freq.Value);
+                var mostFrequentSpeeds = this.sliderVelocityFrequency
+                    .Where(freq => freq.Value >= avgSliderFrequency)
+                    .OrderByDescending(freq => freq.Key)
+                    .ToList();
+
+                this.result.AvgFasterSliderSpeed = mostFrequentSpeeds[0].Key;
+
+                this.result.SliderSpeedDifference = mostFrequentSpeeds[0].Key - mostFrequentSpeeds.Last().Key;
+            }
         }
 
         private double CalculateSliderEndTime(Slider slider, TimingPoint timingPoint)
@@ -337,7 +350,6 @@ namespace OsuFileIO.Interpreter
 
             var distanceBetweenCurrentAndPrev = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.EndCoordinates, hitObjectPrev1.EndCoordinates);
 
-            //var roundedDistance = Convert.ToInt32(distanceBetweenCurrentAndPrev);
             var roundedDistance = Math.Round(distanceBetweenCurrentAndPrev, 2);
             if (this.jumpLengthFrequency.ContainsKey(roundedDistance))
             {
@@ -373,10 +385,20 @@ namespace OsuFileIO.Interpreter
             }
         }
 
+        private Dictionary<double, int> sliderVelocityFrequency = new();
         private void InterpretSliders()
         {
             if (this.reader.HitObjectType != StdHitObjectType.Slider)
                 return;
+
+            if (this.sliderVelocityFrequency.ContainsKey(this.reader.SliderVelocity))
+            {
+                this.sliderVelocityFrequency[this.reader.SliderVelocity]++;
+            }
+            else
+            {
+                this.sliderVelocityFrequency.Add(this.reader.SliderVelocity, 1);
+            }
 
             var slider = this.reader.CurrentHitObject as Slider;
 
@@ -428,7 +450,7 @@ namespace OsuFileIO.Interpreter
             }
             else if (hitObjectPrev1 is Slider prevSlider && this.reader.CurrentHitObject is Slider currentSlider)
             {
-                if ((currentSlider.Coordinates == prevSlider.Coordinates && currentSlider.SliderCoordinates.Last() == prevSlider.SliderCoordinates.Last()) || 
+                if ((currentSlider.Coordinates == prevSlider.Coordinates && currentSlider.SliderCoordinates.Last() == prevSlider.SliderCoordinates.Last()) ||
                     (currentSlider.Coordinates == prevSlider.SliderCoordinates.Last() && currentSlider.SliderCoordinates.Last() == prevSlider.Coordinates))
                     this.result.SliderPerfectStackCount++;
             }
@@ -491,6 +513,8 @@ namespace OsuFileIO.Interpreter
             public int LinearSliderCount { get; set; }
             public int PerfectCicleSliderCount { get; set; }
             public int KickSliderCount { get; set; }
+            public double AvgFasterSliderSpeed { get; set; }
+            public double SliderSpeedDifference { get; set; }
             public int CirclePerfectStackCount { get; set; }
             public int SliderPerfectStackCount { get; set; }
             public int UniqueDistancesCount { get; set; }

@@ -1799,6 +1799,137 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             Assert.AreEqual(expectedCount, actual.KickSliderCount, "Should count kicksliders correclty");
         }
 
+        [TestMethod]
+        [DataRow()]
+        public void Interpret_VariousSliderAtSpeeds_AvgFasterSliderSpeed()
+        {
+            var sliders = new List<(int count, double speed)>()
+            {
+                (3, -100),
+                (10, -80),
+                (12, -120),
+                (2, -50),
+            };
+
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.6");
+            
+
+            var timePassed = 0;
+            var timingPointString = new StringBuilder();
+            var hitObjectString = new StringBuilder();
+
+            foreach (var item in sliders)
+            {
+                timingPointString.AppendLine($"{timePassed},{item.speed},4,2,1,55,0,0");
+
+                for (int i = 0; i < item.count; i++)
+                {
+                    hitObjectString.AppendLine($"0,0,{timePassed},6,0,L|394:373,1,10,4|4,0:0|0:3,3:0:0:0:");
+                    timePassed += 100;
+                }
+
+                timePassed += 10000;
+            }
+
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine(timingPointString.ToString());
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine(hitObjectString.ToString());
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            //Assert
+            Assert.AreEqual(100d * 1.6d * (-100d / -80d), actual.AvgFasterSliderSpeed, "Expected to get most common faster slider speed");
+        }
+
+        [TestMethod]
+        public void Interpret_VariousSliderAtSpeeds_SliderSpeedDifference()
+        {
+            var sliders = new List<(int count, double speed)>()
+            {
+                (3, -100),
+                (10, -80),
+                (12, -120),
+                (2, -50),
+            };
+
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("StackLeniency: 0.7");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[Metadata]");
+            writer.WriteLine("[Difficulty]");
+            writer.WriteLine("CircleSize:4");
+            writer.WriteLine("SliderMultiplier: 1.6");
+
+
+            var timePassed = 0;
+            var timingPointString = new StringBuilder();
+            var hitObjectString = new StringBuilder();
+
+            foreach (var item in sliders)
+            {
+                timingPointString.AppendLine($"{timePassed},{item.speed},4,2,1,55,0,0");
+
+                for (int i = 0; i < item.count; i++)
+                {
+                    hitObjectString.AppendLine($"0,0,{timePassed},6,0,L|394:373,1,10,4|4,0:0|0:3,3:0:0:0:");
+                    timePassed += 100;
+                }
+
+                timePassed += 10000;
+            }
+
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine($"0,300,4,2,1,60,1,0");
+            writer.WriteLine(timingPointString.ToString());
+            writer.WriteLine("[HitObjects]");
+            writer.WriteLine(hitObjectString.ToString());
+
+            writer.Flush();
+            stream.Position = 0;
+
+            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var file = fileReader.ReadFile() as OsuStdFile;
+
+            //Act
+            var actual = new ActualInterpretation();
+            var interpreter = new OsuStdInterpreter(actual);
+            interpreter.Interpret(file);
+
+            var fastestSpeeds = sliders
+                .Where(s => s.count >= 10)
+                .Select(s => 100d * 1.6d * (-100d / s.speed))
+                .OrderByDescending(s => s)
+                .ToList();
+
+            //Assert
+            Assert.AreEqual(fastestSpeeds[0] - fastestSpeeds.Last(), actual.SliderSpeedDifference, "Expected to slider speed difference of most common slider speeds");
+        }
+
         #endregion
 
         #region Miscellaneous
@@ -1918,7 +2049,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
         #endregion
 
-        private class ActualInterpretation : IOsuStdInterpretation
+        internal class ActualInterpretation : IOsuStdInterpretation
         {
             public TimeSpan Length { get; set; }
             public int HitCircleCount { get; set; }
@@ -1954,6 +2085,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             public int PerfectCicleSliderCount { get; set; }
             public double AvgSliderPointCount { get; set; }
             public int KickSliderCount { get; set; }
+            public double AvgFasterSliderSpeed { get; set; }
+            public double SliderSpeedDifference { get; set; }
             public int CirclePerfectStackCount { get; set; }
             public int SliderPerfectStackCount { get; set; }
             public int UniqueDistancesCount { get; set; }
