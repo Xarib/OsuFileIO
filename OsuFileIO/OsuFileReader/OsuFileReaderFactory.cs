@@ -1,5 +1,6 @@
 ﻿using OsuFileIO.Enums;
 using OsuFileIO.Extensions;
+using OsuFileIO.HitObject;
 using OsuFileIO.OsuFileReader.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace OsuFileIO.OsuFileReader
         }
 
         private static string searchString = "Mode:";
-        public OsuFileReader Build()
+        public IOsuFileReader<IHitObject> Build()
         {
             StreamReader sr = new(this.stream);
 

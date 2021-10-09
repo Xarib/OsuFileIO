@@ -11,7 +11,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 {
     public class StdHitObjectReader : HitObjectReader<StdHitObject>
     {
-        public StdHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, List<IHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
+        public StdHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<StdHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
         {
             if (difficulty is null)
                 throw new ArgumentNullException(nameof(difficulty));

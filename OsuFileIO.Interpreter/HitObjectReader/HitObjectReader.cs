@@ -12,7 +12,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
     {
         protected readonly Difficulty difficulty;
         protected readonly List<TimingPoint> timingPoints;
-        protected readonly List<THitObject> hitObjects;
+        protected readonly IReadOnlyList<THitObject> hitObjects;
         protected int indexHitObject;
         protected int indexTimingPoint;
 
@@ -21,21 +21,22 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
         private List<(TimingPoint, THitObject)> History { get; init; }
 
-        public HitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, List<IHitObject> hitObjects)
+        public HitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<THitObject> hitObjects)
         {
             this.difficulty = difficulty ?? throw new ArgumentNullException(nameof(difficulty));
             this.timingPoints = timingPoints ?? throw new ArgumentNullException(nameof(timingPoints));
             this.History = new List<(TimingPoint, THitObject)>();
+            this.hitObjects = hitObjects;
 
-            if (hitObjects is null)
-            {
-                throw new ArgumentNullException(nameof(hitObjects));
-            }
-            else
-            {
-                //TODO look how much of an isssue this is.
-                this.hitObjects = hitObjects.Cast<THitObject>().ToList();
-            }
+            //if (hitObjects is null)
+            //{
+            //    throw new ArgumentNullException(nameof(hitObjects));
+            //}
+            //else
+            //{
+            //    //TODO look how much of an isssue this is.
+            //    this.hitObjects = hitObjects.Cast<THitObject>().ToList();
+            //}
         }
 
         public abstract bool ReadNext();

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OsuFileIO.HitObject;
+using OsuFileIO.HitObject.OsuStd;
 using OsuFileIO.Interpreter;
 using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader;
@@ -43,7 +44,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -82,7 +83,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
 
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             var actual = new ActualInterpretation();
 
@@ -104,7 +105,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         {
             //Arrange
             var fileReader = new OsuFileReaderFactory(fileName).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -148,7 +149,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -188,7 +189,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -228,7 +229,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -250,7 +251,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         {
             //Arrange
             var fileReader = new OsuFileReaderFactory(fileName).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -275,7 +276,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         {
             //Arrange
             var fileReader = new OsuFileReaderFactory(fileName).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -331,7 +332,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -371,7 +372,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -422,7 +423,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -463,7 +464,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -514,7 +515,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -556,7 +557,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -615,7 +616,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -669,7 +670,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -722,7 +723,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -773,7 +774,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -823,7 +824,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -866,7 +867,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -917,7 +918,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -964,7 +965,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1012,7 +1013,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1033,7 +1034,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         {
             //Arrange
             var fileReader = new OsuFileReaderFactory("2371698_mod.osu").Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             var d = file.TimingPoints.Where(tp => tp is InheritedPoint).Select(tp => tp as InheritedPoint).Select(tp => tp.VelocityMultiplier).ToList();
             var s = string.Join(", ", d);
@@ -1088,7 +1089,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1137,7 +1138,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1181,7 +1182,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1220,7 +1221,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
+
 
             //Act
             var actual = new ActualInterpretation();
@@ -1255,7 +1257,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1290,7 +1292,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1335,7 +1337,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1375,7 +1377,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1411,7 +1413,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1453,7 +1455,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1497,7 +1499,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1543,7 +1545,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1590,7 +1592,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1630,7 +1632,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1670,7 +1672,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1710,7 +1712,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1750,7 +1752,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1788,7 +1790,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1851,7 +1853,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1913,7 +1915,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -1962,7 +1964,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -2005,7 +2007,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();
@@ -2039,7 +2041,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             stream.Position = 0;
 
             var fileReader = new OsuFileReaderFactory(stream).Build();
-            var file = fileReader.ReadFile() as OsuStdFile;
+            var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
             var actual = new ActualInterpretation();

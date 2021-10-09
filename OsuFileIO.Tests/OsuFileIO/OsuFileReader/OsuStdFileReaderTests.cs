@@ -151,7 +151,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             var actual2 = reader2.ReadFile();
 
             //Assert
-            CollectionAssert.AreEqual(actual1.HitObjects, actual2.HitObjects, $"Expected to get the same HitObjects");
+            CollectionAssert.AreEqual(actual1.HitObjects.ToList(), actual2.HitObjects.ToList(), $"Expected to get the same HitObjects");
         }
 
         [TestMethod]

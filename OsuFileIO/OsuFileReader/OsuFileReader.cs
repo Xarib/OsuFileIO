@@ -1,5 +1,7 @@
 ﻿using OsuFileIO.Enums;
 using OsuFileIO.Extensions;
+using OsuFileIO.HitObject;
+using OsuFileIO.HitObject.OsuStd;
 using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader.Exceptions;
 using System;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader
 {
-    public abstract class OsuFileReader
+    public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> where THitObject : IHitObject
     {
         private const string orderExceptionMessage = "The File was not read in the correct order. ReadMethods have to be ordere like: 'Genral -> Editor -> Metadata -> Difficulty -> Events -> TimingPoints -> Colours -> HitObjects' or with 'ReadFile'. No repetions";
         protected readonly StreamReader sr;
@@ -41,7 +43,7 @@ namespace OsuFileIO.OsuFileReader
             };
         }
 
-        public abstract OsuFile.OsuFile ReadFile();
+        public abstract IReadOnlyBeatmap<THitObject> ReadFile();
 
         public void Dispose()
             => this.sr.Dispose();

@@ -9,12 +9,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader
 {
-    public class OsuStdFileReader : OsuFileReader
+    public class OsuStdFileReader : OsuFileReader<StdHitObject>
     {
         public OsuStdFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
             : base(path, options, overrides)
@@ -26,9 +27,10 @@ namespace OsuFileIO.OsuFileReader
         {
         }
 
-        public override OsuStdFile ReadFile()
+        public override ReadOnlyBeatmap<StdHitObject> ReadFile()
         {
-            var osuStdFile = new OsuStdFile();
+            var osuStdFile = new ReadOnlyBeatmap<StdHitObject>();
+            var listBuilder = new ReadOnlyCollectionBuilder<StdHitObject>();
 
             try
             {
@@ -68,13 +70,13 @@ namespace OsuFileIO.OsuFileReader
                     switch (objectType)
                     {
                         case 0:
-                            osuStdFile.HitObjects.Add(this.ReadSpinner(new Coordinates(x, y), ms, line[indexOfComma..]));
+                            listBuilder.Add(this.ReadSpinner(new Coordinates(x, y), ms, line[indexOfComma..]));
                             break;
                         case 1:
-                            osuStdFile.HitObjects.Add(new Circle(new Coordinates(x, y), ms));
+                            listBuilder.Add(new Circle(new Coordinates(x, y), ms));
                             break;
                         case 2:
-                            osuStdFile.HitObjects.Add(this.ReadSlider(new Coordinates(x, y), ms, line[indexOfComma..]));
+                            listBuilder.Add(this.ReadSlider(new Coordinates(x, y), ms, line[indexOfComma..]));
                             break;
                         default:
                             throw new OsuFileReaderException("Invalid type was found in string: " + objectType);
@@ -88,6 +90,8 @@ namespace OsuFileIO.OsuFileReader
             }
 
             this.Dispose();
+
+            osuStdFile.HitObjects = listBuilder.ToReadOnlyCollection();
 
             return osuStdFile;
         }

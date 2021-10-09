@@ -52,7 +52,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
                 hitObjects.Add(new Circle(new Coordinates(), hitObjectTimes[i]));
             }
 
-            var reader = new StdHitObjectReader(difficulty, timingPoints, hitObjects);
+            var reader = new StdHitObjectReader(difficulty, timingPoints, hitObjects.Cast<StdHitObject>().ToList());
 
             //Act
             do
@@ -97,7 +97,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             var file = fileReader.ReadFile();
 
             //Act
-            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
+            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects.Cast<StdHitObject>().ToList());
 
             //Assert
             Assert.AreEqual(expected, Math.Round(reader.SliderVelocity, 2), $"Expected to calculate {nameof(reader.SliderVelocity)} correctly");
@@ -131,7 +131,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             var file = fileReader.ReadFile();
 
             //Act
-            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
+            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects.Cast<StdHitObject>().ToList());
 
             //Assert
             Assert.AreEqual(hitObjectType, reader.HitObjectType, "Expected to get the correct type for the given hitObject string");
@@ -164,7 +164,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             var file = fileReader.ReadFile();
 
             //Act
-            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
+            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects.Cast<StdHitObject>().ToList());
 
             //Assert
             Assert.AreEqual(timeOneTwos, reader.TimeHalfBeat, "Expected to calculate time between 1-2 jumps");
@@ -206,7 +206,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
 
             var file = fileReader.ReadFile();
 
-            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
+            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects.Cast<StdHitObject>().ToList());
 
             //Act
             while (reader.ReadNext()) { }
@@ -246,7 +246,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
 
             var file = fileReader.ReadFile();
 
-            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects);
+            var reader = new StdHitObjectReader(file.Difficulty, file.TimingPoints, file.HitObjects.Cast<StdHitObject>().ToList());
 
             //Act
             while (reader.ReadNext()) { }
@@ -263,7 +263,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
                 .OrderBy(item => item.TimeInMs)
                 .ToList();
 
-            CollectionAssert.AreEqual(actualHistory, file.HitObjects, "Expected to be the same and log history correctly");
+            CollectionAssert.AreEqual(actualHistory, file.HitObjects.ToList(), "Expected to be the same and log history correctly");
         }
     }
 }

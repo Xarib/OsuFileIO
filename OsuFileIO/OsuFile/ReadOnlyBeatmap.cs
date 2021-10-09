@@ -3,12 +3,13 @@ using OsuFileIO.HitObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFile
 {
-    public class OsuFile
+    public class ReadOnlyBeatmap<THitObject> : IReadOnlyBeatmap<THitObject> where THitObject : IHitObject
     {
         public General General { get; set; }
         //TODO property Editor
@@ -17,7 +18,7 @@ namespace OsuFileIO.OsuFile
         //TODO property Events
         public List<TimingPoint> TimingPoints { get; set; } = new();
         //TODO property Combo colors
-        public List<IHitObject> HitObjects { get; set; } = new();
+        public IReadOnlyList<THitObject> HitObjects { get; set; }
     }
 
     public class General : IEquatable<General>

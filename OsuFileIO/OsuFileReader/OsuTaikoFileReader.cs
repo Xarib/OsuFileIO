@@ -1,4 +1,6 @@
-﻿using OsuFileIO.OsuFileReader.Exceptions;
+﻿using OsuFileIO.HitObject.Taiko;
+using OsuFileIO.OsuFile;
+using OsuFileIO.OsuFileReader.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader
 {
-    public class OsuTaikoFileReader : OsuFileReader
+    public class OsuTaikoFileReader : OsuFileReader<TaikoHitObject>
     {
         public OsuTaikoFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
             : base(path, options, overrides)
@@ -20,9 +22,9 @@ namespace OsuFileIO.OsuFileReader
         {
         }
 
-        public override OsuFile.OsuFile ReadFile()
+        public override ReadOnlyBeatmap<TaikoHitObject> ReadFile()
         {
-            var osuFile = new OsuFile.OsuFile();
+            var osuFile = new ReadOnlyBeatmap<TaikoHitObject>();
 
             try
             {
