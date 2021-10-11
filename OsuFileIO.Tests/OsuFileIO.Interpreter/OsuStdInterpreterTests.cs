@@ -1830,11 +1830,11 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var timingPointString = new StringBuilder();
             var hitObjectString = new StringBuilder();
 
-            foreach (var item in sliders)
+            foreach (var (count, speed) in sliders)
             {
-                timingPointString.AppendLine($"{timePassed},{item.speed},4,2,1,55,0,0");
+                timingPointString.AppendLine($"{timePassed},{speed},4,2,1,55,0,0");
 
-                for (int i = 0; i < item.count; i++)
+                for (int i = 0; i < count; i++)
                 {
                     hitObjectString.AppendLine($"0,0,{timePassed},6,0,L|394:373,1,10,4|4,0:0|0:3,3:0:0:0:");
                     timePassed += 100;
@@ -1892,11 +1892,11 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var timingPointString = new StringBuilder();
             var hitObjectString = new StringBuilder();
 
-            foreach (var item in sliders)
+            foreach (var (count, speed) in sliders)
             {
-                timingPointString.AppendLine($"{timePassed},{item.speed},4,2,1,55,0,0");
+                timingPointString.AppendLine($"{timePassed},{speed},4,2,1,55,0,0");
 
-                for (int i = 0; i < item.count; i++)
+                for (int i = 0; i < count; i++)
                 {
                     hitObjectString.AppendLine($"0,0,{timePassed},6,0,L|394:373,1,10,4|4,0:0|0:3,3:0:0:0:");
                     timePassed += 100;

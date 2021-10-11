@@ -29,7 +29,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
                 throw new ArgumentException("Map has to have hit objects");
 
             if (difficulty.CircleSize is null)
-                throw new ArgumentNullException("Difficulty cannot be null");
+                throw new ArgumentNullException(nameof(difficulty.CircleSize));
 
 
             this.SetValues();

@@ -24,7 +24,7 @@ namespace OsuFileIO.Interpreter
             this.result = source ?? new OsuStdInterpretation();
         }
 
-        public void Interpret(IReadOnlyBeatmap<StdHitObject> beatmap)
+        public IOsuStdInterpretation Interpret(IReadOnlyBeatmap<StdHitObject> beatmap)
         {
             this.reader = new StdHitObjectReader(beatmap.Difficulty, beatmap.TimingPoints, beatmap.HitObjects);
 
@@ -125,6 +125,8 @@ namespace OsuFileIO.Interpreter
 
                 this.result.SliderSpeedDifference = mostFrequentSpeeds[0].Key - mostFrequentSpeeds.Last().Key;
             }
+
+            return this.result;
         }
 
         private double CalculateSliderEndTime(Slider slider, TimingPoint timingPoint)
@@ -339,7 +341,7 @@ namespace OsuFileIO.Interpreter
             return timeDifference < this.reader.TimeQuarterBeat * 1.1 && timeDifference <= beatLength100Bpm;
         }
 
-        private Dictionary<double, int> jumpLengthFrequency = new();
+        private readonly Dictionary<double, int> jumpLengthFrequency = new();
         private void InterpretJumps()
         {
             var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull(-1);
@@ -385,7 +387,7 @@ namespace OsuFileIO.Interpreter
             }
         }
 
-        private Dictionary<double, int> sliderVelocityFrequency = new();
+        private readonly Dictionary<double, int> sliderVelocityFrequency = new();
         private void InterpretSliders()
         {
             if (this.reader.HitObjectType != StdHitObjectType.Slider)
