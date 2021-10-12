@@ -6,15 +6,11 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Interpreter
 {
-    public interface IOsuStdInterpretation
+    public interface IOsuStdInterpretation : IInterpretation
     {
-        public TimeSpan Length { get; set; }
         public int HitCircleCount { get; set; }
         public int SliderCount { get; set; }
         public int SpinnerCount { get; set; }
-        public double Bpm { get; set; }
-        public double BpmMin { get; set; }
-        public double BpmMax { get; set; }
         public int DoubleCount { get; set; }
         public int StandaloneDoubleCount { get; set; }
         public int TripletCount { get; set; }

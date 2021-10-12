@@ -21,23 +21,23 @@ namespace OsuFileIO.Interpreter
             return new OsuStdInterpreter().Interpret(beatmap);
         }
 
-        public static IOsuStdInterpretation Interpret(this IReadOnlyBeatmap<ManiaHitObject> beatmap)
+        public static IInterpretation Interpret(this IReadOnlyBeatmap<ManiaHitObject> beatmap)
         {
             throw new NotImplementedException();
         }
 
-        public static IOsuStdInterpretation Interpret(this IReadOnlyBeatmap<TaikoHitObject> beatmap)
+        public static IInterpretation Interpret(this IReadOnlyBeatmap<TaikoHitObject> beatmap)
         {
             throw new NotImplementedException();
         }
 
-        public static IOsuStdInterpretation Interpret(this IReadOnlyBeatmap<CatchHitObject> beatmap)
+        public static IInterpretation Interpret(this IReadOnlyBeatmap<CatchHitObject> beatmap)
         {
             throw new NotImplementedException();
         }
 
         //Leave this here so this is the last overload option
-        public static object Interpret(this IReadOnlyBeatmap<IHitObject> beatmap)
+        public static IInterpretation Interpret(this IReadOnlyBeatmap<IHitObject> beatmap)
         {
             switch (beatmap)
             {
