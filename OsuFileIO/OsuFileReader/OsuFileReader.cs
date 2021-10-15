@@ -21,6 +21,8 @@ namespace OsuFileIO.OsuFileReader
         private readonly OsuFileReaderOverride overrides;
         private readonly OsuFileReaderOptions options;
 
+        private bool disposed;
+
         public OsuFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
         {
             this.sr = new(path);
@@ -46,7 +48,23 @@ namespace OsuFileIO.OsuFileReader
         public abstract IReadOnlyBeatmap<THitObject> ReadFile();
 
         public void Dispose()
-            => this.sr.Dispose();
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                this.sr.Dispose();
+            }
+
+            this.disposed = true;
+        }
 
         public void ResetReader()
         {
@@ -223,8 +241,10 @@ namespace OsuFileIO.OsuFileReader
                                 if (prevBeatLength < 0) //Inherited timingpoint has to have a point to inherit
                                     throw new OsuFileReaderException($"{nameof(InheritedPoint)} has no {nameof(TimingPoint)} to inherit");
 
-                                timingPoint = new InheritedPoint(timingPoint, beatLength);
-                                timingPoint.BeatLength = prevBeatLength;
+                                timingPoint = new InheritedPoint(timingPoint, beatLength)
+                                {
+                                    BeatLength = prevBeatLength
+                                };
                             }
                             else
                             {

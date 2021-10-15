@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader
 {
-    public class OsuFileReaderFactory : IDisposable
+    public sealed class OsuFileReaderFactory : IDisposable
     {
         private OsuFileReaderOptions options;
         private OsuFileReaderOverride readerOverride;
@@ -50,7 +50,7 @@ namespace OsuFileIO.OsuFileReader
             this.readerOverride = readerOverride;
         }
 
-        private static string searchString = "Mode:";
+        private const string searchString = "Mode:";
         public IOsuFileReader<IHitObject> Build()
         {
             StreamReader sr = new(this.stream);
@@ -128,7 +128,10 @@ namespace OsuFileIO.OsuFileReader
         public void Dispose()
         {
             if (!this.willBeDisposedByReader)
+            {
                 this.stream.Dispose();
+                GC.SuppressFinalize(this);
+            }
         }
     }
 

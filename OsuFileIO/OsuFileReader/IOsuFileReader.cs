@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader
 {
-    public interface IOsuFileReader<out THitObject> where THitObject : IHitObject
+    public interface IOsuFileReader<out THitObject> : IDisposable where THitObject : IHitObject
     {
         public void ResetReader();
         public General ReadGeneral();

@@ -103,7 +103,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             stream.Position = 0;
 
             //Act
-            var reader = new OsuFileReaderFactory(stream).Build();
+            using var reader = new OsuFileReaderFactory(stream).Build();
 
             //Asset
             Assert.IsTrue(reader is OsuStdFileReader, "Expected the osu!Standard file reader");

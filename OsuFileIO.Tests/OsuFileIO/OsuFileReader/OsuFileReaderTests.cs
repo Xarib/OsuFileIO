@@ -384,6 +384,23 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         }
 
         [TestMethod]
+        [DeploymentItem(fileLocation + tutorialFile)]
+        public void DisposeReader_WhenReaderIsBuilt_ThrowsObjectDisposedException()
+        {
+            //Arrange
+            var stream = File.OpenRead(tutorialFile);
+
+            var reader = new OsuFileReaderFactory(stream).Build();
+
+            //Act
+            reader.Dispose();
+            void actual() => stream.ReadByte();
+
+            //Assert
+            Assert.ThrowsException<ObjectDisposedException>(actual);
+        }
+
+        [TestMethod]
         [DeploymentItem(fileLocation + "stdShort.osu")]
         [DeploymentItem(fileLocation + "stdShortNoNewLines.osu")]
         public void Read_OsuFileWithoutNewLinesBetween_ReturnsSameResultWithNewLines()
