@@ -237,7 +237,7 @@ namespace OsuFileIO.OsuFileReader
                             var beatLength = double.Parse(span);
 
                             if (beatLength < 0)
-                            {
+                            { //Inherited Point (green)
                                 if (prevBeatLength < 0) //Inherited timingpoint has to have a point to inherit
                                     throw new OsuFileReaderException($"{nameof(InheritedPoint)} has no {nameof(TimingPoint)} to inherit");
 
@@ -247,7 +247,7 @@ namespace OsuFileIO.OsuFileReader
                                 };
                             }
                             else
-                            {
+                            { //Timinigpoint (red)
                                 timingPoint.BeatLength = prevBeatLength = beatLength;
                             }
 

@@ -74,9 +74,18 @@ namespace OsuFileIO.Interpreter
 
                     break;
                 case StdHitObjectType.Slider:
-
                     var slider = this.reader.CurrentHitObject as Slider;
-                    this.result.Length = TimeSpan.FromMilliseconds(this.CalculateSliderEndTime(slider, this.reader.CurrentTimingPoint));
+
+                    var time = this.CalculateSliderEndTime(slider, this.reader.CurrentTimingPoint);
+
+                    if (time > int.MaxValue) //Maps that have infinite bpm
+                    {
+                        this.result.Length = TimeSpan.FromMilliseconds(slider.TimeInMs);
+                    }
+                    else
+                    {
+                        this.result.Length = TimeSpan.FromMilliseconds(time);
+                    }                   
 
                     break;
                 case StdHitObjectType.Spinner:
@@ -96,7 +105,9 @@ namespace OsuFileIO.Interpreter
             this.result.BpmMin = int.MaxValue;
             foreach (var item in totalTimeByBpm)
             {
-                var currentBpm = Convert.ToInt32(1 / item.Key * 60000d);
+
+                //var currentBpm = Convert.ToInt32(1 / item.Key * 60000d);
+                var currentBpm = Math.Round(1 / item.Key * 60000d, 2);
                 if (item.Value > longestTimeForBpms)
                 {
                     longestTimeForBpms = item.Value;

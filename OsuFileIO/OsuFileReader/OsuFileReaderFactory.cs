@@ -130,7 +130,6 @@ namespace OsuFileIO.OsuFileReader
             if (!this.willBeDisposedByReader)
             {
                 this.stream.Dispose();
-                GC.SuppressFinalize(this);
             }
         }
     }

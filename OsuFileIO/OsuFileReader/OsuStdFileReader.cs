@@ -159,6 +159,10 @@ namespace OsuFileIO.OsuFileReader
 
                             sliderPoints.Add(new Coordinates(x, y));
                         }
+
+                        if (sliderPoints.Count == 0)
+                            sliderPoints.Add(coordinates);
+
                         continue;
                     case 2:
                         slides = int.Parse(span);
