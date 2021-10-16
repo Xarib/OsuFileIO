@@ -239,6 +239,9 @@ namespace OsuFileIO.OsuFileReader
                         case 1:
                             var beatLength = double.Parse(span);
 
+                            if (double.IsNaN(beatLength)) //Some apsire map
+                                continue;
+
                             if (beatLength < 0)
                             { //Inherited Point (green)
                                 if (prevBeatLength < 0) //Inherited timingpoint has to have a point to inherit
