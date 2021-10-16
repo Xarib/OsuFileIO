@@ -25,7 +25,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             //Arrange
             var stream = File.OpenRead(fileName);
 
-            var factory = new OsuFileReaderFactory(stream);
+            var factory = new OsuFileReaderBuilder(stream);
 
             //Act
             factory.Dispose();
@@ -43,7 +43,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             //Arrange
             var stream = File.OpenRead(fileName);
 
-            var factory = new OsuFileReaderFactory(stream);
+            var factory = new OsuFileReaderBuilder(stream);
             var reader = factory.Build();
 
             //Act
@@ -65,7 +65,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             var stream = File.OpenRead(filePath);
 
             //Act
-            var factory = new OsuFileReaderFactory(stream);
+            var factory = new OsuFileReaderBuilder(stream);
             var reader = factory.Build();
             //Assert
 
@@ -76,7 +76,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void Constructor_NonOsuFile_ThrowsException()
         {
             //Act
-            static void actual() => new OsuFileReaderFactory("test.txt");
+            static void actual() => new OsuFileReaderBuilder("test.txt");
 
             //Assert
             Assert.ThrowsException<ArgumentException>(actual);
@@ -86,7 +86,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void Constructor_FileDoesNotExist_ThrowsException()
         {
             //Act
-            static void actual() => new OsuFileReaderFactory("test.osu");
+            static void actual() => new OsuFileReaderBuilder("test.osu");
 
             //Assert
             Assert.ThrowsException<FileNotFoundException>(actual);
@@ -103,7 +103,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             stream.Position = 0;
 
             //Act
-            using var reader = new OsuFileReaderFactory(stream).Build();
+            using var reader = new OsuFileReaderBuilder(stream).Build();
 
             //Asset
             Assert.IsTrue(reader is OsuStdFileReader, "Expected the osu!Standard file reader");

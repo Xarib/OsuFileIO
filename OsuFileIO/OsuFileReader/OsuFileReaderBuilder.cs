@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader
 {
-    public sealed class OsuFileReaderFactory : IDisposable
+    public sealed class OsuFileReaderBuilder : IDisposable
     {
         private OsuFileReaderOptions options;
         private OsuFileReaderOverride readerOverride;
@@ -23,7 +23,7 @@ namespace OsuFileIO.OsuFileReader
         /// Opens and reads a .osu file and returns the corresponding reader for the given gamemode
         /// </summary>
         /// <param name="path"></param>
-        public OsuFileReaderFactory([NotNull] string path, OsuFileReaderOptions options = null)
+        public OsuFileReaderBuilder([NotNull] string path)
         {
             if (!path.EndsWith(".osu"))
                 throw new ArgumentException("The given file is not a osu file");
@@ -31,23 +31,26 @@ namespace OsuFileIO.OsuFileReader
             if (!File.Exists(path))
                 throw new FileNotFoundException("File '" + path + "' does not exist");
 
-            this.options = options;
             this.stream = File.OpenRead(path);
         }
 
-        public OsuFileReaderFactory([NotNull] Stream stream)
+        public OsuFileReaderBuilder([NotNull] Stream stream)
         {
             this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
         }
 
-        public void ConfigureOptions(OsuFileReaderOptions options)
+        public OsuFileReaderBuilder UseOptions(OsuFileReaderOptions options)
         {
             this.options = options;
+
+            return this;
         }
 
-        public void ConfigureOverride(OsuFileReaderOverride readerOverride)
+        public OsuFileReaderBuilder UseOverrides(OsuFileReaderOverride readerOverride)
         {
             this.readerOverride = readerOverride;
+
+            return this;
         }
 
         private const string searchString = "Mode:";

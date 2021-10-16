@@ -92,7 +92,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.Flush();
             stream.Position = 0;
 
-            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var fileReader = new OsuFileReaderBuilder(stream).Build();
 
             var file = fileReader.ReadFile();
 
@@ -126,7 +126,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.Flush();
             stream.Position = 0;
 
-            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var fileReader = new OsuFileReaderBuilder(stream).Build();
 
             var file = fileReader.ReadFile();
 
@@ -159,7 +159,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.Flush();
             stream.Position = 0;
 
-            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var fileReader = new OsuFileReaderBuilder(stream).Build();
 
             var file = fileReader.ReadFile();
 
@@ -202,7 +202,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.Flush();
             stream.Position = 0;
 
-            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var fileReader = new OsuFileReaderBuilder(stream).Build();
 
             var file = fileReader.ReadFile();
 
@@ -242,7 +242,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
             writer.Flush();
             stream.Position = 0;
 
-            var fileReader = new OsuFileReaderFactory(stream).Build();
+            var fileReader = new OsuFileReaderBuilder(stream).Build();
 
             var file = fileReader.ReadFile();
 

@@ -33,7 +33,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void ReadGeneral_OsuFile_ReturnsGeneral(string fileName, GameMode gameMode, int format, double leniency)
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(fileName).Build();
+            var reader = new OsuFileReaderBuilder(fileName).Build();
 
             //Act
             var actual = reader.ReadGeneral();
@@ -63,7 +63,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void ReadMetadata_OsuFile_ReturnsMetadata(string fileName, string title, string titleUnicode, string artist, string artistUnicode, string creator, string version, string source, string tags, int beatmapID, int beatmapSetID)
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(fileName).Build();
+            var reader = new OsuFileReaderBuilder(fileName).Build();
 
             //Act
             var actual = reader.ReadMetadata();
@@ -107,7 +107,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void ReadDifficulty_OsuFile_ReturnsMetadataDifficulty(string fileName, double HP, double CS, double OD, double AR, double SM, double STR)
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(fileName).Build();
+            var reader = new OsuFileReaderBuilder(fileName).Build();
 
             //Act
             var actual = reader.ReadDifficulty();
@@ -143,7 +143,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void ReadTimingPoints_OsuFile_ReturnsTimingPoints(string fileName, int count)
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(fileName).Build();
+            var reader = new OsuFileReaderBuilder(fileName).Build();
 
             //Act
             var actual = reader.ReadTimingPoints();
@@ -168,7 +168,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             writer.Flush();
             stream.Position = 0;
 
-            var reader = new OsuFileReaderFactory(stream).Build();
+            var reader = new OsuFileReaderBuilder(stream).Build();
 
             //Act
             var actual = reader.ReadTimingPoints().Single();
@@ -198,7 +198,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             writer.Flush();
             stream.Position = 0;
 
-            var reader = new OsuFileReaderFactory(stream).Build();
+            var reader = new OsuFileReaderBuilder(stream).Build();
 
             //Act
             var timingPoints = reader.ReadTimingPoints().ToList();
@@ -215,7 +215,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         }
 
         [TestMethod]
-        public void ReadTimingPoints_InheritedPointWithNoTimingPoint_ReturnsTimingPoint()
+        public void ReadTimingPoints_InheritedPointWithNoTimingPoint_ReturnsTimingPoints()
         {
             //Arrange
             var stream = new MemoryStream();
@@ -228,7 +228,32 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             writer.Flush();
             stream.Position = 0;
 
-            var reader = new OsuFileReaderFactory(stream).Build();
+            var reader = new OsuFileReaderBuilder(stream).Build();
+
+            //Act
+            reader.ReadTimingPoints();
+        }
+
+        [TestMethod]
+        public void ReadTimingPoints_InheritedPointWithNoTimingPointWithStrict_ThrowsOsuFileReaderException()
+        {
+            //Arrange
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.WriteLine("osu file format v14");
+            writer.WriteLine("[General]");
+            writer.WriteLine("Mode: 0");
+            writer.WriteLine("[TimingPoints]");
+            writer.WriteLine("34125,-100,4,1,0,87,0,0");
+            writer.Flush();
+            stream.Position = 0;
+
+            var reader = new OsuFileReaderBuilder(stream)
+                .UseOptions(new OsuFileReaderOptions
+                {
+                    StrictTimingPointInheritance = true,
+                })
+                .Build();
 
             //Act
             void actual() => reader.ReadTimingPoints().Single();
@@ -242,7 +267,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void ReadGeneral_OsuFileReadWrongOrder_ThrowsException()
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+            var reader = new OsuFileReaderBuilder(tutorialFile).Build();
 
             //Act
             _ = reader.ReadTimingPoints();
@@ -256,7 +281,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void ReadGeneral_OsuFileReadTwiceWithReset_ReturnsGeneral()
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+            var reader = new OsuFileReaderBuilder(tutorialFile).Build();
 
             //Act
             var read1 = reader.ReadGeneral();
@@ -282,7 +307,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             writer.Flush();
             stream.Position = 0;
 
-            var reader = new OsuFileReaderFactory(stream).Build();
+            var reader = new OsuFileReaderBuilder(stream).Build();
 
             //Act
             var general = reader.ReadGeneral();
@@ -303,7 +328,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             writer.Flush();
             stream.Position = 0;
 
-            var reader = new OsuFileReaderFactory(stream).Build();
+            var reader = new OsuFileReaderBuilder(stream).Build();
 
             //Act
             var general = reader.ReadGeneral();
@@ -317,7 +342,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void ReadMetadata_OsuFileReadWrongOrder_ThrowsException()
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+            var reader = new OsuFileReaderBuilder(tutorialFile).Build();
 
             //Act
             _ = reader.ReadTimingPoints();
@@ -343,7 +368,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             writer.Flush();
             stream.Position = 0;
 
-            var reader = new OsuFileReaderFactory(stream).Build();
+            var reader = new OsuFileReaderBuilder(stream).Build();
 
             //Act
             var actual = reader.ReadMetadata();
@@ -359,7 +384,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void ReadDifficulty_OsuFileReadWrongOrder_ThrowsException()
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+            var reader = new OsuFileReaderBuilder(tutorialFile).Build();
 
             //Act
             _ = reader.ReadTimingPoints();
@@ -373,7 +398,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void ReadTimingPoints_OsuFileReadTwice_ThrowsException()
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(tutorialFile).Build();
+            var reader = new OsuFileReaderBuilder(tutorialFile).Build();
 
             //Act
             _ = reader.ReadTimingPoints();
@@ -390,7 +415,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             //Arrange
             var stream = File.OpenRead(tutorialFile);
 
-            var reader = new OsuFileReaderFactory(stream).Build();
+            var reader = new OsuFileReaderBuilder(stream).Build();
 
             //Act
             reader.Dispose();
@@ -406,8 +431,8 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void Read_OsuFileWithoutNewLinesBetween_ReturnsSameResultWithNewLines()
         {
             //Arrange
-            var reader1 = new OsuFileReaderFactory("stdShort.osu").Build();
-            var reader2 = new OsuFileReaderFactory("stdShortNoNewLines.osu").Build();
+            var reader1 = new OsuFileReaderBuilder("stdShort.osu").Build();
+            var reader2 = new OsuFileReaderBuilder("stdShortNoNewLines.osu").Build();
 
             //Act
             var actual1 = reader1.ReadFile();

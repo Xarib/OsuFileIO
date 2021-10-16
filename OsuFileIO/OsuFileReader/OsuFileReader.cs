@@ -6,6 +6,7 @@ using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,7 @@ namespace OsuFileIO.OsuFileReader
             {
                 IntParsing = IntParsing.ConvertFloat,
                 StringComparison = StringComparison.OrdinalIgnoreCase,
+                StrictTimingPointInheritance = false,
             };
         }
 
@@ -42,6 +44,7 @@ namespace OsuFileIO.OsuFileReader
             {
                 IntParsing = IntParsing.ConvertFloat,
                 StringComparison = StringComparison.OrdinalIgnoreCase,
+                StrictTimingPointInheritance = false,
             };
         }
 
@@ -239,7 +242,16 @@ namespace OsuFileIO.OsuFileReader
                             if (beatLength < 0)
                             { //Inherited Point (green)
                                 if (prevBeatLength < 0) //Inherited timingpoint has to have a point to inherit
-                                    throw new OsuFileReaderException($"{nameof(InheritedPoint)} has no {nameof(TimingPoint)} to inherit");
+                                {
+                                    if (this.options.StrictTimingPointInheritance)
+                                    {
+                                        throw new OsuFileReaderException($"{nameof(InheritedPoint)} has no {nameof(TimingPoint)} to inherit");
+                                    }
+                                    else
+                                    {
+                                        timingPoint.BeatLength = prevBeatLength = 333.333333333333; // 180 Bpm
+                                    }
+                                }
 
                                 timingPoint = new InheritedPoint(timingPoint, beatLength)
                                 {
@@ -282,5 +294,6 @@ namespace OsuFileIO.OsuFileReader
     {
         public StringComparison StringComparison { get; set; }
         public IntParsing IntParsing { get; set; }
+        public bool StrictTimingPointInheritance { get; set; }
     }
 }

@@ -37,7 +37,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             writer.Flush();
             stream.Position = 0;
 
-            var reader = new OsuFileReaderFactory(stream).Build();
+            var reader = new OsuFileReaderBuilder(stream).Build();
 
             //Act
             var file = reader.ReadFile();
@@ -70,7 +70,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             writer.Flush();
             stream.Position = 0;
 
-            var reader = new OsuFileReaderFactory(stream).Build();
+            var reader = new OsuFileReaderBuilder(stream).Build();
 
             //Act
             var file = reader.ReadFile();
@@ -105,7 +105,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             writer.Flush();
             stream.Position = 0;
 
-            var reader = new OsuFileReaderFactory(stream).Build();
+            var reader = new OsuFileReaderBuilder(stream).Build();
 
             //Act
             var file = reader.ReadFile();
@@ -143,8 +143,8 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void ReadFile_OsuFileWithoutNewLinesBetween_ReturnsSameHitObjectsWithNewLines()
         {
             //Arrange
-            var reader1 = new OsuFileReaderFactory("stdShort.osu").Build();
-            var reader2 = new OsuFileReaderFactory("stdShortNoNewLines.osu").Build();
+            var reader1 = new OsuFileReaderBuilder("stdShort.osu").Build();
+            var reader2 = new OsuFileReaderBuilder("stdShortNoNewLines.osu").Build();
 
             //Act
             var actual1 = reader1.ReadFile();
@@ -162,7 +162,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         public void ReadFile_ProblematicFile100_ReturnsOsuFile(string fileName)
         {
             //Arrange
-            var reader = new OsuFileReaderFactory(fileName).Build();
+            var reader = new OsuFileReaderBuilder(fileName).Build();
 
             //Act
             var actual = reader.ReadFile();
