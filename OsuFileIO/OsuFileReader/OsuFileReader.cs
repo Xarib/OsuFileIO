@@ -22,8 +22,6 @@ namespace OsuFileIO.OsuFileReader
         private readonly OsuFileReaderOverride overrides;
         private readonly OsuFileReaderOptions options;
 
-        private bool disposed;
-
         public OsuFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
         {
             this.sr = new(path);
@@ -49,25 +47,6 @@ namespace OsuFileIO.OsuFileReader
         }
 
         public abstract IReadOnlyBeatmap<THitObject> ReadFile();
-
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        public virtual void Dispose(bool disposing)
-        {
-            if (disposed)
-                return;
-
-            if (disposing)
-            {
-                this.sr.Dispose();
-            }
-
-            this.disposed = true;
-        }
 
         public void ResetReader()
         {
@@ -281,6 +260,12 @@ namespace OsuFileIO.OsuFileReader
             }
 
             return points;
+        }
+
+        public void Dispose()
+        {
+            this.sr.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 
