@@ -9,12 +9,12 @@ namespace OsuFileIO.OsuFile
 {
     public interface IReadOnlyBeatmap<out THitObject> where THitObject : IHitObject
     {
-        public General General { get; set; }
+        public General General { get; }
         //TODO property Editor
-        public MetaData MetaData { get; set; }
-        public Difficulty Difficulty { get; set; }
+        public MetaData MetaData { get; }
+        public Difficulty Difficulty { get; }
         //TODO property Events
-        public List<TimingPoint> TimingPoints { get; set; }
+        public List<TimingPoint> TimingPoints { get; }
         //TODO property Combo colors
         public IReadOnlyList<THitObject> HitObjects { get; }
     }

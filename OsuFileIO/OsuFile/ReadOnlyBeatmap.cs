@@ -11,14 +11,14 @@ namespace OsuFileIO.OsuFile
 {
     public class ReadOnlyBeatmap<THitObject> : IReadOnlyBeatmap<THitObject> where THitObject : IHitObject
     {
-        public General General { get; set; }
+        public General General { get; internal set; }
         //TODO property Editor
-        public MetaData MetaData { get; set; }
-        public Difficulty Difficulty { get; set; }
+        public MetaData MetaData { get; internal set; }
+        public Difficulty Difficulty { get; internal set; }
         //TODO property Events
-        public List<TimingPoint> TimingPoints { get; set; } = new();
+        public List<TimingPoint> TimingPoints { get; internal set; } = new();
         //TODO property Combo colors
-        public IReadOnlyList<THitObject> HitObjects { get; set; }
+        public IReadOnlyList<THitObject> HitObjects { get; internal set; }
     }
 
     public class General : IEquatable<General>
@@ -57,7 +57,7 @@ namespace OsuFileIO.OsuFile
             {
                 if (rhs is null)
                     return true;
-                
+
                 return false;
             }
 
