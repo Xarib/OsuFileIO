@@ -8,7 +8,7 @@ namespace OsuFileIO.Extensions
 {
     internal static class StringExtensions
     {
-        public static SplitEnumerator SplitLinesAt(this string str, char delimiter)
+        internal static SplitEnumerator SplitLinesAt(this string str, char delimiter)
         {
             return new SplitEnumerator(str.AsSpan(), delimiter);
         }

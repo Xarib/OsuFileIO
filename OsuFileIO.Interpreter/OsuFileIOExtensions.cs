@@ -42,7 +42,7 @@ namespace OsuFileIO.Interpreter
             switch (beatmap)
             {
                 case IReadOnlyBeatmap<StdHitObject> stdBeatmap:
-                    return stdBeatmap.Interpret(interpretation);
+                    return stdBeatmap.Interpret((IOsuStdInterpretation)interpretation);
                 case IReadOnlyBeatmap<ManiaHitObject> maniaBeatmap:
                     return maniaBeatmap.Interpret();
                 case IReadOnlyBeatmap<TaikoHitObject> taikoBeatmap:
