@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Interpreter.HitObjectReader
 {
-    public abstract class HitObjectReader<THitObject> where THitObject : IHitObject
+    internal abstract class HitObjectReader<THitObject> where THitObject : IHitObject
     {
         protected readonly Difficulty difficulty;
         protected readonly List<TimingPoint> timingPoints;

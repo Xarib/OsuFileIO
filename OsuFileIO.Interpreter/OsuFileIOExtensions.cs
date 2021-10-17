@@ -16,9 +16,9 @@ namespace OsuFileIO.Interpreter
 {
     public static class OsuFileIOExtensions
     {
-        public static IOsuStdInterpretation Interpret(this IReadOnlyBeatmap<StdHitObject> beatmap)
+        public static IOsuStdInterpretation Interpret(this IReadOnlyBeatmap<StdHitObject> beatmap, IOsuStdInterpretation interpretation = null)
         {
-            return new OsuStdInterpreter().Interpret(beatmap);
+            return new OsuStdInterpreter(interpretation).Interpret(beatmap);
         }
 
         public static IInterpretation Interpret(this IReadOnlyBeatmap<ManiaHitObject> beatmap)
@@ -37,18 +37,18 @@ namespace OsuFileIO.Interpreter
         }
 
         //Leave this here so this is the last overload option
-        public static IInterpretation Interpret(this IReadOnlyBeatmap<IHitObject> beatmap)
+        public static IInterpretation Interpret(this IReadOnlyBeatmap<IHitObject> beatmap, IInterpretation interpretation = null)
         {
             switch (beatmap)
             {
                 case IReadOnlyBeatmap<StdHitObject> stdBeatmap:
-                    return Interpret(stdBeatmap);
+                    return stdBeatmap.Interpret(interpretation);
                 case IReadOnlyBeatmap<ManiaHitObject> maniaBeatmap:
-                    return Interpret(maniaBeatmap);
+                    return maniaBeatmap.Interpret();
                 case IReadOnlyBeatmap<TaikoHitObject> taikoBeatmap:
-                    return Interpret(taikoBeatmap);
+                    return taikoBeatmap.Interpret();
                 case IReadOnlyBeatmap<CatchHitObject> catchBeatmap:
-                    return Interpret(catchBeatmap);
+                    return catchBeatmap.Interpret();
                 case null:
                     throw new ArgumentNullException(nameof(beatmap));
                 default:

@@ -4,12 +4,15 @@ using OsuFileIO.OsuFile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+[assembly: InternalsVisibleTo("OsuFileIO.Tests")]
+
 namespace OsuFileIO.Interpreter.HitObjectReader
-{
-    public class StdHitObjectReader : HitObjectReader<StdHitObject>
+{    
+    internal class StdHitObjectReader : HitObjectReader<StdHitObject>
     {
         public StdHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<StdHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
         {

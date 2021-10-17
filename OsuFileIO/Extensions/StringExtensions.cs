@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Extensions
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         public static SplitEnumerator SplitLinesAt(this string str, char delimiter)
         {
@@ -14,7 +14,7 @@ namespace OsuFileIO.Extensions
         }
     }
 
-    public ref struct SplitEnumerator
+    internal ref struct SplitEnumerator
     {
         private ReadOnlySpan<char> str;
         private readonly char delimiter;

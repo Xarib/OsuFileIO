@@ -16,7 +16,7 @@ namespace OsuFileIO.OsuFileReader
 {
     public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> where THitObject : IHitObject
     {
-        private const string orderExceptionMessage = "The File was not read in the correct order. ReadMethods have to be ordere like: 'Genral -> Editor -> Metadata -> Difficulty -> Events -> TimingPoints -> Colours -> HitObjects' or with 'ReadFile'. No repetions";
+        private const string orderExceptionMessage = "The File was not read in the correct order. ReadMethods have to be ordere like: 'Genral -> Editor -> Metadata -> Difficulty -> Events -> TimingPoints -> Colours -> HitObjects' or with 'ReadFile'. For repetitions reset the reader";
         protected readonly StreamReader sr;
         protected string line;
         private readonly OsuFileReaderOverride overrides;
