@@ -39,7 +39,7 @@ namespace OsuFileIO.OsuFileReader
             }
             catch (Exception e)
             {
-                throw new OsuFileReaderException($"The reader encountert an Error at line: {this.line}, in File with beatmapId: {osuFile.MetaData.BeatmapID}, with Title: {osuFile.MetaData.Title}", e);
+                throw new OsuFileReaderException($"The reader encountered an error at line: {this.line}, in file with beatmapId: {osuFile.MetaData.BeatmapID}, with title: {osuFile.MetaData.Title}", e);
             }
         }
     }

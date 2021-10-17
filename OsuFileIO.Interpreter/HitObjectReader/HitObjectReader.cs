@@ -16,32 +16,22 @@ namespace OsuFileIO.Interpreter.HitObjectReader
         protected int indexHitObject;
         protected int indexTimingPoint;
 
-        public TimingPoint CurrentTimingPoint { get => this.timingPoints[this.indexTimingPoint]; }
-        public THitObject CurrentHitObject { get => this.hitObjects[this.indexHitObject]; }
+        internal TimingPoint CurrentTimingPoint { get => this.timingPoints[this.indexTimingPoint]; }
+        internal THitObject CurrentHitObject { get => this.hitObjects[this.indexHitObject]; }
 
         private List<(TimingPoint, THitObject)> History { get; init; }
 
-        public HitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<THitObject> hitObjects)
+        internal HitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<THitObject> hitObjects)
         {
             this.difficulty = difficulty ?? throw new ArgumentNullException(nameof(difficulty));
             this.timingPoints = timingPoints ?? throw new ArgumentNullException(nameof(timingPoints));
             this.History = new List<(TimingPoint, THitObject)>();
             this.hitObjects = hitObjects;
-
-            //if (hitObjects is null)
-            //{
-            //    throw new ArgumentNullException(nameof(hitObjects));
-            //}
-            //else
-            //{
-            //    //TODO look how much of an isssue this is.
-            //    this.hitObjects = hitObjects.Cast<THitObject>().ToList();
-            //}
         }
 
-        public abstract bool ReadNext();
+        internal abstract bool ReadNext();
 
-        public TimingPoint GetTimingPointFromOffsetOrNull(int offsetFromCurrent)
+        internal TimingPoint GetTimingPointFromOffsetOrNull(int offsetFromCurrent)
         {
             var indexAfterOffset = this.indexTimingPoint + offsetFromCurrent;
 
@@ -51,7 +41,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             return this.timingPoints[indexAfterOffset];
         }
 
-        public THitObject GetHitObjectFromOffsetOrNull(int offsetFromCurrent)
+        internal THitObject GetHitObjectFromOffsetOrNull(int offsetFromCurrent)
         {
             var indexAfterOffset = this.indexHitObject + offsetFromCurrent;
 
@@ -61,7 +51,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             return this.hitObjects[indexAfterOffset];
         }
 
-        public (TimingPoint timingPoint, THitObject hitObject)? GetHistoryEntryOrNull(int offsetFromCurrent)
+        internal (TimingPoint timingPoint, THitObject hitObject)? GetHistoryEntryOrNull(int offsetFromCurrent)
         {
             var index = this.History.Count + offsetFromCurrent - 1;
 

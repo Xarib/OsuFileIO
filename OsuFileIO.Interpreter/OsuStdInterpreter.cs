@@ -18,7 +18,6 @@ namespace OsuFileIO.Interpreter
         private readonly IOsuStdInterpretation result;
         private StdHitObjectReader reader;
 
-
         public OsuStdInterpreter(IOsuStdInterpretation source = null)
         {
             this.result = source ?? new OsuStdInterpretation();

@@ -104,11 +104,13 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
         }
 
         [TestMethod]
-        [DataRow("255,184,3664,69,4,3:1:0:0:", StdHitObjectType.Circle)]
-        [DataRow("328,80,999999999,2,0,P|412:101|464:168,1,167.999994873047,4|4,0:0|0:0,0:0:0:0:", StdHitObjectType.Slider)]
-        [DataRow("256,192,126433,12,4,129202,3:2:0:0:", StdHitObjectType.Spinner)]
-        public void ReadNext_EmptyFileWithHitObject_ReturnsHitObjectType(string hitObject, StdHitObjectType hitObjectType)
+        [DataRow("255,184,3664,69,4,3:1:0:0:", 1)]
+        [DataRow("328,80,999999999,2,0,P|412:101|464:168,1,167.999994873047,4|4,0:0|0:0,0:0:0:0:", 2)]
+        [DataRow("256,192,126433,12,4,129202,3:2:0:0:", 3)]
+        public void ReadNext_EmptyFileWithHitObject_ReturnsHitObjectType(string hitObject, int type)
         {
+            var hitObjectType = (StdHitObjectType)type;
+
             //Arrange
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);

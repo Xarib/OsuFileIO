@@ -29,15 +29,15 @@ namespace OsuFileIO.OsuFileReader
 
         public override ReadOnlyBeatmap<StdHitObject> ReadFile()
         {
-            var osuStdFile = new ReadOnlyBeatmap<StdHitObject>();
+            var osuFile = new ReadOnlyBeatmap<StdHitObject>();
             var listBuilder = new ReadOnlyCollectionBuilder<StdHitObject>();
 
             try
             {
-                osuStdFile.General = this.ReadGeneral();
-                osuStdFile.MetaData = this.ReadMetadata();
-                osuStdFile.Difficulty = this.ReadDifficulty();
-                osuStdFile.TimingPoints = this.ReadTimingPoints();
+                osuFile.General = this.ReadGeneral();
+                osuFile.MetaData = this.ReadMetadata();
+                osuFile.Difficulty = this.ReadDifficulty();
+                osuFile.TimingPoints = this.ReadTimingPoints();
 
                 if (this.line is null || !this.line.StartsWith("[HitObjects]"))
                     this.line = this.sr.ReadLineStartingWithOrNull("[HitObjects]");
@@ -86,14 +86,14 @@ namespace OsuFileIO.OsuFileReader
             catch (Exception e)
             {
                 this.Dispose();
-                throw new OsuFileReaderException($"The reader encountert an Error at line: {this.line}, in File with beatmapId: {osuStdFile.MetaData.BeatmapID}, with Title: {osuStdFile.MetaData.Title}", e);
+                throw new OsuFileReaderException($"The reader encountered an error at line: {this.line}, in file with beatmapId: {osuFile.MetaData.BeatmapID}, with title: {osuFile.MetaData.Title}", e);
             }
 
             this.Dispose();
 
-            osuStdFile.HitObjects = listBuilder.ToReadOnlyCollection();
+            osuFile.HitObjects = listBuilder.ToReadOnlyCollection();
 
-            return osuStdFile;
+            return osuFile;
         }
 
         private Spinner ReadSpinner(Coordinates coordinates, int ms, string rest)

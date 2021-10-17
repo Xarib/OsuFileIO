@@ -40,16 +40,16 @@ namespace OsuFileIO.Interpreter.HitObjectReader
             this.CircleSize = difficulty.CircleSize.Value;
         }
 
-        public double TimeQuarterBeat { get; private set; }
-        public double TimeHalfBeat { get; private set; }
-        public double TimeEighthOfBeat { get; private set; }
+        internal double TimeQuarterBeat { get; private set; }
+        internal double TimeHalfBeat { get; private set; }
+        internal double TimeEighthOfBeat { get; private set; }
 
         /// <summary>
         /// Slider verlocity in pixels per beat
         /// </summary>
-        public double SliderVelocity { get; private set; }
-        public StdHitObjectType HitObjectType { get; private set; }
-        public double CircleSize { get; init; }
+        internal double SliderVelocity { get; private set; }
+        internal StdHitObjectType HitObjectType { get; private set; }
+        internal double CircleSize { get; init; }
 
         private void SetValues()
         {
@@ -68,7 +68,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
         /// Reads the next <see cref="IHitObject"/> and set the most current <see cref="TimingPoint"/>
         /// </summary>
         /// <returns></returns>
-        public override bool ReadNext()
+        internal override bool ReadNext()
         {
             if (this.indexHitObject == this.hitObjects.Count - 1)
                 return false;
@@ -114,7 +114,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
         }
     }
 
-    public enum StdHitObjectType
+    internal enum StdHitObjectType
     {
         Circle = 1,
         Slider = 2,

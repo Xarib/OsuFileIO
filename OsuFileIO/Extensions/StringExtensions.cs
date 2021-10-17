@@ -21,7 +21,7 @@ namespace OsuFileIO.Extensions
 
         public ReadOnlySpan<char> Current { get; private set; }
 
-        public SplitEnumerator(ReadOnlySpan<char> str, char delimiter)
+        internal SplitEnumerator(ReadOnlySpan<char> str, char delimiter)
         {
             this.str = str;
             this.delimiter = delimiter;
