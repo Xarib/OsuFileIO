@@ -30,7 +30,6 @@ namespace OsuFileIO.Extensions
 
         private const int oByte = 111;
         private const int spaceByte = 32;
-
         /// <summary>
         /// Reset the Stream reader and skips BOM bytes if it exits.
         /// </summary>
@@ -41,7 +40,11 @@ namespace OsuFileIO.Extensions
 
             int b = sr.BaseStream.ReadByte();
 
-            if (b == Encoding.UTF8.Preamble[0])
+            if (b == oByte || b == spaceByte)
+            {
+                sr.BaseStream.Position = 0;
+            }
+            else if (b == Encoding.UTF8.Preamble[0])
             {
                 sr.BaseStream.Position = 3;
             }
