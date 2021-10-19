@@ -32,24 +32,31 @@ namespace OsuFileIO.Extensions
         private const int spaceByte = 32;
 
         /// <summary>
-        /// Reset the Stream reader and skip BOM bytes if they exits.
+        /// Reset the Stream reader and skips BOM bytes if it exits.
         /// </summary>
         /// <param name="sr"></param>
         internal static void Reset(this StreamReader sr)
         {
             sr.BaseStream.Position = 0;
 
-            int b;
-            do
+            int b = sr.BaseStream.ReadByte();
+
+            if (b == Encoding.UTF8.Preamble[0])
             {
-                b = sr.BaseStream.ReadByte();
+                sr.BaseStream.Position = 3;
+            }
+            else
+            {
+                while (b != oByte && b != spaceByte)
+                {
+                    if (sr.BaseStream.Position > 10)
+                        throw new OsuFileReaderException("Failed to reset reader!");
 
-                if (sr.BaseStream.Position > 10)
-                    throw new OsuFileReaderException("Failed to reset reader!");
+                    b = sr.BaseStream.ReadByte();
+                }
 
-            } while (b != oByte && b != spaceByte);
-
-            sr.BaseStream.Seek(-1, SeekOrigin.Current);
+                sr.BaseStream.Seek(-1, SeekOrigin.Current);
+            }
 
             sr.DiscardBufferedData();
         }
