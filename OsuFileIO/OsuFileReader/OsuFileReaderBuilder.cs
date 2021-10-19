@@ -18,6 +18,7 @@ namespace OsuFileIO.OsuFileReader
         private OsuFileReaderOverride readerOverride;
         private readonly Stream stream;
         private bool willBeDisposedByReader;
+        private readonly StreamReader sr;
 
         /// <summary>
         /// Opens and reads a .osu file and returns the corresponding reader for the given gamemode
@@ -31,12 +32,18 @@ namespace OsuFileIO.OsuFileReader
             if (!File.Exists(path))
                 throw new FileNotFoundException("File '" + path + "' does not exist");
 
-            this.stream = File.OpenRead(path);
+            this.sr = new StreamReader(path);
+            this.stream = sr.BaseStream;
+            sr.Reset();
         }
 
         public OsuFileReaderBuilder([NotNull] Stream stream)
         {
-            this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            if (stream is null)
+                throw new ArgumentNullException(nameof(stream));
+
+            this.sr = new StreamReader(stream);
+            this.stream = sr.BaseStream;
         }
 
         public OsuFileReaderBuilder UseOptions(OsuFileReaderOptions options)
@@ -56,8 +63,6 @@ namespace OsuFileIO.OsuFileReader
         private const string searchString = "Mode:";
         public IOsuFileReader<IHitObject> Build()
         {
-            StreamReader sr = new(this.stream);
-
             string line;
             if (options is null)
             {
@@ -102,7 +107,7 @@ namespace OsuFileIO.OsuFileReader
                 .Trim());
             }
 
-            this.stream.Position = 0;
+            this.sr.Reset();
 
             switch (mode)
             {
@@ -132,7 +137,7 @@ namespace OsuFileIO.OsuFileReader
         {
             if (!this.willBeDisposedByReader)
             {
-                this.stream.Dispose();
+                this.sr.Dispose();
             }
         }
     }

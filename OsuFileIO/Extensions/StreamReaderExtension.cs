@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OsuFileIO.OsuFileReader.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,6 +25,28 @@ namespace OsuFileIO.Extensions
                 return null;
 
             return line;
+        }
+
+
+        private const int oByte = 111;
+        private const int spaceByte = 32;
+        internal static void Reset(this StreamReader sr)
+        {
+            sr.BaseStream.Position = 0;
+
+            int b;
+            do
+            {
+                b = sr.BaseStream.ReadByte();
+
+                if (sr.BaseStream.Position > 10)
+                    throw new OsuFileReaderException("Failed to reset reader!");
+
+            } while (b != oByte && b != spaceByte);
+
+            sr.BaseStream.Seek(-1, SeekOrigin.Current);
+
+            sr.DiscardBufferedData();
         }
     }
 }

@@ -444,5 +444,22 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             Assert.AreEqual(actual1.Difficulty, actual2.Difficulty, $"Expected to get the same {nameof(Difficulty)}");
             CollectionAssert.AreEqual(actual1.TimingPoints, actual2.TimingPoints, $"Expected to get the same {nameof(TimingPoint)}s");
         }
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + "new beginnings utf8 bom.osu")]
+        public void ReadFile_OsuFileUTF8BOM_ShouldReset()
+        {
+            //Arrange
+            var reader = new OsuFileReaderBuilder("new beginnings utf8 bom.osu").Build();
+
+            //Act
+            var read1 = reader.ReadGeneral();
+
+            reader.ResetReader();
+
+            var read2 = reader.ReadGeneral();
+
+            //Assert
+        }
     }
 }

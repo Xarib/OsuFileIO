@@ -22,36 +22,32 @@ namespace OsuFileIO.OsuFileReader
         private readonly OsuFileReaderOverride overrides;
         private readonly OsuFileReaderOptions options;
 
-        public OsuFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
+        private static readonly OsuFileReaderOptions defaultOptions = new OsuFileReaderOptions
+        {
+            IntParsing = IntParsing.ConvertFloat,
+            StringComparison = StringComparison.OrdinalIgnoreCase,
+            StrictTimingPointInheritance = false,
+        };
+
+        protected OsuFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
         {
             this.sr = new(path);
             this.overrides = overrides;
-            this.options = options ?? new OsuFileReaderOptions
-            {
-                IntParsing = IntParsing.ConvertFloat,
-                StringComparison = StringComparison.OrdinalIgnoreCase,
-                StrictTimingPointInheritance = false,
-            };
+            this.options = options ?? defaultOptions;
         }
 
-        public OsuFileReader(Stream stream, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
+        protected OsuFileReader(Stream stream, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
         {
             this.sr = new(stream);
             this.overrides = overrides;
-            this.options = options ?? new OsuFileReaderOptions
-            {
-                IntParsing = IntParsing.ConvertFloat,
-                StringComparison = StringComparison.OrdinalIgnoreCase,
-                StrictTimingPointInheritance = false,
-            };
+            this.options = options ?? defaultOptions;
         }
 
         public abstract IReadOnlyBeatmap<THitObject> ReadFile();
 
         public void ResetReader()
         {
-            this.sr.BaseStream.Position = 0;
-            this.sr.DiscardBufferedData();
+            this.sr.Reset();
         }
 
         protected int ParseInt(string line)

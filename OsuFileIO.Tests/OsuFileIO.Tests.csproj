@@ -34,6 +34,9 @@
     <None Update="TestFiles\mania.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestFiles\new beginnings utf8 bom.osu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestFiles\new beginnings.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
