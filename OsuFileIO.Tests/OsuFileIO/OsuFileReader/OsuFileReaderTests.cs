@@ -460,6 +460,9 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             var read2 = reader.ReadGeneral();
 
             //Assert
+            Assert.AreEqual(read1.Mode, read2.Mode, $"Expected the re-read to be the same");
+            Assert.AreEqual(read1.OsuFileFormat, read2.OsuFileFormat, $"Expected the re-read to be the same");
+            Assert.AreEqual(read1.StackLeniency, read2.StackLeniency, $"Expected the re-read to be the same");
         }
     }
 }

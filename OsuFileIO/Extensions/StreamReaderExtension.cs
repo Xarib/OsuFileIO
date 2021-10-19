@@ -30,6 +30,11 @@ namespace OsuFileIO.Extensions
 
         private const int oByte = 111;
         private const int spaceByte = 32;
+
+        /// <summary>
+        /// Reset the Stream reader and skip BOM bytes if they exits.
+        /// </summary>
+        /// <param name="sr"></param>
         internal static void Reset(this StreamReader sr)
         {
             sr.BaseStream.Position = 0;
