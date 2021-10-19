@@ -43,6 +43,13 @@ namespace OsuFileIO.OsuFileReader
             this.options = options ?? defaultOptions;
         }
 
+        protected OsuFileReader(StreamReader sr, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
+        {
+            this.sr = sr;
+            this.overrides = overrides;
+            this.options = options ?? defaultOptions;
+        }
+
         public abstract IReadOnlyBeatmap<THitObject> ReadFile();
 
         public void ResetReader()

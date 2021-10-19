@@ -27,6 +27,11 @@ namespace OsuFileIO.OsuFileReader
         {
         }
 
+        internal OsuStdFileReader(StreamReader sr, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null) 
+            : base(sr, options, overrides)
+        {
+        }
+
         public override ReadOnlyBeatmap<StdHitObject> ReadFile()
         {
             var osuFile = new ReadOnlyBeatmap<StdHitObject>();

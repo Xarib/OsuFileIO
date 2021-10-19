@@ -22,6 +22,11 @@ namespace OsuFileIO.OsuFileReader
         {
         }
 
+        internal OsuTaikoFileReader(StreamReader sr, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
+            : base(sr, options, overrides)
+        {
+        }
+
         public override ReadOnlyBeatmap<TaikoHitObject> ReadFile()
         {
             var osuFile = new ReadOnlyBeatmap<TaikoHitObject>();

@@ -22,6 +22,11 @@ namespace OsuFileIO.OsuFileReader
         {
         }
 
+        internal OsuManiaFileReader(StreamReader sr, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
+            : base(sr, options, overrides)
+        {
+        }
+
         public override ReadOnlyBeatmap<ManiaHitObject> ReadFile()
         {
             var osuFile = new ReadOnlyBeatmap<ManiaHitObject>();

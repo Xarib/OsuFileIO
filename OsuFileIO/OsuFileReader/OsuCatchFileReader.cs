@@ -22,6 +22,11 @@ namespace OsuFileIO.OsuFileReader
         {
         }
 
+        internal OsuCatchFileReader(StreamReader sr, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
+            : base(sr, options, overrides)
+        {
+        }
+
         public override ReadOnlyBeatmap<CatchHitObject> ReadFile()
         {
             var osuFile = new ReadOnlyBeatmap<CatchHitObject>();

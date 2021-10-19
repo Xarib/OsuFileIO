@@ -16,7 +16,6 @@ namespace OsuFileIO.OsuFileReader
     {
         private OsuFileReaderOptions options;
         private OsuFileReaderOverride readerOverride;
-        private readonly Stream stream;
         private bool willBeDisposedByReader;
         private readonly StreamReader sr;
 
@@ -33,8 +32,6 @@ namespace OsuFileIO.OsuFileReader
                 throw new FileNotFoundException("File '" + path + "' does not exist");
 
             this.sr = new StreamReader(path);
-            this.stream = sr.BaseStream;
-            sr.Reset();
         }
 
         public OsuFileReaderBuilder([NotNull] Stream stream)
@@ -43,7 +40,6 @@ namespace OsuFileIO.OsuFileReader
                 throw new ArgumentNullException(nameof(stream));
 
             this.sr = new StreamReader(stream);
-            this.stream = sr.BaseStream;
         }
 
         public OsuFileReaderBuilder UseOptions(OsuFileReaderOptions options)
@@ -114,19 +110,19 @@ namespace OsuFileIO.OsuFileReader
                 case GameMode.Standard:
                     this.willBeDisposedByReader = true;
 
-                    return new OsuStdFileReader(this.stream, this.options, this.readerOverride);
+                    return new OsuStdFileReader(this.sr, this.options, this.readerOverride);
                 case GameMode.Taiko:
                     this.willBeDisposedByReader = true;
 
-                    return new OsuTaikoFileReader(this.stream, this.options, this.readerOverride);
+                    return new OsuTaikoFileReader(this.sr, this.options, this.readerOverride);
                 case GameMode.Catch:
                     this.willBeDisposedByReader = true;
 
-                    return new OsuCatchFileReader(this.stream, this.options, this.readerOverride);
+                    return new OsuCatchFileReader(this.sr, this.options, this.readerOverride);
                 case GameMode.Mania:
                     this.willBeDisposedByReader = true;
 
-                    return new OsuManiaFileReader(this.stream, this.options, this.readerOverride);
+                    return new OsuManiaFileReader(this.sr, this.options, this.readerOverride);
                 default:
                     this.Dispose();
                     throw new OsuFileReaderException();
