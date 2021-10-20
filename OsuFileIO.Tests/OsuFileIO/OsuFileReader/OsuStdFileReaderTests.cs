@@ -156,9 +156,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
 
         [TestMethod]
         [DeploymentItem(problematic + "100.osu")]
-        [DeploymentItem(problematic + "1000168.osu")]
         [DataRow("100.osu")]
-        [DataRow("1000168.osu")]
         public void ReadFile_ProblematicFile100_ReturnsOsuFile(string fileName)
         {
             //Arrange
