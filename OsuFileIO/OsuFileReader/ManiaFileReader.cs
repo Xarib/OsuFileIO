@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader
 {
-    public class OsuManiaFileReader : OsuFileReader<ManiaHitObject>
+    public class ManiaFileReader : OsuFileReader<ManiaHitObject>
     {
-        public OsuManiaFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
+        public ManiaFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
             : base(path, options, overrides)
         {
         }
 
-        public OsuManiaFileReader(Stream stream, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
+        public ManiaFileReader(Stream stream, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
             : base(stream, options, overrides)
         {
         }
 
-        internal OsuManiaFileReader(StreamReader sr, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
+        internal ManiaFileReader(StreamReader sr, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
             : base(sr, options, overrides)
         {
         }

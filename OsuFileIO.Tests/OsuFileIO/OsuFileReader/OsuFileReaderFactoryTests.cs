@@ -55,10 +55,10 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
 
         [TestMethod]
         [DeploymentItem(fileLocation + fileName)]
-        [DataRow(fileName, typeof(OsuStdFileReader))]
-        [DataRow(taikoFile, typeof(OsuTaikoFileReader))]
-        [DataRow(maniaFile, typeof(OsuManiaFileReader))]
-        [DataRow(catchFile, typeof(OsuCatchFileReader))]
+        [DataRow(fileName, typeof(StdFileReader))]
+        [DataRow(taikoFile, typeof(TaikoFileReader))]
+        [DataRow(maniaFile, typeof(ManiaFileReader))]
+        [DataRow(catchFile, typeof(CatchFileReader))]
         public void Build_OsuFile_ReturnsOsuFileReader(string filePath, Type type)
         {
             //Arrange
@@ -106,7 +106,7 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             using var reader = new OsuFileReaderBuilder(stream).Build();
 
             //Asset
-            Assert.IsTrue(reader is OsuStdFileReader, "Expected the osu!Standard file reader");
+            Assert.IsTrue(reader is StdFileReader, "Expected the osu!Standard file reader");
         }
     }
 }

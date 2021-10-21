@@ -15,19 +15,19 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader
 {
-    public class OsuStdFileReader : OsuFileReader<StdHitObject>
+    public class StdFileReader : OsuFileReader<StdHitObject>
     {
-        public OsuStdFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
+        public StdFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
             : base(path, options, overrides)
         {
         }
 
-        public OsuStdFileReader(Stream stream, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null) 
+        public StdFileReader(Stream stream, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null) 
             : base(stream, options, overrides)
         {
         }
 
-        internal OsuStdFileReader(StreamReader sr, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null) 
+        internal StdFileReader(StreamReader sr, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null) 
             : base(sr, options, overrides)
         {
         }

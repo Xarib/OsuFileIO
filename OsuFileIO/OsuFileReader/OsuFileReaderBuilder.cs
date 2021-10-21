@@ -110,19 +110,19 @@ namespace OsuFileIO.OsuFileReader
                 case GameMode.Standard:
                     this.willBeDisposedByReader = true;
 
-                    return new OsuStdFileReader(this.sr, this.options, this.readerOverride);
+                    return new StdFileReader(this.sr, this.options, this.readerOverride);
                 case GameMode.Taiko:
                     this.willBeDisposedByReader = true;
 
-                    return new OsuTaikoFileReader(this.sr, this.options, this.readerOverride);
+                    return new TaikoFileReader(this.sr, this.options, this.readerOverride);
                 case GameMode.Catch:
                     this.willBeDisposedByReader = true;
 
-                    return new OsuCatchFileReader(this.sr, this.options, this.readerOverride);
+                    return new CatchFileReader(this.sr, this.options, this.readerOverride);
                 case GameMode.Mania:
                     this.willBeDisposedByReader = true;
 
-                    return new OsuManiaFileReader(this.sr, this.options, this.readerOverride);
+                    return new ManiaFileReader(this.sr, this.options, this.readerOverride);
                 default:
                     this.Dispose();
                     throw new OsuFileReaderException();
