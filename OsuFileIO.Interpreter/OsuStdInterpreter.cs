@@ -16,15 +16,15 @@ namespace OsuFileIO.Interpreter
 {
     public class OsuStdInterpreter
     {
-        private readonly IOsuStdInterpretation result;
+        private readonly IStdInterpretation result;
         private StdHitObjectReader reader;
 
-        public OsuStdInterpreter(IOsuStdInterpretation source = null)
+        public OsuStdInterpreter(IStdInterpretation source = null)
         {
             this.result = source ?? new OsuStdInterpretation();
         }
 
-        public IOsuStdInterpretation Interpret(IReadOnlyBeatmap<StdHitObject> beatmap)
+        public IStdInterpretation Interpret(IReadOnlyBeatmap<StdHitObject> beatmap)
         {
             this.reader = new StdHitObjectReader(beatmap.Difficulty, beatmap.TimingPoints, beatmap.HitObjects);
 
@@ -490,7 +490,7 @@ namespace OsuFileIO.Interpreter
             return degrees;
         }
 
-        private class OsuStdInterpretation : IOsuStdInterpretation
+        private class OsuStdInterpretation : IStdInterpretation
         {
             public TimeSpan Length { get; set; }
             public int HitCircleCount { get; set; }

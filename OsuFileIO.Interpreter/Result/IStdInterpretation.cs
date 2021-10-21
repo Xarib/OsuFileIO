@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Interpreter.Result
 {
-    public interface IOsuStdInterpretation : IInterpretation
+    public interface IStdInterpretation : IInterpretation
     {
         public int HitCircleCount { get; set; }
         public int SliderCount { get; set; }

@@ -2052,7 +2052,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
         #endregion
 
-        internal class ActualInterpretation : IOsuStdInterpretation
+        internal class ActualInterpretation : IStdInterpretation
         {
             public TimeSpan Length { get; set; }
             public int HitCircleCount { get; set; }

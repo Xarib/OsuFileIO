@@ -9,6 +9,7 @@ using OsuFileIO.OsuFile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,25 +18,17 @@ namespace OsuFileIO.Interpreter
 {
     public static class OsuFileIOExtensions
     {
-        public static IOsuStdInterpretation Interpret(this IReadOnlyBeatmap<StdHitObject> beatmap, IOsuStdInterpretation interpretation = null)
-        {
-            return new OsuStdInterpreter(interpretation).Interpret(beatmap);
-        }
+        public static IStdInterpretation Interpret(this IReadOnlyBeatmap<StdHitObject> beatmap, IStdInterpretation interpretation = null)
+            => new OsuStdInterpreter(interpretation).Interpret(beatmap);
 
-        public static IInterpretation Interpret(this IReadOnlyBeatmap<ManiaHitObject> beatmap)
-        {
-            throw new NotImplementedException();
-        }
+        public static IInterpretation Interpret(this IReadOnlyBeatmap<ManiaHitObject> beatmap, IManiaInterpretation interpretation = null)
+            => new ManiaInterperter(interpretation).Interpret(beatmap);
 
-        public static IInterpretation Interpret(this IReadOnlyBeatmap<TaikoHitObject> beatmap)
-        {
-            throw new NotImplementedException();
-        }
+        public static IInterpretation Interpret(this IReadOnlyBeatmap<TaikoHitObject> beatmap, ITaikoInterpretation interpretation = null)
+            => new TaikoInterpreter(interpretation).Interpret(beatmap);
 
-        public static IInterpretation Interpret(this IReadOnlyBeatmap<CatchHitObject> beatmap)
-        {
-            throw new NotImplementedException();
-        }
+        public static IInterpretation Interpret(this IReadOnlyBeatmap<CatchHitObject> beatmap, ICatchInterpretation interpretation = null)
+            => new CatchInterpreter(interpretation).Interpret(beatmap);
 
         //Leave this here so this is the last overload option
         public static IInterpretation Interpret(this IReadOnlyBeatmap<IHitObject> beatmap, IInterpretation interpretation = null)
@@ -43,13 +36,13 @@ namespace OsuFileIO.Interpreter
             switch (beatmap)
             {
                 case IReadOnlyBeatmap<StdHitObject> stdBeatmap:
-                    return stdBeatmap.Interpret((IOsuStdInterpretation)interpretation);
+                    return stdBeatmap.Interpret((IStdInterpretation)interpretation);
                 case IReadOnlyBeatmap<ManiaHitObject> maniaBeatmap:
-                    return maniaBeatmap.Interpret();
+                    return maniaBeatmap.Interpret((IManiaInterpretation)interpretation);
                 case IReadOnlyBeatmap<TaikoHitObject> taikoBeatmap:
-                    return taikoBeatmap.Interpret();
+                    return taikoBeatmap.Interpret((ITaikoInterpretation)interpretation);
                 case IReadOnlyBeatmap<CatchHitObject> catchBeatmap:
-                    return catchBeatmap.Interpret();
+                    return catchBeatmap.Interpret((ICatchInterpretation)interpretation);
                 case null:
                     throw new ArgumentNullException(nameof(beatmap));
                 default:
