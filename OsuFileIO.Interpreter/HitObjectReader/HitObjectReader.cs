@@ -23,10 +23,28 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 
         internal HitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<THitObject> hitObjects)
         {
-            this.difficulty = difficulty ?? throw new ArgumentNullException(nameof(difficulty));
-            this.timingPoints = timingPoints ?? throw new ArgumentNullException(nameof(timingPoints));
-            this.History = new List<(TimingPoint, THitObject)>();
+            if (difficulty is null)
+                throw new ArgumentNullException(nameof(difficulty));
+
+            if (timingPoints is null)
+                throw new ArgumentNullException(nameof(timingPoints));
+
+            if (hitObjects is null)
+                throw new ArgumentNullException(nameof(hitObjects));
+
+            if (timingPoints.Count == 0)
+                throw new ArgumentException("Map has to have timingPoints");
+
+            if (hitObjects.Count == 0)
+                throw new ArgumentException("Map has to have hit objects");
+
+            if (difficulty.CircleSize is null)
+                throw new ArgumentNullException(nameof(difficulty.CircleSize));
+
+            this.difficulty = difficulty;
+            this.timingPoints = timingPoints;
             this.hitObjects = hitObjects;
+            this.History = new List<(TimingPoint, THitObject)>();
         }
 
         internal abstract bool ReadNext();

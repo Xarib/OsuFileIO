@@ -4,6 +4,7 @@ using OsuFileIO.HitObject.Mania;
 using OsuFileIO.HitObject.OsuStd;
 using OsuFileIO.HitObject.Taiko;
 using OsuFileIO.Interpreter.HitObjectReader;
+using OsuFileIO.Interpreter.Result;
 using OsuFileIO.OsuFile;
 using System;
 using System.Collections.Generic;

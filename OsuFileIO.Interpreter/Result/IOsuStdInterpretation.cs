@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Interpreter
+namespace OsuFileIO.Interpreter.Result
 {
     public interface IOsuStdInterpretation : IInterpretation
     {

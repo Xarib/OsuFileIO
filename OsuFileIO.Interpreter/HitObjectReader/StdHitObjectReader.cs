@@ -16,25 +16,6 @@ namespace OsuFileIO.Interpreter.HitObjectReader
     {
         public StdHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<StdHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
         {
-            if (difficulty is null)
-                throw new ArgumentNullException(nameof(difficulty));
-
-            if (timingPoints is null)
-                throw new ArgumentNullException(nameof(timingPoints));
-
-            if (hitObjects is null)
-                throw new ArgumentNullException(nameof(hitObjects));
-
-            if (timingPoints.Count == 0)
-                throw new ArgumentException("Map has to have timingPoints");
-
-            if (hitObjects.Count == 0)
-                throw new ArgumentException("Map has to have hit objects");
-
-            if (difficulty.CircleSize is null)
-                throw new ArgumentNullException(nameof(difficulty.CircleSize));
-
-
             this.SetValues();
 
             this.CircleSize = difficulty.CircleSize.Value;

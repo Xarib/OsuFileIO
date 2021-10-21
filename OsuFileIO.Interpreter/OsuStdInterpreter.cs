@@ -1,6 +1,7 @@
 ﻿using OsuFileIO.HitObject;
 using OsuFileIO.HitObject.OsuStd;
 using OsuFileIO.Interpreter.HitObjectReader;
+using OsuFileIO.Interpreter.Result;
 using OsuFileIO.OsuFile;
 using System;
 using System.Collections.Generic;

@@ -2,6 +2,7 @@
 using OsuFileIO.HitObject;
 using OsuFileIO.HitObject.OsuStd;
 using OsuFileIO.Interpreter;
+using OsuFileIO.Interpreter.Result;
 using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader;
 using System;
