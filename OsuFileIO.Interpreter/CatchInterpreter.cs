@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Interpreter
 {
-    public class CatchInterpreter
+    internal class CatchInterpreter
     {
         private readonly ICatchInterpretation source;
 

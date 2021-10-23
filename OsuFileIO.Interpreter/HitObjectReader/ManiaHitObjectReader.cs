@@ -13,7 +13,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 {
     internal class ManiaHitObjectReader : HitObjectReader<ManiaHitObject>
     {
-        public ManiaHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<ManiaHitObject> hitObjects)
+        internal ManiaHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<ManiaHitObject> hitObjects)
             : base(difficulty, timingPoints, hitObjects) { }
 
         internal override bool ReadNext()

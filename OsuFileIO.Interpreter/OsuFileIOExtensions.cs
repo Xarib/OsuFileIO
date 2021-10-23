@@ -19,7 +19,7 @@ namespace OsuFileIO.Interpreter
     public static class OsuFileIOExtensions
     {
         public static IStdInterpretation Interpret(this IReadOnlyBeatmap<StdHitObject> beatmap, IStdInterpretation interpretation = null)
-            => new OsuStdInterpreter(interpretation).Interpret(beatmap);
+            => new StdInterpreter(interpretation).Interpret(beatmap);
 
         public static IInterpretation Interpret(this IReadOnlyBeatmap<ManiaHitObject> beatmap, IManiaInterpretation interpretation = null)
             => new ManiaInterperter(interpretation).Interpret(beatmap);

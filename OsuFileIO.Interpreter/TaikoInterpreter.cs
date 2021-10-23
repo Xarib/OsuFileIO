@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Interpreter
 {
-    public class TaikoInterpreter
+    internal class TaikoInterpreter
     {
         private readonly ITaikoInterpretation source;
 

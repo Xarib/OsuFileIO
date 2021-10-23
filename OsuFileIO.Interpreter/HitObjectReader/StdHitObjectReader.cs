@@ -14,7 +14,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 {    
     internal class StdHitObjectReader : HitObjectReader<StdHitObject>
     {
-        public StdHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<StdHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
+        internal StdHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<StdHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
         {
             this.SetValues();
 

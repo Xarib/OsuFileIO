@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.OsuFileReader
 {
-    public sealed class OsuFileReaderBuilder : IDisposable
+    public class OsuFileReaderBuilder : IDisposable
     {
         private OsuFileReaderOptions options;
         private OsuFileReaderOverride readerOverride;

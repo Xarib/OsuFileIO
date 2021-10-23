@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Interpreter
 {
-    public class OsuStdInterpreter
+    internal class StdInterpreter
     {
         private readonly IStdInterpretation result;
         private StdHitObjectReader reader;
 
-        public OsuStdInterpreter(IStdInterpretation source = null)
+        public StdInterpreter(IStdInterpretation source = null)
         {
             this.result = source ?? new OsuStdInterpretation();
         }

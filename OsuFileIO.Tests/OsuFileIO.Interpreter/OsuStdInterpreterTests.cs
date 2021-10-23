@@ -49,7 +49,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -89,7 +89,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var actual = new ActualInterpretation();
 
             //Act
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -110,7 +110,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -154,7 +154,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -194,7 +194,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -234,7 +234,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -256,7 +256,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -281,7 +281,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             Assert.AreEqual(bpm, actual.Bpm, $"Expected to get the correct {actual.Bpm}");
@@ -337,7 +337,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -377,7 +377,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -428,7 +428,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -469,7 +469,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -520,7 +520,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -562,7 +562,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -621,7 +621,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -675,7 +675,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -728,7 +728,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -779,7 +779,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -829,7 +829,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -872,7 +872,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -923,7 +923,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -970,7 +970,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1018,7 +1018,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1042,7 +1042,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             Assert.AreEqual(1, actual.StreamCutsCount, "Expected one stream jump");
@@ -1094,7 +1094,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1143,7 +1143,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1187,7 +1187,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             Assert.AreEqual(expectedCount, actual.Jump90DegreesCount, "Expected to find all 90 Degree jumps");
@@ -1227,7 +1227,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             Assert.AreEqual(expectedCount, actual.Jump180DegreesCount, "Expected to find all 180 Degree jumps");
@@ -1262,7 +1262,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             Assert.IsTrue(actual.Jump180DegreesCount == 0, "Expected no 180 Degree jumps");
@@ -1297,7 +1297,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             Assert.IsTrue(actual.Jump180DegreesCount == 0, "Expected no 180 Degree jumps");
@@ -1342,7 +1342,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1382,7 +1382,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1418,7 +1418,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1460,7 +1460,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1504,7 +1504,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1550,7 +1550,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1597,7 +1597,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1637,7 +1637,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1677,7 +1677,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1717,7 +1717,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1757,7 +1757,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1795,7 +1795,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1858,7 +1858,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -1920,7 +1920,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             var fastestSpeeds = sliders
@@ -1969,7 +1969,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -2012,7 +2012,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
 
             //Assert
@@ -2046,7 +2046,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new OsuStdInterpreter(actual);
+            var interpreter = new StdInterpreter(actual);
             interpreter.Interpret(file);
         }
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Interpreter
 {
-    public class ManiaInterperter
+    internal class ManiaInterperter
     {
         private readonly IManiaInterpretation source;
 

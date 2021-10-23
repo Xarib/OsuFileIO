@@ -13,7 +13,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 {
     internal class CatchHitObjectReader : HitObjectReader<CatchHitObject>
     {
-        public CatchHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<CatchHitObject> hitObjects)
+        internal CatchHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<CatchHitObject> hitObjects)
             : base(difficulty, timingPoints, hitObjects) { }
 
         internal override bool ReadNext()

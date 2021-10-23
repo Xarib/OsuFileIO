@@ -13,7 +13,7 @@ namespace OsuFileIO.Interpreter.HitObjectReader
 {
     internal class TaikoHitObjectReader : HitObjectReader<TaikoHitObject>
     {
-        public TaikoHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<TaikoHitObject> hitObjects)
+        internal TaikoHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<TaikoHitObject> hitObjects)
             : base(difficulty, timingPoints, hitObjects) { }
 
         internal override bool ReadNext()
