@@ -90,17 +90,13 @@ namespace OsuFileIO.OsuFileReader
             }
             catch (Exception e)
             {
-                this.Dispose();
                 throw new OsuFileReaderException($"The reader encountered an error at line: {this.line}, in file with beatmapId: {osuFile.MetaData.BeatmapID}, with title: {osuFile.MetaData.Title}", e);
             }
-
-            this.Dispose();
 
             osuFile.HitObjects = listBuilder.ToReadOnlyCollection();
 
             return osuFile;
         }
-
         private Spinner ReadSpinner(Coordinates coordinates, int ms, string rest)
         {
             Spinner spinner = null;

@@ -19,8 +19,10 @@ namespace OsuFileIO.OsuFileReader
         private const string orderExceptionMessage = "The File was not read in the correct order. ReadMethods have to be ordere like: 'Genral -> Editor -> Metadata -> Difficulty -> Events -> TimingPoints -> Colours -> HitObjects' or with 'ReadFile'. For repetitions reset the reader";
         protected readonly StreamReader sr;
         protected string line;
-        private readonly OsuFileReaderOverride overrides;
-        private readonly OsuFileReaderOptions options;
+        private OsuFileReaderOverride overrides;
+        private OsuFileReaderOptions options;
+
+        private bool disposed;
 
         private static readonly OsuFileReaderOptions defaultOptions = new OsuFileReaderOptions
         {
@@ -267,8 +269,22 @@ namespace OsuFileIO.OsuFileReader
 
         public void Dispose()
         {
-            this.sr.Dispose();
+            this.Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (this.disposed)
+                return;
+
+            if (disposing)
+            {
+                this.sr.Dispose();
+            }
+
+            this.options = null;
+            this.overrides = null;
         }
     }
 
