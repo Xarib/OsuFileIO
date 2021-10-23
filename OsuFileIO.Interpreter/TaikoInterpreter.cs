@@ -13,12 +13,12 @@ namespace OsuFileIO.Interpreter
     {
         private readonly ITaikoInterpretation source;
 
-        public TaikoInterpreter(ITaikoInterpretation source = null)
+        internal TaikoInterpreter(ITaikoInterpretation source = null)
         {
             this.source = source ?? throw new ArgumentNullException(nameof(source));
         }
 
-        public ITaikoInterpretation Interpret(IReadOnlyBeatmap<TaikoHitObject> beatmap)
+        internal ITaikoInterpretation Interpret(IReadOnlyBeatmap<TaikoHitObject> beatmap)
         {
             throw new NotImplementedException();
         }

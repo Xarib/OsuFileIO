@@ -19,12 +19,12 @@ namespace OsuFileIO.Interpreter
         private readonly IStdInterpretation result;
         private StdHitObjectReader reader;
 
-        public StdInterpreter(IStdInterpretation source = null)
+        internal StdInterpreter(IStdInterpretation source = null)
         {
             this.result = source ?? new OsuStdInterpretation();
         }
 
-        public IStdInterpretation Interpret(IReadOnlyBeatmap<StdHitObject> beatmap)
+        internal IStdInterpretation Interpret(IReadOnlyBeatmap<StdHitObject> beatmap)
         {
             this.reader = new StdHitObjectReader(beatmap.Difficulty, beatmap.TimingPoints, beatmap.HitObjects);
 

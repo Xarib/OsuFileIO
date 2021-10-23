@@ -13,12 +13,12 @@ namespace OsuFileIO.Interpreter
     {
         private readonly ICatchInterpretation source;
 
-        public CatchInterpreter(ICatchInterpretation source = null)
+        internal CatchInterpreter(ICatchInterpretation source = null)
         {
             this.source = source ?? throw new ArgumentNullException(nameof(source));
         }
 
-        public ICatchInterpretation Interpret(IReadOnlyBeatmap<CatchHitObject> beatmap)
+        internal ICatchInterpretation Interpret(IReadOnlyBeatmap<CatchHitObject> beatmap)
         {
             throw new NotImplementedException();
         }
