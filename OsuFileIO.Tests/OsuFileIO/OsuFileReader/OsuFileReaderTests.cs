@@ -464,5 +464,16 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
             Assert.AreEqual(read1.OsuFileFormat, read2.OsuFileFormat, $"Expected the re-read to be the same");
             Assert.AreEqual(read1.StackLeniency, read2.StackLeniency, $"Expected the re-read to be the same");
         }
+
+        [TestMethod]
+        [DeploymentItem(fileLocation + "empty.osu")]
+        public void ReadFile_EmptyFile_ShouldThrowArgumentException()
+        {
+            //Act
+            void actual() => new OsuFileReaderBuilder("empty.osu");
+
+            //Assert
+            Assert.ThrowsException<ArgumentException>(actual);
+        }
     }
 }

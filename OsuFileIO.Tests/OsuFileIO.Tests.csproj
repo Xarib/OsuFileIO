@@ -31,6 +31,9 @@
     <None Update="TestFiles\catch.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestFiles\empty.osu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestFiles\mania.osu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

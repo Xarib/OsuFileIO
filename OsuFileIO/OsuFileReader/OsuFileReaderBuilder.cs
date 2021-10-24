@@ -32,6 +32,8 @@ namespace OsuFileIO.OsuFileReader
                 throw new FileNotFoundException("File '" + path + "' does not exist");
 
             this.sr = new StreamReader(path);
+
+            this.sr.ThrowArgumentExceptionIfEmpty();
         }
 
         public OsuFileReaderBuilder([NotNull] Stream stream)
@@ -40,6 +42,8 @@ namespace OsuFileIO.OsuFileReader
                 throw new ArgumentNullException(nameof(stream));
 
             this.sr = new StreamReader(stream);
+
+            this.sr.ThrowArgumentExceptionIfEmpty();
         }
 
         public OsuFileReaderBuilder UseOptions(OsuFileReaderOptions options)

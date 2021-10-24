@@ -63,5 +63,11 @@ namespace OsuFileIO.Extensions
 
             sr.DiscardBufferedData();
         }
+
+        internal static void ThrowArgumentExceptionIfEmpty(this StreamReader sr)
+        {
+            if (sr.BaseStream.Length == 0)
+                throw new ArgumentException("The given file is empty");
+        }
     }
 }

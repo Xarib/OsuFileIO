@@ -155,6 +155,17 @@ namespace OsuFileIO.Tests.OsuFileIO.OsuFileReader
         }
 
         [TestMethod]
+        [DeploymentItem(fileLocation + "empty.osu")]
+        public void ReadFile_EmptyFile_ShouldThrowArgumentException()
+        {
+            //Act
+            void actual() => new StdFileReader("empty.osu");
+
+            //Assert
+            Assert.ThrowsException<ArgumentException>(actual);
+        }
+
+        [TestMethod]
         [DeploymentItem(problematic + "100.osu")]
         [DataRow("100.osu")]
         public void ReadFile_ProblematicFile100_ReturnsOsuFile(string fileName)

@@ -34,6 +34,8 @@ namespace OsuFileIO.OsuFileReader
         protected OsuFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
         {
             this.sr = new(path);
+            this.sr.ThrowArgumentExceptionIfEmpty();
+
             this.overrides = overrides;
             this.options = options ?? defaultOptions;
         }
@@ -41,6 +43,8 @@ namespace OsuFileIO.OsuFileReader
         protected OsuFileReader(Stream stream, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
         {
             this.sr = new(stream);
+            this.sr.ThrowArgumentExceptionIfEmpty();
+
             this.overrides = overrides;
             this.options = options ?? defaultOptions;
         }
@@ -285,6 +289,8 @@ namespace OsuFileIO.OsuFileReader
 
             this.options = null;
             this.overrides = null;
+
+            this.disposed = true;
         }
     }
 
