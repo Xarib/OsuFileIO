@@ -15,7 +15,7 @@ namespace OsuFileIO.Interpreter
 
         internal ManiaInterperter(IManiaInterpretation source = null)
         {
-            this.source = source ?? throw new ArgumentNullException(nameof(source));
+            this.source = source;
         }
 
         internal IManiaInterpretation Interpret(IReadOnlyBeatmap<ManiaHitObject> beatmap)

@@ -15,7 +15,7 @@ namespace OsuFileIO.Interpreter
 
         internal TaikoInterpreter(ITaikoInterpretation source = null)
         {
-            this.source = source ?? throw new ArgumentNullException(nameof(source));
+            this.source = source;
         }
 
         internal ITaikoInterpretation Interpret(IReadOnlyBeatmap<TaikoHitObject> beatmap)

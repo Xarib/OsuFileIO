@@ -15,7 +15,7 @@ namespace OsuFileIO.Interpreter
 
         internal CatchInterpreter(ICatchInterpretation source = null)
         {
-            this.source = source ?? throw new ArgumentNullException(nameof(source));
+            this.source = source;
         }
 
         internal ICatchInterpretation Interpret(IReadOnlyBeatmap<CatchHitObject> beatmap)
