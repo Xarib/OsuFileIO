@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OsuFileIO.Interpreter\OsuFileIO.Analyzer.csproj" />
+    <ProjectReference Include="..\OsuFileIO.Analyzer\OsuFileIO.Analyzer.csproj" />
     <ProjectReference Include="..\OsuFileIO\OsuFileIO.csproj" />
   </ItemGroup>
 
