@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("OsuFileIO.Tests")]
 
-namespace OsuFileIO.Interpreter.HitObjectReader
+namespace OsuFileIO.Analyzer.HitObjectReader
 {
     internal class ManiaHitObjectReader : HitObjectReader<ManiaHitObject>
     {

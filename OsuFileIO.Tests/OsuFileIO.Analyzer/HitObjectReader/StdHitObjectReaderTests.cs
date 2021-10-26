@@ -1,16 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OsuFileIO.HitObject;
 using OsuFileIO.HitObject.OsuStd;
-using OsuFileIO.Interpreter.HitObjectReader;
+using OsuFileIO.Analyzer.HitObjectReader;
 using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static OsuFileIO.Interpreter.HitObjectReader.StdHitObjectReader;
 
 namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
 {

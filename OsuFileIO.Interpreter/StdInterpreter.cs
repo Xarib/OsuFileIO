@@ -1,7 +1,7 @@
 ﻿using OsuFileIO.HitObject;
 using OsuFileIO.HitObject.OsuStd;
-using OsuFileIO.Interpreter.HitObjectReader;
-using OsuFileIO.Interpreter.Result;
+using OsuFileIO.Analyzer.HitObjectReader;
+using OsuFileIO.Analyzer.Result;
 using OsuFileIO.OsuFile;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Interpreter
+namespace OsuFileIO.Analyzer
 {
     internal class StdInterpreter
     {

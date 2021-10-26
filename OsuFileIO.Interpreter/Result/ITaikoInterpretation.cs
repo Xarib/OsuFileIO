@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Interpreter.Result
+namespace OsuFileIO.Analyzer.Result
 {
     public interface ITaikoInterpretation : IInterpretation
     {

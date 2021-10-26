@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OsuFileIO", "OsuFileIO\OsuF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OsuFileIO.Tests", "OsuFileIO.Tests\OsuFileIO.Tests.csproj", "{20F2A4B3-D1E9-474E-B03D-5D4A2765B5F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuFileIO.Interpreter", "OsuFileIO.Interpreter\OsuFileIO.Interpreter.csproj", "{0768AC6B-1F56-46BF-8836-94AD7138C82D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OsuFileIO.Analyzer", "OsuFileIO.Interpreter\OsuFileIO.Analyzer.csproj", "{0768AC6B-1F56-46BF-8836-94AD7138C82D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

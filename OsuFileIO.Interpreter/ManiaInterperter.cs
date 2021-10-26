@@ -1,5 +1,5 @@
 ﻿using OsuFileIO.HitObject.Mania;
-using OsuFileIO.Interpreter.Result;
+using OsuFileIO.Analyzer.Result;
 using OsuFileIO.OsuFile;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Interpreter
+namespace OsuFileIO.Analyzer
 {
     internal class ManiaInterperter
     {

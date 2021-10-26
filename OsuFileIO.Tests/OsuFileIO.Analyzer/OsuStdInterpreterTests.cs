@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OsuFileIO.HitObject;
 using OsuFileIO.HitObject.OsuStd;
-using OsuFileIO.Interpreter;
-using OsuFileIO.Interpreter.Result;
+using OsuFileIO.Analyzer;
+using OsuFileIO.Analyzer.Result;
 using OsuFileIO.OsuFile;
 using OsuFileIO.OsuFileReader;
 using System;

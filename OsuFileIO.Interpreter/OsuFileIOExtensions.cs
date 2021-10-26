@@ -3,8 +3,8 @@ using OsuFileIO.HitObject.Catch;
 using OsuFileIO.HitObject.Mania;
 using OsuFileIO.HitObject.OsuStd;
 using OsuFileIO.HitObject.Taiko;
-using OsuFileIO.Interpreter.HitObjectReader;
-using OsuFileIO.Interpreter.Result;
+using OsuFileIO.Analyzer.HitObjectReader;
+using OsuFileIO.Analyzer.Result;
 using OsuFileIO.OsuFile;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Interpreter
+namespace OsuFileIO.Analyzer
 {
     public static class OsuFileIOExtensions
     {
