@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Analyzer
 {
-    internal class CatchInterpreter
+    internal class CatchAnalyzer
     {
-        private readonly ICatchInterpretation source;
+        private readonly ICatchAnalysis analysis;
 
-        internal CatchInterpreter(ICatchInterpretation source = null)
+        internal CatchAnalyzer(ICatchAnalysis analysis = null)
         {
-            this.source = source;
+            this.analysis = analysis;
         }
 
-        internal ICatchInterpretation Interpret(IReadOnlyBeatmap<CatchHitObject> beatmap)
+        internal ICatchAnalysis Analyze(IReadOnlyBeatmap<CatchHitObject> beatmap)
         {
             throw new NotImplementedException();
         }

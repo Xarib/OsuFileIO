@@ -49,8 +49,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(TimeSpan.FromMilliseconds(expectedLength), actual.Length, "Expected to interpret the length correclty");
@@ -89,8 +89,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var actual = new ActualInterpretation();
 
             //Act
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             var milisecondDifference = Math.Abs(actual.Length.TotalMilliseconds - expectedEndTime);
@@ -110,8 +110,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             var milisecondDifference = Math.Abs(actual.Length.TotalMilliseconds - endtimeInMs);
@@ -154,8 +154,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.HitCircleCount, $"Expected to count HitCircles correctly");
@@ -194,8 +194,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.SliderCount, $"Expected to count Sliders correctly");
@@ -234,8 +234,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.SpinnerCount, $"Expected to count Spinners correctly");
@@ -256,8 +256,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCircleCount, actual.HitCircleCount, $"Expected to count HitCircles correctly");
@@ -281,8 +281,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             Assert.AreEqual(bpm, actual.Bpm, $"Expected to get the correct {actual.Bpm}");
             Assert.AreEqual(bpmMin, actual.BpmMin, $"Expected to get the correct {actual.BpmMin}");
@@ -337,8 +337,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.DoubleCount, "Expected to count doubles correctly");
@@ -377,8 +377,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.StandaloneDoubleCount, "Expected to count true doubles correctly");
@@ -428,8 +428,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.TripletCount, "Expected to count triplets correctly");
@@ -469,8 +469,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.StandaloneTripletCount, "Expected to count true doubles correctly");
@@ -520,8 +520,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.QuadrupletCount, "Expected to count quadruplets correctly");
@@ -562,8 +562,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.StandaloneQuadrupletCount, "Expected to count true doubles correctly");
@@ -621,8 +621,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedLength, actual.LongestStream, "Expected to find the longest stream");
@@ -675,8 +675,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.BurstCount, $"Expected count {nameof(actual.BurstCount)} correctly");
@@ -728,8 +728,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.StreamCount, $"Expected count {nameof(actual.StreamCount)} correctly");
@@ -779,8 +779,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.LongStreamCount, $"Expected count {nameof(actual.LongStreamCount)} correctly");
@@ -829,8 +829,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.DeathStreamCount, $"Expected count {nameof(actual.DeathStreamCount)} correctly");
@@ -872,8 +872,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedLength, actual.LongestStream, "Expected to find the longest stream");
@@ -923,8 +923,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedPixels, actual.TotalStreamAlikePixels, $"Expected to calculate {actual.TotalStreamAlikePixels}");
@@ -970,8 +970,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(5 * count, actual.TotalStreamAlikePixels, $"Expected to calculate {nameof(actual.TotalStreamAlikePixels)} correctly");
@@ -1018,8 +1018,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedSpacePixels, Convert.ToInt32(actual.TotalSpacedStreamAlikePixels), $"Expected to calculate {nameof(actual.TotalSpacedStreamAlikePixels)} correctly");
@@ -1042,8 +1042,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             Assert.AreEqual(1, actual.StreamCutsCount, "Expected one stream jump");
         }
@@ -1094,8 +1094,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCuts, actual.StreamCutsCount, "Expected to count cuts in streams");
@@ -1143,8 +1143,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(epxtedCount, actual.SlidersInStreamAlike, "Expected to count sliders in streams");
@@ -1187,8 +1187,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             Assert.AreEqual(expectedCount, actual.Jump90DegreesCount, "Expected to find all 90 Degree jumps");
         }
@@ -1227,8 +1227,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             Assert.AreEqual(expectedCount, actual.Jump180DegreesCount, "Expected to find all 180 Degree jumps");
         }
@@ -1262,8 +1262,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             Assert.IsTrue(actual.Jump180DegreesCount == 0, "Expected no 180 Degree jumps");
         }
@@ -1297,8 +1297,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             Assert.IsTrue(actual.Jump180DegreesCount == 0, "Expected no 180 Degree jumps");
         }
@@ -1342,8 +1342,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.CrossScreenJumpCount, "Expected find all cross screen jumps");
@@ -1382,8 +1382,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedLength, actual.TotalJumpPixels, "Expected to get Jump length");
@@ -1418,8 +1418,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedLength, actual.TotalJumpPixels, "Expected to calculate jump pixels from slider end");
@@ -1460,8 +1460,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.UniqueDistancesCount, "Expected to find all unique jumps lenghts");
@@ -1504,8 +1504,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(sliderLengths.Sum(), actual.TotalSliderLength, "Expected to sum up all slider lengths");
@@ -1550,8 +1550,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(sliderPoints.Sum(), actual.SliderPointCount, "Expected to sum up all slider points");
@@ -1597,8 +1597,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual((double)sliderPoints.Sum() / sliderPoints.Length, actual.AvgSliderPointCount, "Expected to get avg slider point count");
@@ -1637,8 +1637,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.BèzierSliderCount, "Expected to count bèzier sliders");
@@ -1677,8 +1677,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.CatmullSliderCount, "Expected to count catmull sliders");
@@ -1717,8 +1717,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.LinearSliderCount, "Expected to count linear sliders");
@@ -1757,8 +1757,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.PerfectCicleSliderCount, "Expected to count perfect circle sliders");
@@ -1795,8 +1795,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.KickSliderCount, "Should count kicksliders correclty");
@@ -1858,8 +1858,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(100d * 1.6d * (-100d / -80d), actual.AvgFasterSliderSpeed, "Expected to get most common faster slider speed");
@@ -1920,8 +1920,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             var fastestSpeeds = sliders
                 .Where(s => s.count >= 10)
@@ -1969,8 +1969,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(prefectStackCount, actual.CirclePerfectStackCount, "Expected to count perfect circle stacks correctly");
@@ -2012,8 +2012,8 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
 
             //Assert
             Assert.AreEqual(prefectStackCount, actual.SliderPerfectStackCount, "Expected to count perfect slider stacks correctly");
@@ -2046,13 +2046,13 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             //Act
             var actual = new ActualInterpretation();
-            var interpreter = new StdInterpreter(actual);
-            interpreter.Interpret(file);
+            var interpreter = new StdAnalyzer(actual);
+            interpreter.Analyze(file);
         }
 
         #endregion
 
-        internal class ActualInterpretation : IStdInterpretation
+        internal class ActualInterpretation : IStdAnalysis
         {
             public TimeSpan Length { get; set; }
             public int HitCircleCount { get; set; }

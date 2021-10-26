@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Analyzer
 {
-    internal class ManiaInterperter
+    internal class ManiaAnalyzer
     {
-        private readonly IManiaInterpretation source;
+        private readonly IManiaAnalysis analysis;
 
-        internal ManiaInterperter(IManiaInterpretation source = null)
+        internal ManiaAnalyzer(IManiaAnalysis analysis = null)
         {
-            this.source = source;
+            this.analysis = analysis;
         }
 
-        internal IManiaInterpretation Interpret(IReadOnlyBeatmap<ManiaHitObject> beatmap)
+        internal IManiaAnalysis Analyze(IReadOnlyBeatmap<ManiaHitObject> beatmap)
         {
             throw new NotImplementedException();
         }

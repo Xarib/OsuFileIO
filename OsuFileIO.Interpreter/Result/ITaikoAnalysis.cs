@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Analyzer.Result
 {
-    public interface ICatchInterpretation : IInterpretation
+    public interface ITaikoAnalysis : IAnalysis
     {
     }
 }

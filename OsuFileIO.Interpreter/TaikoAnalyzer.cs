@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Analyzer
 {
-    internal class TaikoInterpreter
+    internal class TaikoAnalyzer
     {
-        private readonly ITaikoInterpretation source;
+        private readonly ITaikoAnalysis analysis;
 
-        internal TaikoInterpreter(ITaikoInterpretation source = null)
+        internal TaikoAnalyzer(ITaikoAnalysis analysis = null)
         {
-            this.source = source;
+            this.analysis = analysis;
         }
 
-        internal ITaikoInterpretation Interpret(IReadOnlyBeatmap<TaikoHitObject> beatmap)
+        internal ITaikoAnalysis Analyze(IReadOnlyBeatmap<TaikoHitObject> beatmap)
         {
             throw new NotImplementedException();
         }

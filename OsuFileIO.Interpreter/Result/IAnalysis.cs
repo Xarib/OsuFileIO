@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Analyzer.Result
 {
-    public interface IInterpretation
+    public interface IAnalysis
     {
         public TimeSpan Length { get; set; }
         public double Bpm { get; set; }

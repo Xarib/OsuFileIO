@@ -18,31 +18,31 @@ namespace OsuFileIO.Analyzer
 {
     public static class OsuFileIOExtensions
     {
-        public static IStdInterpretation Interpret(this IReadOnlyBeatmap<StdHitObject> beatmap, IStdInterpretation interpretation = null)
-            => new StdInterpreter(interpretation).Interpret(beatmap);
+        public static IStdAnalysis Analyze(this IReadOnlyBeatmap<StdHitObject> beatmap, IStdAnalysis analysis = null)
+            => new StdAnalyzer(analysis).Analyze(beatmap);
 
-        public static IInterpretation Interpret(this IReadOnlyBeatmap<ManiaHitObject> beatmap, IManiaInterpretation interpretation = null)
-            => new ManiaInterperter(interpretation).Interpret(beatmap);
+        public static IAnalysis Analyze(this IReadOnlyBeatmap<ManiaHitObject> beatmap, IManiaAnalysis analysis = null)
+            => new ManiaAnalyzer(analysis).Analyze(beatmap);
 
-        public static IInterpretation Interpret(this IReadOnlyBeatmap<TaikoHitObject> beatmap, ITaikoInterpretation interpretation = null)
-            => new TaikoInterpreter(interpretation).Interpret(beatmap);
+        public static IAnalysis Analyze(this IReadOnlyBeatmap<TaikoHitObject> beatmap, ITaikoAnalysis analysis = null)
+            => new TaikoAnalyzer(analysis).Analyze(beatmap);
 
-        public static IInterpretation Interpret(this IReadOnlyBeatmap<CatchHitObject> beatmap, ICatchInterpretation interpretation = null)
-            => new CatchInterpreter(interpretation).Interpret(beatmap);
+        public static IAnalysis Analyze(this IReadOnlyBeatmap<CatchHitObject> beatmap, ICatchAnalysis analysis = null)
+            => new CatchAnalyzer(analysis).Analyze(beatmap);
 
         //Leave this here so this is the last overload option
-        public static IInterpretation Interpret(this IReadOnlyBeatmap<IHitObject> beatmap, IInterpretation interpretation = null)
+        public static IAnalysis Analyze(this IReadOnlyBeatmap<IHitObject> beatmap, IAnalysis analysis = null)
         {
             switch (beatmap)
             {
                 case IReadOnlyBeatmap<StdHitObject> stdBeatmap:
-                    return stdBeatmap.Interpret((IStdInterpretation)interpretation);
+                    return stdBeatmap.Analyze((IStdAnalysis)analysis);
                 case IReadOnlyBeatmap<ManiaHitObject> maniaBeatmap:
-                    return maniaBeatmap.Interpret((IManiaInterpretation)interpretation);
+                    return maniaBeatmap.Analyze((IManiaAnalysis)analysis);
                 case IReadOnlyBeatmap<TaikoHitObject> taikoBeatmap:
-                    return taikoBeatmap.Interpret((ITaikoInterpretation)interpretation);
+                    return taikoBeatmap.Analyze((ITaikoAnalysis)analysis);
                 case IReadOnlyBeatmap<CatchHitObject> catchBeatmap:
-                    return catchBeatmap.Interpret((ICatchInterpretation)interpretation);
+                    return catchBeatmap.Analyze((ICatchAnalysis)analysis);
                 case null:
                     throw new ArgumentNullException(nameof(beatmap));
                 default:

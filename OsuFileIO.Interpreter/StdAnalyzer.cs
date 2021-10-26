@@ -14,17 +14,17 @@ using System.Threading.Tasks;
 
 namespace OsuFileIO.Analyzer
 {
-    internal class StdInterpreter
+    internal class StdAnalyzer
     {
-        private readonly IStdInterpretation result;
+        private readonly IStdAnalysis analysis;
         private StdHitObjectReader reader;
 
-        internal StdInterpreter(IStdInterpretation source = null)
+        internal StdAnalyzer(IStdAnalysis analysis = null)
         {
-            this.result = source ?? new OsuStdInterpretation();
+            this.analysis = analysis ?? new OsuStdAnalysis();
         }
 
-        internal IStdInterpretation Interpret(IReadOnlyBeatmap<StdHitObject> beatmap)
+        internal IStdAnalysis Analyze(IReadOnlyBeatmap<StdHitObject> beatmap)
         {
             this.reader = new StdHitObjectReader(beatmap.Difficulty, beatmap.TimingPoints, beatmap.HitObjects);
 
@@ -54,13 +54,13 @@ namespace OsuFileIO.Analyzer
                     lastRedTimingPoint = this.reader.CurrentTimingPoint;
                 }
 
-                this.InterpretCountValues();
+                this.AnalyzeCountValues();
 
-                this.InterpretJumps();
+                this.AnalyzeJumps();
 
-                this.InterpretSliders();
+                this.AnalyzeSliders();
 
-                this.InterpretMiscellaneous();
+                this.AnalyzeMiscellaneous();
 
             } while (this.reader.ReadNext());
 
@@ -70,7 +70,7 @@ namespace OsuFileIO.Analyzer
             {
                 case StdHitObjectType.Circle:
 
-                    this.result.Length = TimeSpan.FromMilliseconds(this.reader.CurrentHitObject.TimeInMs);
+                    this.analysis.Length = TimeSpan.FromMilliseconds(this.reader.CurrentHitObject.TimeInMs);
 
                     break;
                 case StdHitObjectType.Slider:
@@ -80,29 +80,29 @@ namespace OsuFileIO.Analyzer
 
                     if (time > int.MaxValue) //Maps that have infinite bpm
                     {
-                        this.result.Length = TimeSpan.FromMilliseconds(slider.TimeInMs);
+                        this.analysis.Length = TimeSpan.FromMilliseconds(slider.TimeInMs);
                     }
                     else
                     {
-                        this.result.Length = TimeSpan.FromMilliseconds(time);
+                        this.analysis.Length = TimeSpan.FromMilliseconds(time);
                     }                   
 
                     break;
                 case StdHitObjectType.Spinner:
 
                     var spinner = this.reader.CurrentHitObject as Spinner;
-                    this.result.Length = TimeSpan.FromMilliseconds(spinner.EndTimeInMs);
+                    this.analysis.Length = TimeSpan.FromMilliseconds(spinner.EndTimeInMs);
 
                     break;
                 default:
                     throw new InvalidEnumArgumentException($"Unimplemented enum {this.reader.HitObjectType}");
             }
 
-            totalTimeByBpm[lastRedTimingPoint.BeatLength] += Convert.ToInt32(this.result.Length.TotalMilliseconds - lastRedTimingPoint.TimeInMs);
+            totalTimeByBpm[lastRedTimingPoint.BeatLength] += Convert.ToInt32(this.analysis.Length.TotalMilliseconds - lastRedTimingPoint.TimeInMs);
 
             var longestTimeForBpms = 0;
-            this.result.BpmMax = int.MinValue;
-            this.result.BpmMin = int.MaxValue;
+            this.analysis.BpmMax = int.MinValue;
+            this.analysis.BpmMin = int.MaxValue;
             foreach (var item in totalTimeByBpm)
             {
 
@@ -111,18 +111,18 @@ namespace OsuFileIO.Analyzer
                 if (item.Value > longestTimeForBpms)
                 {
                     longestTimeForBpms = item.Value;
-                    this.result.Bpm = currentBpm;
+                    this.analysis.Bpm = currentBpm;
                 }
 
-                if (currentBpm > this.result.BpmMax)
-                    this.result.BpmMax = currentBpm;
+                if (currentBpm > this.analysis.BpmMax)
+                    this.analysis.BpmMax = currentBpm;
 
-                if (currentBpm < this.result.BpmMin)
-                    this.result.BpmMin = currentBpm;
+                if (currentBpm < this.analysis.BpmMin)
+                    this.analysis.BpmMin = currentBpm;
             }
 
-            this.result.AvgSliderPointCount = (double)this.result.SliderPointCount / this.result.SliderCount;
-            this.result.UniqueDistancesCount = this.jumpLengthFrequency.Count;
+            this.analysis.AvgSliderPointCount = (double)this.analysis.SliderPointCount / this.analysis.SliderCount;
+            this.analysis.UniqueDistancesCount = this.jumpLengthFrequency.Count;
 
             if (this.sliderVelocityFrequency.Count != 0)
             {
@@ -132,12 +132,12 @@ namespace OsuFileIO.Analyzer
                     .OrderByDescending(freq => freq.Key)
                     .ToList();
 
-                this.result.AvgFasterSliderSpeed = mostFrequentSpeeds[0].Key;
+                this.analysis.AvgFasterSliderSpeed = mostFrequentSpeeds[0].Key;
 
-                this.result.SliderSpeedDifference = mostFrequentSpeeds[0].Key - mostFrequentSpeeds.Last().Key;
+                this.analysis.SliderSpeedDifference = mostFrequentSpeeds[0].Key - mostFrequentSpeeds.Last().Key;
             }
 
-            return this.result;
+            return this.analysis;
         }
 
         private double CalculateSliderEndTime(Slider slider, TimingPoint timingPoint)
@@ -146,19 +146,19 @@ namespace OsuFileIO.Analyzer
             => slider.TravelLenth / this.reader.SliderVelocity * timingPoint.BeatLength;
 
         private const double beatLength100Bpm = 60000 / 100 / 4; //100 Bmp
-        private void InterpretCountValues()
+        private void AnalyzeCountValues()
         {
 
             switch (this.reader.HitObjectType)
             {
                 case StdHitObjectType.Circle:
-                    this.result.HitCircleCount++;
+                    this.analysis.HitCircleCount++;
                     break;
                 case StdHitObjectType.Slider:
-                    this.result.SliderCount++;
+                    this.analysis.SliderCount++;
                     break;
                 case StdHitObjectType.Spinner:
-                    this.result.SpinnerCount++;
+                    this.analysis.SpinnerCount++;
                     break;
                 default:
                     throw new InvalidEnumArgumentException($"Unimplemented enum {this.reader.HitObjectType}");
@@ -171,14 +171,9 @@ namespace OsuFileIO.Analyzer
 
             var timeBetweenHitObjects = this.reader.CurrentHitObject.TimeInMs - previousHitObject.TimeInMs;
 
-            if (timeBetweenHitObjects < this.reader.TimeHalfBeat && timeBetweenHitObjects > this.reader.TimeHalfBeat)
-            {
-                //InterpretOneTwoCount
-            }
-
             if (this.IsMappedLikeDoubleToQuad(timeBetweenHitObjects))
             {
-                this.InterpretDoubleToQuadCount();
+                this.AnalyzeDoubleToQuadCount();
             }
             else
             {
@@ -189,13 +184,13 @@ namespace OsuFileIO.Analyzer
 
             if (this.IsMappedLikeStream(timeBetweenHitObjects))
             {
-                this.InterpretStreamCount();
+                this.AnalyzeStreamCount();
             }
         }
 
         private int hitObjectCountDoubleToQuad = 1;
         private bool IsCircleOnly = true;
-        private void InterpretDoubleToQuadCount()
+        private void AnalyzeDoubleToQuadCount()
         {
             this.hitObjectCountDoubleToQuad++;
 
@@ -212,24 +207,24 @@ namespace OsuFileIO.Analyzer
                 case 1:
                     break;
                 case 2:
-                    this.result.DoubleCount++;
+                    this.analysis.DoubleCount++;
 
                     if (this.IsCircleOnly && !this.IsDirectlyAfterSlider(offsetBeggining: -1))
-                        this.result.StandaloneDoubleCount++;
+                        this.analysis.StandaloneDoubleCount++;
 
                     break;
                 case 3:
-                    this.result.TripletCount++;
+                    this.analysis.TripletCount++;
 
                     if (this.IsCircleOnly && !this.IsDirectlyAfterSlider(offsetBeggining: -2))
-                        this.result.StandaloneTripletCount++;
+                        this.analysis.StandaloneTripletCount++;
 
                     break;
                 case 4:
-                    this.result.QuadrupletCount++;
+                    this.analysis.QuadrupletCount++;
 
                     if (this.IsCircleOnly && !this.IsDirectlyAfterSlider(offsetBeggining: -3))
-                        this.result.StandaloneQuadrupletCount++;
+                        this.analysis.StandaloneQuadrupletCount++;
 
                     break;
                 default:
@@ -259,7 +254,7 @@ namespace OsuFileIO.Analyzer
         private double streamPixels = 0;
         private double spacedStreamPixels = 0;
         private int slidersInStream = 0;
-        private void InterpretStreamCount()
+        private void AnalyzeStreamCount()
         {
             var distanceBetweenCurrentAndLastObject = CalculateDistanceBetweenTwoHitObjects(this.reader.CurrentHitObject.Coordinates, this.reader.GetHitObjectFromOffsetOrNull(-1).Coordinates);
             this.streamPixels += distanceBetweenCurrentAndLastObject;
@@ -298,7 +293,7 @@ namespace OsuFileIO.Analyzer
                         ratioDistanceAfterJump >= 1.2
                         )
                     {
-                        this.result.StreamCutsCount++;
+                        this.analysis.StreamCutsCount++;
                     }
                 }
 
@@ -312,34 +307,34 @@ namespace OsuFileIO.Analyzer
             //If stream is longer than 8 beats.
             if (this.hitObjectCountStream > 32)
             {
-                this.result.DeathStreamCount++;
+                this.analysis.DeathStreamCount++;
             }
             //If stream is longer than 4 beats.
             else if (this.hitObjectCountStream > 16)
             {
-                this.result.LongStreamCount++;
+                this.analysis.LongStreamCount++;
             }
             //If stream is longer than 2 beats.
             else if (this.hitObjectCountStream > 8)
             {
-                this.result.StreamCount++;
+                this.analysis.StreamCount++;
             }
             else if (this.hitObjectCountStream > 4 && this.hitObjectCountStream < 9)
             {
-                this.result.BurstCount++;
+                this.analysis.BurstCount++;
             }
 
             if (this.hitObjectCountStream > 4)
             {
-                this.result.TotalStreamAlikePixels += this.streamPixels;
+                this.analysis.TotalStreamAlikePixels += this.streamPixels;
 
-                this.result.TotalSpacedStreamAlikePixels += this.spacedStreamPixels;
+                this.analysis.TotalSpacedStreamAlikePixels += this.spacedStreamPixels;
 
-                this.result.SlidersInStreamAlike += this.slidersInStream;
+                this.analysis.SlidersInStreamAlike += this.slidersInStream;
             }
 
-            if (this.hitObjectCountStream > 8 && this.hitObjectCountStream > this.result.LongestStream)
-                this.result.LongestStream = this.hitObjectCountStream;
+            if (this.hitObjectCountStream > 8 && this.hitObjectCountStream > this.analysis.LongestStream)
+                this.analysis.LongestStream = this.hitObjectCountStream;
 
             //Reset
             this.hitObjectCountStream = 1;
@@ -353,7 +348,7 @@ namespace OsuFileIO.Analyzer
         }
 
         private readonly Dictionary<double, int> jumpLengthFrequency = new();
-        private void InterpretJumps()
+        private void AnalyzeJumps()
         {
             var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull(-1);
             var hitObjectPrev2 = this.reader.GetHitObjectFromOffsetOrNull(-2);
@@ -374,10 +369,10 @@ namespace OsuFileIO.Analyzer
             }
 
             if (distanceBetweenCurrentAndPrev >= 100)
-                this.result.TotalJumpPixels += distanceBetweenCurrentAndPrev;
+                this.analysis.TotalJumpPixels += distanceBetweenCurrentAndPrev;
 
             if (distanceBetweenCurrentAndPrev >= 325)
-                this.result.CrossScreenJumpCount++;
+                this.analysis.CrossScreenJumpCount++;
 
             if (hitObjectPrev2 is null ||
                 distanceBetweenCurrentAndPrev < 100 ||
@@ -390,16 +385,16 @@ namespace OsuFileIO.Analyzer
 
             if (degrees <= 5 || degrees >= 175)
             {
-                this.result.Jump180DegreesCount++;
+                this.analysis.Jump180DegreesCount++;
             }
             else if (degrees >= 85 && degrees <= 95)
             {
-                this.result.Jump90DegreesCount++;
+                this.analysis.Jump90DegreesCount++;
             }
         }
 
         private readonly Dictionary<double, int> sliderVelocityFrequency = new();
-        private void InterpretSliders()
+        private void AnalyzeSliders()
         {
             if (this.reader.HitObjectType != StdHitObjectType.Slider)
                 return;
@@ -415,28 +410,28 @@ namespace OsuFileIO.Analyzer
 
             var slider = this.reader.CurrentHitObject as Slider;
 
-            this.result.TotalSliderLength += slider.Length;
+            this.analysis.TotalSliderLength += slider.Length;
 
-            this.result.SliderPointCount += slider.SliderCoordinates.Count;
+            this.analysis.SliderPointCount += slider.SliderCoordinates.Count;
 
             var sliderDuration = this.CalculateSliderDuration(slider, this.reader.CurrentTimingPoint);
 
             if (sliderDuration > this.reader.TimeEighthOfBeat * 1.5 && sliderDuration < this.reader.TimeQuarterBeat * 1.1)
-                this.result.KickSliderCount++;
+                this.analysis.KickSliderCount++;
 
             switch (slider.CurveType)
             {
                 case CurveType.Bézier:
-                    this.result.BèzierSliderCount++;
+                    this.analysis.BèzierSliderCount++;
                     break;
                 case CurveType.CentripetalCatmullRom:
-                    this.result.CatmullSliderCount++;
+                    this.analysis.CatmullSliderCount++;
                     break;
                 case CurveType.Linear:
-                    this.result.LinearSliderCount++;
+                    this.analysis.LinearSliderCount++;
                     break;
                 case CurveType.PerfectCircle:
-                    this.result.PerfectCicleSliderCount++;
+                    this.analysis.PerfectCicleSliderCount++;
                     break;
                 default:
                     throw new InvalidEnumArgumentException("Unimplemented case: " + slider.CurveType);
@@ -448,7 +443,7 @@ namespace OsuFileIO.Analyzer
             return timeDifference < this.reader.TimeHalfBeat * 1.1;
         }
 
-        private void InterpretMiscellaneous()
+        private void AnalyzeMiscellaneous()
         {
             //Perfect Stacks
             var hitObjectPrev1 = this.reader.GetHitObjectFromOffsetOrNull(-1);
@@ -459,13 +454,13 @@ namespace OsuFileIO.Analyzer
             if (this.reader.HitObjectType == StdHitObjectType.Circle && hitObjectPrev1 is Circle circle)
             {
                 if (circle.Coordinates == this.reader.CurrentHitObject.Coordinates)
-                    this.result.CirclePerfectStackCount++;
+                    this.analysis.CirclePerfectStackCount++;
             }
             else if (hitObjectPrev1 is Slider prevSlider && this.reader.CurrentHitObject is Slider currentSlider)
             {
                 if ((currentSlider.Coordinates == prevSlider.Coordinates && currentSlider.SliderCoordinates.Last() == prevSlider.SliderCoordinates.Last()) ||
                     (currentSlider.Coordinates == prevSlider.SliderCoordinates.Last() && currentSlider.SliderCoordinates.Last() == prevSlider.Coordinates))
-                    this.result.SliderPerfectStackCount++;
+                    this.analysis.SliderPerfectStackCount++;
             }
         }
 
@@ -490,7 +485,7 @@ namespace OsuFileIO.Analyzer
             return degrees;
         }
 
-        private class OsuStdInterpretation : IStdInterpretation
+        private class OsuStdAnalysis : IStdAnalysis
         {
             public TimeSpan Length { get; set; }
             public int HitCircleCount { get; set; }
