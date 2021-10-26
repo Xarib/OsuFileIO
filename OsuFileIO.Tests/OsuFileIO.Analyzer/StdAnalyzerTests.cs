@@ -12,10 +12,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Tests.OsuFileIO.Interpreter
+namespace OsuFileIO.Tests.OsuFileIO.Analyzer
 {
     [TestClass]
-    public class OsuStdInterpreterTests
+    public class StdAnalyzerTests
     {
         private const string fileLocation = "TestFiles/";
         private const string tutorialFile = "new beginnings.osu";
@@ -24,7 +24,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow("479,194,31356,1,4,0:0:0:0:", 31356)]
         [DataRow("256,192,126433,12,4,129202,3:2:0:0:", 129202)]
-        public void Interpret_EndsWithCircleOrSpinner_RetunrsLengthOfMap(string hitObject, int expectedLength)
+        public void Analyze_EndsWithCircleOrSpinner_RetunrsLengthOfMap(string hitObject, int expectedLength)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -48,12 +48,12 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
-            Assert.AreEqual(TimeSpan.FromMilliseconds(expectedLength), actual.Length, "Expected to interpret the length correclty");
+            Assert.AreEqual(TimeSpan.FromMilliseconds(expectedLength), actual.Length, "Expected to analyze the length correclty");
         }
 
         [TestMethod]
@@ -62,7 +62,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow("550,301.507537688442,4,1,0,100,1,0", "85,82,21655,6,0,B|358:67|358:67|129:270|129:270|393:273,1,840", 23766)]
         [DataRow("550,301.507537688442,4,2,1,60,1,0", "29,192,550,2,0,L|150:192,2,120.000000596046", 1153)]
         [DataRow("550,301.507537688442,4,2,1,60,1,0", "29,192,550,2,0,L|150:192,4,120.000000596046", 1756)]
-        public void Interpret_Meter_RetunrsLengthOfMap(string timingPoint, string hitObject, double expectedEndTime)
+        public void Analyze_Meter_RetunrsLengthOfMap(string timingPoint, string hitObject, double expectedEndTime)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -86,11 +86,11 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
-            var actual = new ActualInterpretation();
+            var actual = new ActualAnalysis();
 
             //Act
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             var milisecondDifference = Math.Abs(actual.Length.TotalMilliseconds - expectedEndTime);
@@ -102,16 +102,16 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DeploymentItem(fileLocation + "1860169.osu")]
         [DataRow("1172819.osu", 305271)]
         [DataRow("1860169.osu", 431132)]
-        public void Interpret_RealMaps_RetunrsLengthOfMap(string fileName, int endtimeInMs)
+        public void Analyze_RealMaps_RetunrsLengthOfMap(string fileName, int endtimeInMs)
         {
             //Arrange
             var fileReader = new OsuFileReaderBuilder(fileName).Build();
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             var milisecondDifference = Math.Abs(actual.Length.TotalMilliseconds - endtimeInMs);
@@ -124,7 +124,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(4)]
         [DataRow(42)]
-        public void Interpret_CirclesOnly_ReturnsHitCircleCount(int count)
+        public void Analyze_CirclesOnly_ReturnsHitCircleCount(int count)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -153,9 +153,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.HitCircleCount, $"Expected to count HitCircles correctly");
@@ -164,7 +164,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(4)]
         [DataRow(42)]
-        public void Interpret_SlidersOnly_ReturnsHitSliderCount(int count)
+        public void Analyze_SlidersOnly_ReturnsHitSliderCount(int count)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -193,9 +193,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.SliderCount, $"Expected to count Sliders correctly");
@@ -204,7 +204,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(4)]
         [DataRow(42)]
-        public void Interpret_SpinnersOnly_ReturnsHitSjpinnerCount(int count)
+        public void Analyze_SpinnersOnly_ReturnsHitSjpinnerCount(int count)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -233,9 +233,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.SpinnerCount, $"Expected to count Spinners correctly");
@@ -248,16 +248,16 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow("1172819.osu", 1441, 460, 4)]
         [DataRow("1860169.osu", 2232, 604, 1)]
         [DataRow(tutorialFile, 20, 12, 2)]
-        public void Interpret_ActualMaps_ReturnsHitObjectCount(string fileName, int expectedCircleCount, int expectedSliderCount, int expectedSpinnerCount)
+        public void Analyze_ActualMaps_ReturnsHitObjectCount(string fileName, int expectedCircleCount, int expectedSliderCount, int expectedSpinnerCount)
         {
             //Arrange
             var fileReader = new OsuFileReaderBuilder(fileName).Build();
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCircleCount, actual.HitCircleCount, $"Expected to count HitCircles correctly");
@@ -273,16 +273,16 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DeploymentItem(fileLocation + tutorialFile)]
         [DataRow("1172819.osu", 258, 103, 260)]
         [DataRow(tutorialFile, 130, 130, 130)]
-        public void Interpret_ActualMaps_ReturnBpm(string fileName, double bpm, double bpmMin, double bpmMax)
+        public void Analyze_ActualMaps_ReturnBpm(string fileName, double bpm, double bpmMin, double bpmMax)
         {
             //Arrange
             var fileReader = new OsuFileReaderBuilder(fileName).Build();
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             Assert.AreEqual(bpm, actual.Bpm, $"Expected to get the correct {actual.Bpm}");
             Assert.AreEqual(bpmMin, actual.BpmMin, $"Expected to get the correct {actual.BpmMin}");
@@ -298,7 +298,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(new int[] { 2, 2 }, 2)]
         [DataRow(new int[] { 2, 4 }, 1)]
         [DataRow(new int[] { 0, 4 }, 0)]
-        public void Interpret_VariousHitObjects_ReturnsDoubleCount(int[] streamsLengths, int expectedCount)
+        public void Analyze_VariousHitObjects_ReturnsDoubleCount(int[] streamsLengths, int expectedCount)
         {
             //Arrange
             var beatLength = 300;
@@ -336,9 +336,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.DoubleCount, "Expected to count doubles correctly");
@@ -349,7 +349,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow("163,150,22258,6,0,L|236:149,1,63.7500002235173", 1)]
         [DataRow("163,150,22258,2,0,L|253:150,1,85.0000002980232", 0)]
         [DataRow("163,150,22258,6,0,L|275:152,1,106.250000372529", 0)]
-        public void Interpret_VariousSliderLengths_ReturnsTrueDoubleCount(string slider, int expectedCount)
+        public void Analyze_VariousSliderLengths_ReturnsTrueDoubleCount(string slider, int expectedCount)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -376,9 +376,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.StandaloneDoubleCount, "Expected to count true doubles correctly");
@@ -389,7 +389,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(new int[] { 3, 3 }, 2)]
         [DataRow(new int[] { 3, 4 }, 1)]
         [DataRow(new int[] { 0, 4 }, 0)]
-        public void Interpret_VariousHitObjects_ReturnsTripletCount(int[] streamsLengths, int expectedCount)
+        public void Analyze_VariousHitObjects_ReturnsTripletCount(int[] streamsLengths, int expectedCount)
         {
             //Arrange
             var beatLength = 300;
@@ -427,9 +427,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.TripletCount, "Expected to count triplets correctly");
@@ -440,7 +440,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow("163,150,22258,6,0,L|236:149,1,63.7500002235173", 1)]
         [DataRow("163,150,22258,2,0,L|253:150,1,85.0000002980232", 0)]
         [DataRow("163,150,22258,6,0,L|275:152,1,106.250000372529", 0)]
-        public void Interpret_VariousSliderLengths_ReturnsTrueTripletCount(string slider, int expectedCount)
+        public void Analyze_VariousSliderLengths_ReturnsTrueTripletCount(string slider, int expectedCount)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -468,9 +468,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.StandaloneTripletCount, "Expected to count true doubles correctly");
@@ -481,7 +481,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(new int[] { 4, 4 }, 2)]
         [DataRow(new int[] { 3, 4 }, 1)]
         [DataRow(new int[] { 3, 5 }, 0)]
-        public void Interpret_VariousHitObjects_ReturnsQuadrupletCount(int[] streamsLengths, int expectedCount)
+        public void Analyze_VariousHitObjects_ReturnsQuadrupletCount(int[] streamsLengths, int expectedCount)
         {
             //Arrange
             var beatLength = 300;
@@ -519,9 +519,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.QuadrupletCount, "Expected to count quadruplets correctly");
@@ -532,7 +532,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow("163,150,22258,6,0,L|236:149,1,63.7500002235173", 1)]
         [DataRow("163,150,22258,2,0,L|253:150,1,85.0000002980232", 0)]
         [DataRow("163,150,22258,6,0,L|275:152,1,106.250000372529", 0)]
-        public void Interpret_VariousSliderLengths_ReturnsTrueQuadrupletCount(string slider, int expectedCount)
+        public void Analyze_VariousSliderLengths_ReturnsTrueQuadrupletCount(string slider, int expectedCount)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -561,9 +561,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.StandaloneQuadrupletCount, "Expected to count true doubles correctly");
@@ -581,7 +581,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(300, new int[] { 5 }, 0)] //200Bmp
         [DataRow(300, new int[] { 5, 20 }, 20)] //200Bmp
         [DataRow(300, new int[] { 5, 20, 10 }, 20)] //200Bmp
-        public void Interpret_VariousStreams_ReturnsLongestStreamCount(double beatLength, int[] streamsLengths, int expectedLength)
+        public void Analyze_VariousStreams_ReturnsLongestStreamCount(double beatLength, int[] streamsLengths, int expectedLength)
         {
             if (!streamsLengths.All(length => length > 4))
                 Assert.Fail("For this test only use length > 4");
@@ -620,9 +620,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedLength, actual.LongestStream, "Expected to find the longest stream");
@@ -636,7 +636,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(new int[] { 9 }, 0)]
         [DataRow(new int[] { 6 }, 1)]
         [DataRow(new int[] { 5, 6, 7 }, 3)]
-        public void Interpret_VariousStreams200Bpm_ReturnsBurstCount(int[] streamsLengths, int expectedCount)
+        public void Analyze_VariousStreams200Bpm_ReturnsBurstCount(int[] streamsLengths, int expectedCount)
         {
             //Arrange
             var beatLength = 300;
@@ -674,9 +674,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.BurstCount, $"Expected count {nameof(actual.BurstCount)} correctly");
@@ -689,7 +689,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(new int[] { 8, 5, 16 }, 1)]
         [DataRow(new int[] { 10, 5, 17 }, 1)]
         [DataRow(new int[] { 11, 12, 13, 14 }, 4)]
-        public void Interpret_VariousStreams200Bpm_ReturnsStreamCount(int[] streamsLengths, int expectedCount)
+        public void Analyze_VariousStreams200Bpm_ReturnsStreamCount(int[] streamsLengths, int expectedCount)
         {
             //Arrange
             var beatLength = 300;
@@ -727,9 +727,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.StreamCount, $"Expected count {nameof(actual.StreamCount)} correctly");
@@ -740,7 +740,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(new int[] { 33 }, 0)]
         [DataRow(new int[] { 24 }, 1)]
         [DataRow(new int[] { 21, 22, 23 }, 3)]
-        public void Interpret_VariousStreams200Bpm_ReturnsLongStreamCount(int[] streamsLengths, int expectedCount)
+        public void Analyze_VariousStreams200Bpm_ReturnsLongStreamCount(int[] streamsLengths, int expectedCount)
         {
             //Arrange
             var beatLength = 300;
@@ -778,9 +778,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.LongStreamCount, $"Expected count {nameof(actual.LongStreamCount)} correctly");
@@ -790,7 +790,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(new int[] { 30 }, 0)]
         [DataRow(new int[] { 33 }, 1)]
         [DataRow(new int[] { 56, 34, 35 }, 3)]
-        public void Interpret_VariousStreams200Bpm_ReturnsDeathStreamCount(int[] streamsLengths, int expectedCount)
+        public void Analyze_VariousStreams200Bpm_ReturnsDeathStreamCount(int[] streamsLengths, int expectedCount)
         {
             //Arrange
             var beatLength = 300;
@@ -828,9 +828,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.DeathStreamCount, $"Expected count {nameof(actual.DeathStreamCount)} correctly");
@@ -839,7 +839,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(60000d / 310d, 0)]//310Bpm 
         [DataRow(60000d / 400d, 0)]//310Bpm 
-        public void Interpret_300BpmPlusBmpOneTwoJumps_ReturnsLongestStreamCount(double beatLength, int expectedLength)
+        public void Analyze_300BpmPlusBmpOneTwoJumps_ReturnsLongestStreamCount(double beatLength, int expectedLength)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -871,9 +871,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedLength, actual.LongestStream, "Expected to find the longest stream");
@@ -891,7 +891,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(-3, -4, 5, 5)]
         [DataRow(0, 5, 5, 5)]
         [DataRow(5, 0, 5, 5)]
-        public void Interpret_StreamWithSpacing_ReturnsStreamPixels(int x, int y, int hitObjectCount, double expectedPixels)
+        public void Analyze_StreamWithSpacing_ReturnsStreamPixels(int x, int y, int hitObjectCount, double expectedPixels)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -922,16 +922,16 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedPixels, actual.TotalStreamAlikePixels, $"Expected to calculate {actual.TotalStreamAlikePixels}");
         }
 
         [TestMethod]
-        public void Interpret_MultipleStreamWithSpacing_ReturnsStreamPixels()
+        public void Analyze_MultipleStreamWithSpacing_ReturnsStreamPixels()
         {
             //Arrange
             var stream = new MemoryStream();
@@ -969,9 +969,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(5 * count, actual.TotalStreamAlikePixels, $"Expected to calculate {nameof(actual.TotalStreamAlikePixels)} correctly");
@@ -985,7 +985,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(-1, 5, 0)]
         [DataRow(1, 5, 4)]
         [DataRow(3, 5, 12)]
-        public void Interpret_SpacedStream_ReturnsSpacedStreamPixels(int spacePixels, int hitObjectCount, double expectedSpacePixels)
+        public void Analyze_SpacedStream_ReturnsSpacedStreamPixels(int spacePixels, int hitObjectCount, double expectedSpacePixels)
         {
             //Arrange
             var cs10pxRadius = 555d / 56d;
@@ -1017,9 +1017,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedSpacePixels, Convert.ToInt32(actual.TotalSpacedStreamAlikePixels), $"Expected to calculate {nameof(actual.TotalSpacedStreamAlikePixels)} correctly");
@@ -1031,7 +1031,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
         [TestMethod]
         [DeploymentItem(fileLocation + "2371698_mod.osu")]
-        public void Interpret_MapsWithStreamJumps_ReturnsStreamJumpCount()
+        public void Analyze_MapsWithStreamJumps_ReturnsStreamJumpCount()
         {
             //Arrange
             var fileReader = new OsuFileReaderBuilder("2371698_mod.osu").Build();
@@ -1041,9 +1041,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var s = string.Join(", ", d);
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             Assert.AreEqual(1, actual.StreamCutsCount, "Expected one stream jump");
         }
@@ -1052,7 +1052,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(5, 1)]
         [DataRow(4, 1)]
         [DataRow(3, 0)]
-        public void Interpret_JumpStreamWithVariousJumpLength_ReturnsStreamJumpCount(int jumpLengthPixels, double expectedCuts)
+        public void Analyze_JumpStreamWithVariousJumpLength_ReturnsStreamJumpCount(int jumpLengthPixels, double expectedCuts)
         {
             //Arrange
             var cs10pxRadius = 555d / 56d;
@@ -1093,9 +1093,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCuts, actual.StreamCutsCount, "Expected to count cuts in streams");
@@ -1105,7 +1105,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(1, 0)]
         [DataRow(2, 2)]
         [DataRow(7, 7)]
-        public void Interpret_StreamWithSliders_ReturnsSlidersInStreams(int sliderCount, int epxtedCount)
+        public void Analyze_StreamWithSliders_ReturnsSlidersInStreams(int sliderCount, int epxtedCount)
         {
             //Arrange
             var bpm200 = 300;
@@ -1142,9 +1142,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(epxtedCount, actual.SlidersInStreamAlike, "Expected to count sliders in streams");
@@ -1159,7 +1159,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(100, -100, 1)]
         [DataRow(100, 10, 0)]
         [DataRow(0, 50, 0)]
-        public void Interpret_90DegreeJumps_ReturnsCount90DegreeJumps(int x, int y, int expectedCount)
+        public void Analyze_90DegreeJumps_ReturnsCount90DegreeJumps(int x, int y, int expectedCount)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1186,9 +1186,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             Assert.AreEqual(expectedCount, actual.Jump90DegreesCount, "Expected to find all 90 Degree jumps");
         }
@@ -1198,7 +1198,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(0, 90, 0)]
         [DataRow(100, 100, 0)]
         [DataRow(100, -100, 0)]
-        public void Interpret_180DegreeJumps_ReturnsCount180DegreeJumps(int x, int y, int expectedCount)
+        public void Analyze_180DegreeJumps_ReturnsCount180DegreeJumps(int x, int y, int expectedCount)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1226,15 +1226,15 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             Assert.AreEqual(expectedCount, actual.Jump180DegreesCount, "Expected to find all 180 Degree jumps");
         }
 
         [TestMethod]
-        public void Interpret_FirstJumpToLong_ReturnsCount180DegreeJumps()
+        public void Analyze_FirstJumpToLong_ReturnsCount180DegreeJumps()
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1261,15 +1261,15 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             Assert.IsTrue(actual.Jump180DegreesCount == 0, "Expected no 180 Degree jumps");
         }
 
         [TestMethod]
-        public void Interpret_SecondJumpToLong_ReturnsCount180DegreeJumps()
+        public void Analyze_SecondJumpToLong_ReturnsCount180DegreeJumps()
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1296,9 +1296,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             Assert.IsTrue(actual.Jump180DegreesCount == 0, "Expected no 180 Degree jumps");
         }
@@ -1312,7 +1312,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(new int[] { 0, 350, 0 }, 2)]
         [DataRow(new int[] { 0, 100, 0, 360 }, 1)]
         [DataRow(new int[] { 0, 400, 0, 360 }, 3)]
-        public void Interpret_CrossScreenJump_ReturnsCrossScreenJumps(int[] xCoords, int expectedCount)
+        public void Analyze_CrossScreenJump_ReturnsCrossScreenJumps(int[] xCoords, int expectedCount)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1341,9 +1341,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.CrossScreenJumpCount, "Expected find all cross screen jumps");
@@ -1352,7 +1352,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(new int[] { 0, 350 }, 350)]
         [DataRow(new int[] { 0, 350, 100 }, 600)]
-        public void Interpret_AnyJumps_ReturnsTotalJumpPixels(int[] xCoords, double expectedLength)
+        public void Analyze_AnyJumps_ReturnsTotalJumpPixels(int[] xCoords, double expectedLength)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1381,9 +1381,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedLength, actual.TotalJumpPixels, "Expected to get Jump length");
@@ -1391,7 +1391,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
         [TestMethod]
         [DataRow(120, 120)]
-        public void Interpret_JumpFromSlider_ReturnsTotalJumpPixels(int xCoord, double expectedLength)
+        public void Analyze_JumpFromSlider_ReturnsTotalJumpPixels(int xCoord, double expectedLength)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1417,9 +1417,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedLength, actual.TotalJumpPixels, "Expected to calculate jump pixels from slider end");
@@ -1429,7 +1429,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(new int[] { 10 }, 1)]
         [DataRow(new int[] { 10, 0 }, 1)]
         [DataRow(new int[] { 10, -10, 0, 30 }, 3)] // Jumps: 10px -20px 10px 30px
-        public void Interpret_VariousJumpLengths(int[] xCoords, int expectedCount)
+        public void Analyze_VariousJumpLengths(int[] xCoords, int expectedCount)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1459,9 +1459,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.UniqueDistancesCount, "Expected to find all unique jumps lenghts");
@@ -1474,7 +1474,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(new double[] { 349, 3, 44 })]
         [DataRow(new double[] { 10, 35.55, 343434 })]
-        public void Interpret_SlidersWithVariousLengths_ReturnsTotalSliderLength(double[] sliderLengths)
+        public void Analyze_SlidersWithVariousLengths_ReturnsTotalSliderLength(double[] sliderLengths)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1503,9 +1503,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(sliderLengths.Sum(), actual.TotalSliderLength, "Expected to sum up all slider lengths");
@@ -1514,7 +1514,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(new int[] { 5, 7 })]
         [DataRow(new int[] { 2, 6, 5, 7 })]
-        public void Interpret_SlidersWithVariousSliderPoints_ReturnsSliderPointCount(int[] sliderPoints)
+        public void Analyze_SlidersWithVariousSliderPoints_ReturnsSliderPointCount(int[] sliderPoints)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1549,9 +1549,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(sliderPoints.Sum(), actual.SliderPointCount, "Expected to sum up all slider points");
@@ -1561,7 +1561,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(new int[] { 5, 7 })]
         [DataRow(new int[] { 2, 6, 5 })]
         [DataRow(new int[] { 2, 6, 5, 7 })]
-        public void Interpret_SlidersWithVariousSliderPoints_AvgSliderPointCount(int[] sliderPoints)
+        public void Analyze_SlidersWithVariousSliderPoints_AvgSliderPointCount(int[] sliderPoints)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1596,9 +1596,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual((double)sliderPoints.Sum() / sliderPoints.Length, actual.AvgSliderPointCount, "Expected to get avg slider point count");
@@ -1607,7 +1607,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(4)]
         [DataRow(8)]
-        public void Interpret_BèzierSliders_ReturnsBèzierSliderCount(int count)
+        public void Analyze_BèzierSliders_ReturnsBèzierSliderCount(int count)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1636,9 +1636,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.BèzierSliderCount, "Expected to count bèzier sliders");
@@ -1647,7 +1647,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(4)]
         [DataRow(8)]
-        public void Interpret_CatmullSliders_ReturnsCatmullSliderCount(int count)
+        public void Analyze_CatmullSliders_ReturnsCatmullSliderCount(int count)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1676,9 +1676,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.CatmullSliderCount, "Expected to count catmull sliders");
@@ -1687,7 +1687,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(4)]
         [DataRow(8)]
-        public void Interpret_LinearSliders_ReturnsLinearSliderCount(int count)
+        public void Analyze_LinearSliders_ReturnsLinearSliderCount(int count)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1716,9 +1716,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.LinearSliderCount, "Expected to count linear sliders");
@@ -1727,7 +1727,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [TestMethod]
         [DataRow(4)]
         [DataRow(8)]
-        public void Interpret_PerfectCicleSliders_ReturnsPerfectCicleSliderCount(int count)
+        public void Analyze_PerfectCicleSliders_ReturnsPerfectCicleSliderCount(int count)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1756,9 +1756,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(count, actual.PerfectCicleSliderCount, "Expected to count perfect circle sliders");
@@ -1768,7 +1768,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow(34, 0)] // 1/8
         [DataRow(68, 1)] // 1/4
         [DataRow(100, 0)]
-        public void Interpret_KickSliders_ReturnsKickSliderCount(int length, int expectedCount)
+        public void Analyze_KickSliders_ReturnsKickSliderCount(int length, int expectedCount)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1794,9 +1794,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(expectedCount, actual.KickSliderCount, "Should count kicksliders correclty");
@@ -1804,7 +1804,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
 
         [TestMethod]
         [DataRow()]
-        public void Interpret_VariousSliderAtSpeeds_AvgFasterSliderSpeed()
+        public void Analyze_VariousSliderAtSpeeds_AvgFasterSliderSpeed()
         {
             var sliders = new List<(int count, double speed)>()
             {
@@ -1857,16 +1857,16 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(100d * 1.6d * (-100d / -80d), actual.AvgFasterSliderSpeed, "Expected to get most common faster slider speed");
         }
 
         [TestMethod]
-        public void Interpret_VariousSliderAtSpeeds_SliderSpeedDifference()
+        public void Analyze_VariousSliderAtSpeeds_SliderSpeedDifference()
         {
             var sliders = new List<(int count, double speed)>()
             {
@@ -1919,9 +1919,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             var fastestSpeeds = sliders
                 .Where(s => s.count >= 10)
@@ -1942,7 +1942,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow("0,1,0,5,4,0:0:0:0:", 0)]
         [DataRow("0,0,0,12,4,0,3:2:0:0:", 0)]
         [DataRow("0,0,0,6,0,L|0:0,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 0)]
-        public void Interpret_CirclePerfectStack_ReturnCirclePerfectStackCount(string hitObject, int prefectStackCount)
+        public void Analyze_CirclePerfectStack_ReturnCirclePerfectStackCount(string hitObject, int prefectStackCount)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -1968,9 +1968,9 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(prefectStackCount, actual.CirclePerfectStackCount, "Expected to count perfect circle stacks correctly");
@@ -1985,7 +1985,7 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
         [DataRow("10,10,0,6,0,L|0:10,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 0)]
         [DataRow("0,0,0,5,4,0:0:0:0:", 0)]
         [DataRow("0,0,0,12,4,0,3:2:0:0:", 0)]
-        public void Interpret_SliderPerfectStack_ReturnCirclePerfectStackCount(string hitObject, int prefectStackCount)
+        public void Analyze_SliderPerfectStack_ReturnCirclePerfectStackCount(string hitObject, int prefectStackCount)
         {
             //Arrange
             var stream = new MemoryStream();
@@ -2011,16 +2011,16 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
 
             //Assert
             Assert.AreEqual(prefectStackCount, actual.SliderPerfectStackCount, "Expected to count perfect slider stacks correctly");
         }
 
         [TestMethod]
-        public void Interpret_TimingPointAndInheritedPointBeforeHitObject_ShouldNotThrowError()
+        public void Analyze_TimingPointAndInheritedPointBeforeHitObject_ShouldNotThrowError()
         {
             //Arrange
             var stream = new MemoryStream();
@@ -2045,14 +2045,14 @@ namespace OsuFileIO.Tests.OsuFileIO.Interpreter
             var file = fileReader.ReadFile() as ReadOnlyBeatmap<StdHitObject>;
 
             //Act
-            var actual = new ActualInterpretation();
-            var interpreter = new StdAnalyzer(actual);
-            interpreter.Analyze(file);
+            var actual = new ActualAnalysis();
+            var analyzer = new StdAnalyzer(actual);
+            analyzer.Analyze(file);
         }
 
         #endregion
 
-        internal class ActualInterpretation : IStdAnalysis
+        internal class ActualAnalysis : IStdAnalysis
         {
             public TimeSpan Length { get; set; }
             public int HitCircleCount { get; set; }

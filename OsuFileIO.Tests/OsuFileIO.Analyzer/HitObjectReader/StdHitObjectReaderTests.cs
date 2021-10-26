@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace OsuFileIO.Tests.OsuFileIO.Interpreter.HitObjectReader
+namespace OsuFileIO.Tests.OsuFileIO.Analyzer.HitObjectReader
 {
     [TestClass]
     public class StdHitObjectReaderTests
