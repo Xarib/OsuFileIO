@@ -148,7 +148,7 @@ namespace OsuFileIO.OsuFileReader
                 this.ResetReader();
             }
 
-            if (this.overrides?.General?.Mode == null)
+            if (this.overrides?.General?.Mode is null)
             {
                 this.line = sr.ReadLineStartingWithOrNull("Mode:");
                 general.Mode = Enum.Parse<GameMode>(line
@@ -168,7 +168,7 @@ namespace OsuFileIO.OsuFileReader
         {
             var blockDict = this.ReadAllTagsInBlockOrNull("[Metadata]");
 
-            return new MetaData
+            var metadata = new MetaData
             {
                 Artist = blockDict.GetValueOrDefault("Artist"),
                 ArtistUnicode = blockDict.GetValueOrDefault("ArtistUnicode"),
@@ -181,6 +181,11 @@ namespace OsuFileIO.OsuFileReader
                 TitleUnicode = blockDict.GetValueOrDefault("TitleUnicode"),
                 Version = blockDict.GetValueOrDefault("Version"),
             };
+
+            if (this.overrides?.MetaData?.BeatmapID is not null)
+                metadata.BeatmapID = this.overrides.MetaData.BeatmapID.Value;
+
+            return metadata;
         }
 
         public Difficulty ReadDifficulty()
