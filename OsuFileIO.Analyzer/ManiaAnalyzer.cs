@@ -7,20 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Analyzer
+namespace OsuFileIO.Analyzer;
+
+internal class ManiaAnalyzer
 {
-    internal class ManiaAnalyzer
+    private readonly IManiaAnalysis analysis;
+
+    internal ManiaAnalyzer(IManiaAnalysis analysis = null)
     {
-        private readonly IManiaAnalysis analysis;
+        this.analysis = analysis;
+    }
 
-        internal ManiaAnalyzer(IManiaAnalysis analysis = null)
-        {
-            this.analysis = analysis;
-        }
-
-        internal IManiaAnalysis Analyze(IReadOnlyBeatmap<ManiaHitObject> beatmap)
-        {
-            throw new NotImplementedException();
-        }
+    internal IManiaAnalysis Analyze(IReadOnlyBeatmap<ManiaHitObject> beatmap)
+    {
+        throw new NotImplementedException();
     }
 }

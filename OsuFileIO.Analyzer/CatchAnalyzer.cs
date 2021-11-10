@@ -7,20 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Analyzer
+namespace OsuFileIO.Analyzer;
+
+internal class CatchAnalyzer
 {
-    internal class CatchAnalyzer
+    private readonly ICatchAnalysis analysis;
+
+    internal CatchAnalyzer(ICatchAnalysis analysis = null)
     {
-        private readonly ICatchAnalysis analysis;
+        this.analysis = analysis;
+    }
 
-        internal CatchAnalyzer(ICatchAnalysis analysis = null)
-        {
-            this.analysis = analysis;
-        }
-
-        internal ICatchAnalysis Analyze(IReadOnlyBeatmap<CatchHitObject> beatmap)
-        {
-            throw new NotImplementedException();
-        }
+    internal ICatchAnalysis Analyze(IReadOnlyBeatmap<CatchHitObject> beatmap)
+    {
+        throw new NotImplementedException();
     }
 }

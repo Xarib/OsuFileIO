@@ -7,20 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Analyzer
+namespace OsuFileIO.Analyzer;
+
+internal class TaikoAnalyzer
 {
-    internal class TaikoAnalyzer
+    private readonly ITaikoAnalysis analysis;
+
+    internal TaikoAnalyzer(ITaikoAnalysis analysis = null)
     {
-        private readonly ITaikoAnalysis analysis;
+        this.analysis = analysis;
+    }
 
-        internal TaikoAnalyzer(ITaikoAnalysis analysis = null)
-        {
-            this.analysis = analysis;
-        }
-
-        internal ITaikoAnalysis Analyze(IReadOnlyBeatmap<TaikoHitObject> beatmap)
-        {
-            throw new NotImplementedException();
-        }
+    internal ITaikoAnalysis Analyze(IReadOnlyBeatmap<TaikoHitObject> beatmap)
+    {
+        throw new NotImplementedException();
     }
 }

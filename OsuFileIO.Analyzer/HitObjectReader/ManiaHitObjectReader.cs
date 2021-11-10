@@ -9,16 +9,15 @@ using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("OsuFileIO.Tests")]
 
-namespace OsuFileIO.Analyzer.HitObjectReader
-{
-    internal class ManiaHitObjectReader : HitObjectReader<ManiaHitObject>
-    {
-        internal ManiaHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<ManiaHitObject> hitObjects)
-            : base(difficulty, timingPoints, hitObjects) { }
+namespace OsuFileIO.Analyzer.HitObjectReader;
 
-        internal override bool ReadNext()
-        {
-            throw new NotImplementedException();
-        }
+internal class ManiaHitObjectReader : HitObjectReader<ManiaHitObject>
+{
+    internal ManiaHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<ManiaHitObject> hitObjects)
+        : base(difficulty, timingPoints, hitObjects) { }
+
+    internal override bool ReadNext()
+    {
+        throw new NotImplementedException();
     }
 }

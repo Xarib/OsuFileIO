@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Analyzer.Result
+namespace OsuFileIO.Analyzer.Result;
+
+public interface ITaikoAnalysis : IAnalysis
 {
-    public interface ITaikoAnalysis : IAnalysis
-    {
-    }
 }

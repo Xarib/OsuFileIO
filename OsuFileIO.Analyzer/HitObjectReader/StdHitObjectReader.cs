@@ -10,95 +10,94 @@ using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("OsuFileIO.Tests")]
 
-namespace OsuFileIO.Analyzer.HitObjectReader
-{    
-    internal class StdHitObjectReader : HitObjectReader<StdHitObject>
+namespace OsuFileIO.Analyzer.HitObjectReader;
+
+internal class StdHitObjectReader : HitObjectReader<StdHitObject>
+{
+    internal StdHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<StdHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
     {
-        internal StdHitObjectReader(Difficulty difficulty, List<TimingPoint> timingPoints, IReadOnlyList<StdHitObject> hitObjects) : base(difficulty, timingPoints, hitObjects)
+        this.SetValues();
+
+        this.CircleSize = difficulty.CircleSize.Value;
+    }
+
+    internal double TimeQuarterBeat { get; private set; }
+    internal double TimeHalfBeat { get; private set; }
+    internal double TimeEighthOfBeat { get; private set; }
+
+    /// <summary>
+    /// Slider verlocity in pixels per beat
+    /// </summary>
+    internal double SliderVelocity { get; private set; }
+    internal StdHitObjectType HitObjectType { get; private set; }
+    internal double CircleSize { get; init; }
+
+    private void SetValues()
+    {
+        this.SetHitObjectType();
+
+        this.SetMostCurrentTimingPoint();
+
+        this.AddCurrentToHistory();
+
+        this.SetSliderVelocity();
+
+        this.SetTimeBetweens();
+    }
+
+    /// <summary>
+    /// Reads the next <see cref="IHitObject"/> and set the most current <see cref="TimingPoint"/>
+    /// </summary>
+    /// <returns></returns>
+    internal override bool ReadNext()
+    {
+        if (this.indexHitObject == this.hitObjects.Count - 1)
+            return false;
+
+        this.indexHitObject++;
+
+        this.SetValues();
+
+        return true;
+    }
+
+    private void SetSliderVelocity()
+    {
+        this.SliderVelocity = 100d * (this.difficulty.SliderMultiplier ?? 1d); //100 osuPixels per second is the default slider speed before multipliers
+
+        if (this.CurrentTimingPoint is InheritedPoint inheritedPoint)
         {
-            this.SetValues();
-
-            this.CircleSize = difficulty.CircleSize.Value;
-        }
-
-        internal double TimeQuarterBeat { get; private set; }
-        internal double TimeHalfBeat { get; private set; }
-        internal double TimeEighthOfBeat { get; private set; }
-
-        /// <summary>
-        /// Slider verlocity in pixels per beat
-        /// </summary>
-        internal double SliderVelocity { get; private set; }
-        internal StdHitObjectType HitObjectType { get; private set; }
-        internal double CircleSize { get; init; }
-
-        private void SetValues()
-        {
-            this.SetHitObjectType();
-
-            this.SetMostCurrentTimingPoint();
-
-            this.AddCurrentToHistory();
-
-            this.SetSliderVelocity();
-
-            this.SetTimeBetweens();
-        }
-
-        /// <summary>
-        /// Reads the next <see cref="IHitObject"/> and set the most current <see cref="TimingPoint"/>
-        /// </summary>
-        /// <returns></returns>
-        internal override bool ReadNext()
-        {
-            if (this.indexHitObject == this.hitObjects.Count - 1)
-                return false;
-
-            this.indexHitObject++;
-
-            this.SetValues();
-
-            return true;
-        }
-
-        private void SetSliderVelocity()
-        {
-            this.SliderVelocity = 100d * (this.difficulty.SliderMultiplier ?? 1d); //100 osuPixels per second is the default slider speed before multipliers
-
-            if (this.CurrentTimingPoint is InheritedPoint inheritedPoint)
-            {
-                this.SliderVelocity *= inheritedPoint.VelocityMultiplier;
-            }
-        }
-
-        private void SetHitObjectType()
-        {
-            if (this.CurrentHitObject is Circle)
-            {
-                this.HitObjectType = StdHitObjectType.Circle;
-            }
-            else if (this.CurrentHitObject is Slider)
-            {
-                this.HitObjectType = StdHitObjectType.Slider;
-            }
-            else
-            {
-                this.HitObjectType = StdHitObjectType.Spinner;
-            }
-        }
-
-        private void SetTimeBetweens()
-        {
-            this.TimeQuarterBeat = this.CurrentTimingPoint.BeatLength / 4;
-            this.TimeHalfBeat = this.CurrentTimingPoint.BeatLength / 2;
-            this.TimeEighthOfBeat = this.CurrentTimingPoint.BeatLength / 8;
+            this.SliderVelocity *= inheritedPoint.VelocityMultiplier;
         }
     }
 
-    internal enum StdHitObjectType
+    private void SetHitObjectType()
     {
-        Circle = 1,
-        Slider = 2,
-        Spinner = 3,
+        if (this.CurrentHitObject is Circle)
+        {
+            this.HitObjectType = StdHitObjectType.Circle;
+        }
+        else if (this.CurrentHitObject is Slider)
+        {
+            this.HitObjectType = StdHitObjectType.Slider;
+        }
+        else
+        {
+            this.HitObjectType = StdHitObjectType.Spinner;
+        }
     }
+
+    private void SetTimeBetweens()
+    {
+        this.TimeQuarterBeat = this.CurrentTimingPoint.BeatLength / 4;
+        this.TimeHalfBeat = this.CurrentTimingPoint.BeatLength / 2;
+        this.TimeEighthOfBeat = this.CurrentTimingPoint.BeatLength / 8;
+    }
+}
+
+internal enum StdHitObjectType
+{
+    Circle = 1,
+    Slider = 2,
+    Spinner = 3,
 }
