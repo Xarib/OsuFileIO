@@ -90,36 +90,6 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
         return this.line?.Substring(this.line.IndexOf(':') + 1).Trim();
     }
 
-    private Dictionary<string, string> ReadAllTagsInBlockOrNull(string dilimiter)
-    {
-        if (this.line is null || !this.line.StartsWith(dilimiter))
-            this.line = this.sr.ReadLineStartingWithOrNull(dilimiter);
-
-        if (this.line is null)
-            throw new OsuFileReaderException(orderExceptionMessage);
-
-        var tagDict = new Dictionary<string, string>();
-
-        int indexColon;
-        this.line = this.sr.ReadLine();
-        while (!string.IsNullOrWhiteSpace(this.line) && !this.line.StartsWith('['))
-        {
-            indexColon = line.IndexOf(':');
-
-            if (indexColon < 0)
-            {
-                this.line = this.sr.ReadLine();
-                continue;
-            }
-
-            tagDict.Add(this.line.Substring(0, indexColon), this.line.Substring(indexColon + 1));
-
-            this.line = this.sr.ReadLine();
-        }
-
-        return tagDict;
-    }
-
     public General ReadGeneral()
     {
         var general = new General();
@@ -129,10 +99,12 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
         if (this.line is null)
             throw new OsuFileReaderException(orderExceptionMessage);
 
-        general.OsuFileFormat = ParseIntNullable(this.line.Substring(this.line.LastIndexOf("v", StringComparison.OrdinalIgnoreCase) + 1));
+        var generalOverride = this.overrides?.General;
+
+        general.OsuFileFormat = generalOverride?.OsuFileFormat ?? ParseIntNullable(this.line.Substring(this.line.LastIndexOf("v", StringComparison.OrdinalIgnoreCase) + 1));
 
         this.line = sr.ReadLineStartingWithOrNull("StackLeniency:");
-        general.StackLeniency = ParseDoubleNullable(this.ReadTagValue());
+        general.StackLeniency = generalOverride?.OsuFileFormat ?? ParseDoubleNullable(this.ReadTagValue());
 
         //TODO better
         if (this.line is null)
