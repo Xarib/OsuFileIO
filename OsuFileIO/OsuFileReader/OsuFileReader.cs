@@ -166,41 +166,122 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
 
     public MetaData ReadMetadata()
     {
-        var blockDict = this.ReadAllTagsInBlockOrNull("[Metadata]");
+        this.CheckReadOrder("[Metadata]");
 
-        var metadata = new MetaData
+        var metadata = new MetaData();
+
+        while(this.ReadNextKeyValue(out var keyValue))
         {
-            Artist = blockDict.GetValueOrDefault("Artist"),
-            ArtistUnicode = blockDict.GetValueOrDefault("ArtistUnicode"),
-            BeatmapID = ParseIntNullable(blockDict.GetValueOrDefault("BeatmapID")),
-            BeatmapSetID = ParseIntNullable(blockDict.GetValueOrDefault("BeatmapSetID")),
-            Creator = blockDict.GetValueOrDefault("Creator"),
-            Source = blockDict.GetValueOrDefault("Source"),
-            Tags = blockDict.GetValueOrDefault("Tags"),
-            Title = blockDict.GetValueOrDefault("Title"),
-            TitleUnicode = blockDict.GetValueOrDefault("TitleUnicode"),
-            Version = blockDict.GetValueOrDefault("Version"),
-        };
-
-        if (this.overrides?.MetaData?.BeatmapID is not null)
-            metadata.BeatmapID = this.overrides.MetaData.BeatmapID.Value;
+            switch (keyValue.Key)
+            {
+                case "Title":
+                    metadata.Title = keyValue.Value;
+                    break;
+                case "TitleUnicode":
+                    metadata.TitleUnicode = keyValue.Value;
+                    break;
+                case "Artist":
+                    metadata.Artist = keyValue.Value;
+                    break;
+                case "ArtistUnicode":
+                    metadata.ArtistUnicode = keyValue.Value;
+                    break;
+                case "Creator":
+                    metadata.Creator = keyValue.Value;
+                    break;
+                case "Version":
+                    metadata.Version = keyValue.Value;
+                    break;
+                case "Source":
+                    metadata.Source = keyValue.Value;
+                    break;
+                case "Tags":
+                    metadata.Tags = keyValue.Value;
+                    break;
+                case "BeatmapID":
+                    metadata.BeatmapID = ParseIntNullable(keyValue.Value);
+                    break;
+                case "BeatmapSetID":
+                    metadata.BeatmapSetID = ParseIntNullable(keyValue.Value);
+                    break;
+                default:
+                    throw new OsuFileReaderException($"Unkown key '{keyValue.Key}'");
+            }
+        }
 
         return metadata;
     }
 
     public Difficulty ReadDifficulty()
     {
-        var blockDict = this.ReadAllTagsInBlockOrNull("[Difficulty]");
+        this.CheckReadOrder("[Difficulty]");
 
-        return new Difficulty
+        var difficulty = new Difficulty()
         {
-            ApproachRate = ParseDoubleNullable(blockDict.GetValueOrDefault("ApproachRate")),
-            CircleSize = ParseDoubleNullable(blockDict.GetValueOrDefault("CircleSize")),
-            HPDrainRate = ParseDoubleNullable(blockDict.GetValueOrDefault("HPDrainRate")),
-            OverallDifficulty = ParseDoubleNullable(blockDict.GetValueOrDefault("OverallDifficulty")),
-            SliderMultiplier = ParseDoubleNullable(blockDict.GetValueOrDefault("SliderMultiplier")),
-            SliderTickRate = ParseDoubleNullable(blockDict.GetValueOrDefault("SliderTickRate")),
+            ApproachRate = 6, //Default AR if not given
         };
+
+        while(this.ReadNextKeyValue(out var keyValue))
+        {
+            switch (keyValue.Key)
+            {
+                case "ApproachRate":
+                    difficulty.ApproachRate = ParseDoubleNullable(keyValue.Value);
+                    break;
+                case "CircleSize":
+                    difficulty.CircleSize = ParseDoubleNullable(keyValue.Value);
+                    break;
+                case "HPDrainRate":
+                    difficulty.HPDrainRate = ParseDoubleNullable(keyValue.Value);
+                    break;
+                case "OverallDifficulty":
+                    difficulty.OverallDifficulty = ParseDoubleNullable(keyValue.Value);
+                    break;
+                case "SliderMultiplier":
+                    difficulty.SliderMultiplier = ParseDoubleNullable(keyValue.Value);
+                    break;
+                case "SliderTickRate":
+                    difficulty.SliderTickRate = ParseDoubleNullable(keyValue.Value);
+                    break;
+                default:
+                    throw new OsuFileReaderException($"Unkown key '{keyValue.Key}'");
+            }
+        }
+
+        return difficulty;
+    }
+
+    private void CheckReadOrder(string dilimiter)
+    {
+        if (this.line is null || !this.line.StartsWith(dilimiter))
+            this.line = this.sr.ReadLineStartingWithOrNull(dilimiter);
+
+        if (this.line is null)
+            throw new OsuFileReaderException(orderExceptionMessage);
+    }
+
+    private bool ReadNextKeyValue(out (string Key, string Value) keyValue)
+    {
+        this.line = this.sr.ReadLine();
+
+        if (string.IsNullOrWhiteSpace(this.line) || this.line.StartsWith('['))
+        {
+            keyValue = (null, null);
+            return false;
+        }
+
+        var indexColon = line.IndexOf(':');
+
+        //Change this to while loop if more reads are needed
+        if (indexColon == -1)
+        {
+            this.line = this.sr.ReadLine();
+            indexColon = line.IndexOf(':');
+        }
+
+        keyValue = (this.line.Substring(0, indexColon), this.line.Substring(indexColon + 1));
+
+        return true;
     }
 
     public List<TimingPoint> ReadTimingPoints()
