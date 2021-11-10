@@ -24,20 +24,13 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
 
     private bool disposed;
 
-    private static readonly OsuFileReaderOptions defaultOptions = new OsuFileReaderOptions
-    {
-        IntParsing = IntParsing.ConvertFloat,
-        StringComparison = StringComparison.OrdinalIgnoreCase,
-        StrictTimingPointInheritance = false,
-    };
-
     protected OsuFileReader(string path, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
     {
         this.sr = new(path);
         this.sr.ThrowArgumentExceptionIfEmpty();
 
         this.overrides = overrides;
-        this.options = options ?? defaultOptions;
+        this.options = options ?? new OsuFileReaderOptions();
     }
 
     protected OsuFileReader(Stream stream, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
@@ -46,14 +39,14 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
         this.sr.ThrowArgumentExceptionIfEmpty();
 
         this.overrides = overrides;
-        this.options = options ?? defaultOptions;
+        this.options = options ?? new OsuFileReaderOptions();
     }
 
     protected OsuFileReader(StreamReader sr, OsuFileReaderOptions options = null, OsuFileReaderOverride overrides = null)
     {
         this.sr = sr;
         this.overrides = overrides;
-        this.options = options ?? defaultOptions;
+        this.options = options ?? new OsuFileReaderOptions();
     }
 
     public abstract IReadOnlyBeatmap<THitObject> ReadFile();
@@ -491,7 +484,6 @@ public class OsuFileReaderOverride
 
 public class OsuFileReaderOptions
 {
-    public StringComparison StringComparison { get; set; }
-    public IntParsing IntParsing { get; set; }
-    public bool StrictTimingPointInheritance { get; set; }
+    public IntParsing IntParsing { get; set; } = IntParsing.ConvertFloat;
+    public bool StrictTimingPointInheritance { get; set; } = false;
 }

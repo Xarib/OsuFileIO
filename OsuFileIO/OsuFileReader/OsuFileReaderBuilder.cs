@@ -63,15 +63,7 @@ public class OsuFileReaderBuilder : IDisposable
     private const string searchString = "Mode:";
     public IOsuFileReader<IHitObject> Build()
     {
-        string line;
-        if (options is null)
-        {
-            line = sr.ReadLineStartingWithOrNull(searchString, StringComparison.OrdinalIgnoreCase);
-        }
-        else
-        {
-            line = sr.ReadLineStartingWithOrNull(searchString, this.options.StringComparison);
-        }
+        string line = sr.ReadLineStartingWithOrNull(searchString, StringComparison.OrdinalIgnoreCase);
 
         GameMode mode;
         if (line is null)
