@@ -170,38 +170,100 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
 
         var metadata = new MetaData();
 
+        var metadataOverride = this.overrides?.MetaData;
+
         while(this.ReadNextKeyValue(out var keyValue))
         {
             switch (keyValue.Key)
             {
                 case "Title":
+                    if (metadataOverride?.Title is not null)
+                    {
+                        metadata.Title = metadataOverride.Title;
+                        break;
+                    }
+
                     metadata.Title = keyValue.Value;
                     break;
                 case "TitleUnicode":
+                    if (metadataOverride?.TitleUnicode is not null)
+                    {
+                        metadata.TitleUnicode = metadataOverride.TitleUnicode;
+                        break;
+                    }
+
                     metadata.TitleUnicode = keyValue.Value;
                     break;
                 case "Artist":
+                    if (metadataOverride?.Artist is not null)
+                    {
+                        metadata.Artist = metadataOverride.Artist;
+                        break;
+                    }
+
                     metadata.Artist = keyValue.Value;
                     break;
                 case "ArtistUnicode":
+                    if (metadataOverride?.ArtistUnicode is not null)
+                    {
+                        metadata.ArtistUnicode = metadataOverride.ArtistUnicode;
+                        break;
+                    }
+
                     metadata.ArtistUnicode = keyValue.Value;
                     break;
                 case "Creator":
+                    if (metadataOverride?.Creator is not null)
+                    {
+                        metadata.Creator = metadataOverride.Creator;
+                        break;
+                    }
+
                     metadata.Creator = keyValue.Value;
                     break;
                 case "Version":
+                    if (metadataOverride?.Version is not null)
+                    {
+                        metadata.Version = metadataOverride.Version;
+                        break;
+                    }
+
                     metadata.Version = keyValue.Value;
                     break;
                 case "Source":
+                    if (metadataOverride?.Source is not null)
+                    {
+                        metadata.Source = metadataOverride.Source;
+                        break;
+                    }
+
                     metadata.Source = keyValue.Value;
                     break;
                 case "Tags":
+                    if (metadataOverride?.Tags is not null)
+                    {
+                        metadata.Tags = metadataOverride.Tags;
+                        break;
+                    }
+
                     metadata.Tags = keyValue.Value;
                     break;
                 case "BeatmapID":
+                    if (metadataOverride?.BeatmapID is not null)
+                    {
+                        metadata.BeatmapID = metadataOverride.BeatmapID;
+                        break;
+                    }
+
                     metadata.BeatmapID = ParseIntNullable(keyValue.Value);
                     break;
                 case "BeatmapSetID":
+                    if (metadataOverride?.BeatmapSetID is not null)
+                    {
+                        metadata.BeatmapSetID = metadataOverride.BeatmapSetID;
+                        break;
+                    }
+
                     metadata.BeatmapSetID = ParseIntNullable(keyValue.Value);
                     break;
                 default:
@@ -221,26 +283,64 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
             ApproachRate = 6, //Default AR if not given
         };
 
+        var difficultyOverride = this.overrides?.Difficulty;
+
         while(this.ReadNextKeyValue(out var keyValue))
         {
             switch (keyValue.Key)
             {
                 case "ApproachRate":
+                    if (difficultyOverride?.ApproachRate is not null)
+                    {
+                        difficulty.ApproachRate = difficultyOverride.ApproachRate;
+                        break;
+                    }
+
                     difficulty.ApproachRate = ParseDoubleNullable(keyValue.Value);
                     break;
                 case "CircleSize":
+                    if (difficultyOverride?.CircleSize is not null)
+                    {
+                        difficulty.CircleSize = difficultyOverride.CircleSize;
+                        break;
+                    }
+
                     difficulty.CircleSize = ParseDoubleNullable(keyValue.Value);
                     break;
                 case "HPDrainRate":
+                    if (difficultyOverride?.HPDrainRate is not null)
+                    {
+                        difficulty.HPDrainRate = difficultyOverride.HPDrainRate;
+                        break;
+                    }
+
                     difficulty.HPDrainRate = ParseDoubleNullable(keyValue.Value);
                     break;
                 case "OverallDifficulty":
+                    if (difficultyOverride?.OverallDifficulty is not null)
+                    {
+                        difficulty.OverallDifficulty = difficultyOverride.OverallDifficulty;
+                        break;
+                    }
+
                     difficulty.OverallDifficulty = ParseDoubleNullable(keyValue.Value);
                     break;
                 case "SliderMultiplier":
+                    if (difficultyOverride?.SliderMultiplier is not null)
+                    {
+                        difficulty.SliderMultiplier = difficultyOverride.SliderMultiplier;
+                        break;
+                    }
+
                     difficulty.SliderMultiplier = ParseDoubleNullable(keyValue.Value);
                     break;
                 case "SliderTickRate":
+                    if (difficultyOverride?.SliderTickRate is not null)
+                    {
+                        difficulty.SliderTickRate = difficultyOverride.SliderTickRate;
+                        break;
+                    }
+
                     difficulty.SliderTickRate = ParseDoubleNullable(keyValue.Value);
                     break;
                 default:
