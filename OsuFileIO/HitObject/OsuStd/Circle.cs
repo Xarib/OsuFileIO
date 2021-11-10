@@ -4,50 +4,49 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.HitObject.OsuStd
+namespace OsuFileIO.HitObject.OsuStd;
+
+public class Circle : StdHitObject, IEquatable<Circle>
 {
-    public class Circle : StdHitObject, IEquatable<Circle>
+    public Circle(Coordinates coordinates, int timeInMs) : base(coordinates, timeInMs)
     {
-        public Circle(Coordinates coordinates, int timeInMs) : base(coordinates, timeInMs)
-        {
-            this.EndCoordinates = coordinates;
-        }
+        this.EndCoordinates = coordinates;
+    }
 
-        public bool Equals(Circle other)
-        {
-            if (other is null)
-                return false;
+    public bool Equals(Circle other)
+    {
+        if (other is null)
+            return false;
 
-            if (ReferenceEquals(this, other))
+        if (ReferenceEquals(this, other))
+            return true;
+
+        if (this.GetType() != other.GetType())
+            return false;
+
+        return
+            this.Coordinates == other.Coordinates &&
+            this.TimeInMs == other.TimeInMs;
+    }
+
+    public override bool Equals(object obj)
+        => Equals(obj as Circle);
+
+    public override int GetHashCode()
+        => (this.Coordinates, this.TimeInMs, this.EndCoordinates).GetHashCode();
+
+    public static bool operator ==(Circle lhs, Circle rhs)
+    {
+        if (lhs is null)
+        {
+            if (rhs is null)
                 return true;
 
-            if (this.GetType() != other.GetType())
-                return false;
-
-            return
-                this.Coordinates == other.Coordinates &&
-                this.TimeInMs == other.TimeInMs;
+            return false;
         }
 
-        public override bool Equals(object obj)
-            => Equals(obj as Circle);
-
-        public override int GetHashCode()
-            => (this.Coordinates, this.TimeInMs, this.EndCoordinates).GetHashCode();
-
-        public static bool operator ==(Circle lhs, Circle rhs)
-        {
-            if (lhs is null)
-            {
-                if (rhs is null)
-                    return true;
-
-                return false;
-            }
-
-            return lhs.Equals(rhs);
-        }
-
-        public static bool operator !=(Circle lhs, Circle rhs) => !(lhs == rhs);
+        return lhs.Equals(rhs);
     }
+
+    public static bool operator !=(Circle lhs, Circle rhs) => !(lhs == rhs);
 }

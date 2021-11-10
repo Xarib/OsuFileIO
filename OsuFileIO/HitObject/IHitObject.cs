@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace OsuFileIO.HitObject
+namespace OsuFileIO.HitObject;
+
+public interface IHitObject
 {
-    public interface IHitObject
-    {
-        public int TimeInMs { get; set; }
-    }
+    public int TimeInMs { get; set; }
 }

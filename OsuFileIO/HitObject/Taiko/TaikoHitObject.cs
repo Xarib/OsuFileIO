@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.HitObject.Taiko
+namespace OsuFileIO.HitObject.Taiko;
+
+public class TaikoHitObject : IHitObject
 {
-    public class TaikoHitObject : IHitObject
-    {
-        public int TimeInMs { get; set; }
-    }
+    public int TimeInMs { get; set; }
 }

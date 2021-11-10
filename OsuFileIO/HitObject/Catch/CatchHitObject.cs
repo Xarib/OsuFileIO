@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.HitObject.Catch
+namespace OsuFileIO.HitObject.Catch;
+
+public class CatchHitObject : IHitObject
 {
-    public class CatchHitObject : IHitObject
-    {
-        public int TimeInMs { get; set; }
-    }
+    public int TimeInMs { get; set; }
 }

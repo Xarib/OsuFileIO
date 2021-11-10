@@ -4,16 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.OsuFileReader.Exceptions
+namespace OsuFileIO.OsuFileReader.Exceptions;
+
+public class OsuFileReaderException : Exception
 {
-    public class OsuFileReaderException : Exception
-    {
-        public OsuFileReaderException() { }
+    public OsuFileReaderException() { }
 
-        public OsuFileReaderException(string message)
-            : base(message) { }
+    public OsuFileReaderException(string message)
+        : base(message) { }
 
-        public OsuFileReaderException(string message, Exception innerException)
-            : base(message, innerException) { }
-    }
+    public OsuFileReaderException(string message, Exception innerException)
+        : base(message, innerException) { }
 }

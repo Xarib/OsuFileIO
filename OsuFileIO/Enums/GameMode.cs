@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OsuFileIO.Enums
+namespace OsuFileIO.Enums;
+
+public enum GameMode
 {
-    public enum GameMode
-    {
-        Standard = 0,
-        Taiko = 1,
-        Catch = 2,
-        Mania = 3,
-    }
+    Standard = 0,
+    Taiko = 1,
+    Catch = 2,
+    Mania = 3,
 }
