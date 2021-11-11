@@ -12,7 +12,7 @@ public interface IOsuFileReader<out THitObject> : IDisposable where THitObject :
 {
     public void ResetReader();
     public General ReadGeneral();
-    public MetaData ReadMetadata();
+    public Metadata ReadMetadata();
     public Difficulty ReadDifficulty();
     public List<TimingPoint> ReadTimingPoints();
     public abstract IReadOnlyBeatmap<THitObject> ReadFile();

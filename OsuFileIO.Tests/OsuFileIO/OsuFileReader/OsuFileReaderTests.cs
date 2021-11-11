@@ -69,7 +69,7 @@ public class OsuFileReaderTests
         var actual = reader.ReadMetadata();
 
         //Assert
-        var expected = new MetaData
+        var expected = new Metadata
         {
             Title = title,
             TitleUnicode = titleUnicode,
@@ -440,7 +440,7 @@ public class OsuFileReaderTests
 
         //Assert
         Assert.AreEqual(actual1.General, actual2.General, $"Expected to get the same {nameof(General)}");
-        Assert.AreEqual(actual1.MetaData, actual2.MetaData, $"Expected to get the same {nameof(MetaData)}");
+        Assert.AreEqual(actual1.MetaData, actual2.MetaData, $"Expected to get the same {nameof(Metadata)}");
         Assert.AreEqual(actual1.Difficulty, actual2.Difficulty, $"Expected to get the same {nameof(Difficulty)}");
         CollectionAssert.AreEqual(actual1.TimingPoints, actual2.TimingPoints, $"Expected to get the same {nameof(TimingPoint)}s");
     }
@@ -474,5 +474,239 @@ public class OsuFileReaderTests
 
         //Assert
         Assert.ThrowsException<ArgumentException>(actual);
+    }
+
+    [TestMethod]
+    public void ReadFile_MetadataOverridesNoFileMetadata_ShouldOverride()
+    {
+        //Arrange
+        var stream = new MemoryStream();
+        var writer = new StreamWriter(stream);
+        writer.WriteLine("osu file format v14");
+        writer.WriteLine("[General]");
+        writer.WriteLine("StackLeniency: 0.7");
+        writer.WriteLine("Mode: 0");
+        writer.WriteLine("[Metadata]");
+        writer.WriteLine("[Difficulty]");
+        writer.WriteLine("CircleSize:4");
+        writer.WriteLine("SliderMultiplier: 0.7");
+        writer.WriteLine("[TimingPoints]");
+        writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
+        writer.WriteLine("[HitObjects]");
+        writer.WriteLine("562,574.162679425837,4,2,0,30,1,0");
+        writer.Flush();
+        stream.Position = 0;
+
+        //Act
+        var overrides = new OsuFileReaderOverride {
+            MetaData = new Metadata
+            {
+                Artist = "1",
+                ArtistUnicode = "2",
+                BeatmapID = 3,
+                BeatmapSetID = 4,
+                Creator = "5",
+                Source = "6",
+                Tags = "7",
+                Title = "8",
+                TitleUnicode = "9",
+                Version = "10",
+            },
+        };
+
+        var reader = new OsuFileReaderBuilder(stream)
+            .UseOverrides(overrides)
+            .Build();
+
+        var beatmap = reader.ReadFile();
+
+        //Assert
+        var expected = overrides.MetaData;
+        var actual = beatmap.MetaData;
+        Assert.AreEqual(expected.Artist, actual.Artist, $"Expected to override {nameof(actual.Artist)}");
+        Assert.AreEqual(expected.ArtistUnicode, actual.ArtistUnicode, $"Expected to override {nameof(actual.ArtistUnicode)}");
+        Assert.AreEqual(expected.BeatmapID, actual.BeatmapID, $"Expected to override {nameof(actual.BeatmapID)}");
+        Assert.AreEqual(expected.BeatmapSetID, actual.BeatmapSetID, $"Expected to override {nameof(actual.BeatmapSetID)}");
+        Assert.AreEqual(expected.Creator, actual.Creator, $"Expected to override {nameof(actual.Creator)}");
+        Assert.AreEqual(expected.Source, actual.Source, $"Expected to override {nameof(actual.Source)}");
+        Assert.AreEqual(expected.Tags, actual.Tags, $"Expected to override {nameof(actual.Tags)}");
+        Assert.AreEqual(expected.Title, actual.Title, $"Expected to override {nameof(actual.Title)}");
+        Assert.AreEqual(expected.TitleUnicode, actual.TitleUnicode, $"Expected to override {nameof(actual.TitleUnicode)}");
+        Assert.AreEqual(expected.Version, actual.Version, $"Expected to override {nameof(actual.Version)}");
+    }
+
+    [TestMethod]
+    public void ReadFile_MetadataOverrides_ShouldOverride()
+    {
+        //Arrange
+        var stream = new MemoryStream();
+        var writer = new StreamWriter(stream);
+        writer.WriteLine("osu file format v14");
+        writer.WriteLine("[General]");
+        writer.WriteLine("StackLeniency: 0.7");
+        writer.WriteLine("Mode: 0");
+        writer.WriteLine("[Metadata]");
+        writer.WriteLine("Title:Goodbye");
+        writer.WriteLine("TitleUnicode:Goodbye");
+        writer.WriteLine("Artist:BLANKFIELD");
+        writer.WriteLine("ArtistUnicode:BLANKFIELD");
+        writer.WriteLine("Creator:Kyubey");
+        writer.WriteLine("Version:Intense");
+        writer.WriteLine("Source:Undertale");
+        writer.WriteLine("Tags:asgore toby fox");
+        writer.WriteLine("BeatmapID:1172819");
+        writer.WriteLine("BeatmapSetID:553906");
+        writer.WriteLine("[Difficulty]");
+        writer.WriteLine("CircleSize:4");
+        writer.WriteLine("SliderMultiplier: 0.7");
+        writer.WriteLine("[TimingPoints]");
+        writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
+        writer.WriteLine("[HitObjects]");
+        writer.WriteLine("562,574.162679425837,4,2,0,30,1,0");
+        writer.Flush();
+        stream.Position = 0;
+
+        //Act
+        var overrides = new OsuFileReaderOverride {
+            MetaData = new Metadata
+            {
+                Artist = "1",
+                ArtistUnicode = "2",
+                BeatmapID = 3,
+                BeatmapSetID = 4,
+                Creator = "5",
+                Source = "6",
+                Tags = "7",
+                Title = "8",
+                TitleUnicode = "9",
+                Version = "10",
+            },
+        };
+
+        var reader = new OsuFileReaderBuilder(stream)
+            .UseOverrides(overrides)
+            .Build();
+
+        var beatmap = reader.ReadFile();
+
+        //Assert
+        var expected = overrides.MetaData;
+        var actual = beatmap.MetaData;
+        Assert.AreEqual(expected.Artist, actual.Artist, $"Expected to override {nameof(actual.Artist)}");
+        Assert.AreEqual(expected.ArtistUnicode, actual.ArtistUnicode, $"Expected to override {nameof(actual.ArtistUnicode)}");
+        Assert.AreEqual(expected.BeatmapID, actual.BeatmapID, $"Expected to override {nameof(actual.BeatmapID)}");
+        Assert.AreEqual(expected.BeatmapSetID, actual.BeatmapSetID, $"Expected to override {nameof(actual.BeatmapSetID)}");
+        Assert.AreEqual(expected.Creator, actual.Creator, $"Expected to override {nameof(actual.Creator)}");
+        Assert.AreEqual(expected.Source, actual.Source, $"Expected to override {nameof(actual.Source)}");
+        Assert.AreEqual(expected.Tags, actual.Tags, $"Expected to override {nameof(actual.Tags)}");
+        Assert.AreEqual(expected.Title, actual.Title, $"Expected to override {nameof(actual.Title)}");
+        Assert.AreEqual(expected.TitleUnicode, actual.TitleUnicode, $"Expected to override {nameof(actual.TitleUnicode)}");
+        Assert.AreEqual(expected.Version, actual.Version, $"Expected to override {nameof(actual.Version)}");
+    }
+
+    [TestMethod]
+    public void ReadFile_DifficultyOverrides_ShouldOverride()
+    {
+        //Arrange
+        var stream = new MemoryStream();
+        var writer = new StreamWriter(stream);
+        writer.WriteLine("osu file format v14");
+        writer.WriteLine("[General]");
+        writer.WriteLine("StackLeniency: 0.7");
+        writer.WriteLine("Mode: 0");
+        writer.WriteLine("[Metadata]");
+        writer.WriteLine("[Difficulty]");
+        writer.WriteLine("HPDrainRate:4.7");
+        writer.WriteLine("CircleSize:4");
+        writer.WriteLine("OverallDifficulty:10");
+        writer.WriteLine("ApproachRate:10");
+        writer.WriteLine("SliderMultiplier:2");
+        writer.WriteLine("SliderTickRate:2");
+        writer.WriteLine("[TimingPoints]");
+        writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
+        writer.WriteLine("[HitObjects]");
+        writer.WriteLine("562,574.162679425837,4,2,0,30,1,0");
+        writer.Flush();
+        stream.Position = 0;
+
+        //Act
+        var overrides = new OsuFileReaderOverride
+        {
+            Difficulty = new Difficulty
+            {
+                ApproachRate = 1.1,
+                CircleSize = 2.2,
+                HPDrainRate = 3.3,
+                OverallDifficulty = 4.4,
+                SliderMultiplier = 5.5,
+                SliderTickRate = 6.6,
+            }
+        };
+
+        var reader = new OsuFileReaderBuilder(stream)
+            .UseOverrides(overrides)
+            .Build();
+
+        var beatmap = reader.ReadFile();
+
+        //Assert
+        var expected = overrides.Difficulty;
+        var actual = beatmap.Difficulty;
+        Assert.AreEqual(expected.ApproachRate, actual.ApproachRate, $"Expected to override {nameof(actual.ApproachRate)}");
+        Assert.AreEqual(expected.CircleSize, actual.CircleSize, $"Expected to override {nameof(actual.CircleSize)}");
+        Assert.AreEqual(expected.HPDrainRate, actual.HPDrainRate, $"Expected to override {nameof(actual.HPDrainRate)}");
+        Assert.AreEqual(expected.OverallDifficulty, actual.OverallDifficulty, $"Expected to override {nameof(actual.OverallDifficulty)}");
+        Assert.AreEqual(expected.SliderMultiplier, actual.SliderMultiplier, $"Expected to override {nameof(actual.SliderMultiplier)}");
+        Assert.AreEqual(expected.SliderTickRate, actual.SliderTickRate, $"Expected to override {nameof(actual.SliderTickRate)}");
+    }
+
+    [TestMethod]
+    public void ReadFile_FileDifficultyNotSetDifficultyOverrides_ShouldOverride()
+    {
+        //Arrange
+        var stream = new MemoryStream();
+        var writer = new StreamWriter(stream);
+        writer.WriteLine("osu file format v14");
+        writer.WriteLine("[General]");
+        writer.WriteLine("StackLeniency: 0.7");
+        writer.WriteLine("Mode: 0");
+        writer.WriteLine("[Metadata]");
+        writer.WriteLine("[Difficulty]");
+        writer.WriteLine("[TimingPoints]");
+        writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
+        writer.WriteLine("[HitObjects]");
+        writer.WriteLine("562,574.162679425837,4,2,0,30,1,0");
+        writer.Flush();
+        stream.Position = 0;
+
+        //Act
+        var overrides = new OsuFileReaderOverride
+        {
+            Difficulty = new Difficulty
+            {
+                ApproachRate = 1.1,
+                CircleSize = 2.2,
+                HPDrainRate = 3.3,
+                OverallDifficulty = 4.4,
+                SliderMultiplier = 5.5,
+                SliderTickRate = 6.6,
+            }
+        };
+
+        var reader = new OsuFileReaderBuilder(stream)
+            .UseOverrides(overrides)
+            .Build();
+
+        var beatmap = reader.ReadFile();
+
+        //Assert
+        var expected = overrides.Difficulty;
+        var actual = beatmap.Difficulty;
+        Assert.AreEqual(expected.ApproachRate, actual.ApproachRate, $"Expected to override {nameof(actual.ApproachRate)}");
+        Assert.AreEqual(expected.CircleSize, actual.CircleSize, $"Expected to override {nameof(actual.CircleSize)}");
+        Assert.AreEqual(expected.HPDrainRate, actual.HPDrainRate, $"Expected to override {nameof(actual.HPDrainRate)}");
+        Assert.AreEqual(expected.OverallDifficulty, actual.OverallDifficulty, $"Expected to override {nameof(actual.OverallDifficulty)}");
+        Assert.AreEqual(expected.SliderMultiplier, actual.SliderMultiplier, $"Expected to override {nameof(actual.SliderMultiplier)}");
+        Assert.AreEqual(expected.SliderTickRate, actual.SliderTickRate, $"Expected to override {nameof(actual.SliderTickRate)}");
     }
 }

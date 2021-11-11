@@ -69,11 +69,11 @@ public class OsuFileTests
     [TestMethod]
     public void Equal_EqualMetadataObjects_ReturnsTrue()
     {
-        MetaData lhs = null;
-        MetaData rhs = null;
+        Metadata lhs = null;
+        Metadata rhs = null;
         Assert.IsTrue(lhs == rhs, "Expected to be equal");
 
-        lhs = new MetaData()
+        lhs = new Metadata()
         {
             Artist = "1",
             ArtistUnicode = "2",
@@ -87,7 +87,7 @@ public class OsuFileTests
             Version = "10",
         };
 
-        rhs = new MetaData()
+        rhs = new Metadata()
         {
             Artist = "1",
             ArtistUnicode = "2",
@@ -107,8 +107,8 @@ public class OsuFileTests
     [TestMethod]
     public void NotEqual_UnequalMetadataObjects_ReturnsTrue()
     {
-        MetaData lhs = null;
-        MetaData rhs = new MetaData()
+        Metadata lhs = null;
+        Metadata rhs = new Metadata()
         {
             Artist = "1",
             ArtistUnicode = "2",
@@ -123,7 +123,7 @@ public class OsuFileTests
         };
         Assert.IsTrue(lhs != rhs, "Expected to be unequal");
 
-        lhs = new MetaData()
+        lhs = new Metadata()
         {
             Artist = "1",
             ArtistUnicode = "2",
@@ -139,7 +139,7 @@ public class OsuFileTests
         rhs = null;
         Assert.IsTrue(lhs != rhs, "Expected to be unequal");
 
-        rhs = new MetaData()
+        rhs = new Metadata()
         {
             Artist = "1",
             ArtistUnicode = "2",

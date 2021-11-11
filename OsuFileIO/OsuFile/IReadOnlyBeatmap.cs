@@ -11,7 +11,7 @@ public interface IReadOnlyBeatmap<out THitObject> where THitObject : IHitObject
 {
     public General General { get; }
     //TODO property Editor
-    public MetaData MetaData { get; }
+    public Metadata MetaData { get; }
     public Difficulty Difficulty { get; }
     //TODO property Events
     public List<TimingPoint> TimingPoints { get; }

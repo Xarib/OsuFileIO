@@ -129,105 +129,82 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
         return general;
     }
 
-    public MetaData ReadMetadata()
+    public Metadata ReadMetadata()
     {
         this.CheckReadOrder("[Metadata]");
 
-        var metadata = new MetaData();
+        Metadata metadata;
 
-        var metadataOverride = this.overrides?.MetaData;
+        if (this.overrides?.MetaData is not null)
+        {
+            metadata = this.overrides.MetaData;
+        }
+        else
+        {
+            metadata = new Metadata();
+        }
 
         while(this.ReadNextKeyValue(out var keyValue))
         {
             switch (keyValue.Key)
             {
                 case "Title":
-                    if (metadataOverride?.Title is not null)
-                    {
-                        metadata.Title = metadataOverride.Title;
+                    if (metadata.Title is not null)
                         break;
-                    }
 
                     metadata.Title = keyValue.Value;
                     break;
                 case "TitleUnicode":
-                    if (metadataOverride?.TitleUnicode is not null)
-                    {
-                        metadata.TitleUnicode = metadataOverride.TitleUnicode;
+                    if (metadata.TitleUnicode is not null)
                         break;
-                    }
 
                     metadata.TitleUnicode = keyValue.Value;
                     break;
                 case "Artist":
-                    if (metadataOverride?.Artist is not null)
-                    {
-                        metadata.Artist = metadataOverride.Artist;
+                    if (metadata.Artist is not null)
                         break;
-                    }
 
                     metadata.Artist = keyValue.Value;
                     break;
                 case "ArtistUnicode":
-                    if (metadataOverride?.ArtistUnicode is not null)
-                    {
-                        metadata.ArtistUnicode = metadataOverride.ArtistUnicode;
+                    if (metadata.ArtistUnicode is not null)
                         break;
-                    }
 
                     metadata.ArtistUnicode = keyValue.Value;
                     break;
                 case "Creator":
-                    if (metadataOverride?.Creator is not null)
-                    {
-                        metadata.Creator = metadataOverride.Creator;
+                    if (metadata.Creator is not null)
                         break;
-                    }
 
                     metadata.Creator = keyValue.Value;
                     break;
                 case "Version":
-                    if (metadataOverride?.Version is not null)
-                    {
-                        metadata.Version = metadataOverride.Version;
+                    if (metadata.Version is not null)
                         break;
-                    }
 
                     metadata.Version = keyValue.Value;
                     break;
                 case "Source":
-                    if (metadataOverride?.Source is not null)
-                    {
-                        metadata.Source = metadataOverride.Source;
+                    if (metadata.Source is not null)
                         break;
-                    }
 
                     metadata.Source = keyValue.Value;
                     break;
                 case "Tags":
-                    if (metadataOverride?.Tags is not null)
-                    {
-                        metadata.Tags = metadataOverride.Tags;
+                    if (metadata.Tags is not null)
                         break;
-                    }
 
                     metadata.Tags = keyValue.Value;
                     break;
                 case "BeatmapID":
-                    if (metadataOverride?.BeatmapID is not null)
-                    {
-                        metadata.BeatmapID = metadataOverride.BeatmapID;
+                    if (metadata.BeatmapID.HasValue)
                         break;
-                    }
 
                     metadata.BeatmapID = ParseIntNullable(keyValue.Value);
                     break;
                 case "BeatmapSetID":
-                    if (metadataOverride?.BeatmapSetID is not null)
-                    {
-                        metadata.BeatmapSetID = metadataOverride.BeatmapSetID;
+                    if (metadata.BeatmapSetID.HasValue)
                         break;
-                    }
 
                     metadata.BeatmapSetID = ParseIntNullable(keyValue.Value);
                     break;
@@ -243,68 +220,54 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
     {
         this.CheckReadOrder("[Difficulty]");
 
-        var difficulty = new Difficulty()
-        {
-            ApproachRate = 6, //Default AR if not given
-        };
+        Difficulty difficulty;
 
-        var difficultyOverride = this.overrides?.Difficulty;
+        if (this.overrides?.Difficulty is not null)
+        {
+            difficulty = this.overrides.Difficulty;
+        }
+        else
+        {
+            difficulty = new Difficulty();
+        }
 
         while(this.ReadNextKeyValue(out var keyValue))
         {
             switch (keyValue.Key)
             {
                 case "ApproachRate":
-                    if (difficultyOverride?.ApproachRate is not null)
-                    {
-                        difficulty.ApproachRate = difficultyOverride.ApproachRate;
+                    if (difficulty.ApproachRate.HasValue)
                         break;
-                    }
 
                     difficulty.ApproachRate = ParseDoubleNullable(keyValue.Value);
                     break;
                 case "CircleSize":
-                    if (difficultyOverride?.CircleSize is not null)
-                    {
-                        difficulty.CircleSize = difficultyOverride.CircleSize;
+                    if (difficulty.CircleSize.HasValue)
                         break;
-                    }
 
                     difficulty.CircleSize = ParseDoubleNullable(keyValue.Value);
                     break;
                 case "HPDrainRate":
-                    if (difficultyOverride?.HPDrainRate is not null)
-                    {
-                        difficulty.HPDrainRate = difficultyOverride.HPDrainRate;
+                    if (difficulty.HPDrainRate.HasValue)
                         break;
-                    }
 
                     difficulty.HPDrainRate = ParseDoubleNullable(keyValue.Value);
                     break;
                 case "OverallDifficulty":
-                    if (difficultyOverride?.OverallDifficulty is not null)
-                    {
-                        difficulty.OverallDifficulty = difficultyOverride.OverallDifficulty;
+                    if (difficulty.OverallDifficulty.HasValue)
                         break;
-                    }
 
                     difficulty.OverallDifficulty = ParseDoubleNullable(keyValue.Value);
                     break;
                 case "SliderMultiplier":
-                    if (difficultyOverride?.SliderMultiplier is not null)
-                    {
-                        difficulty.SliderMultiplier = difficultyOverride.SliderMultiplier;
+                    if (difficulty.SliderMultiplier.HasValue)
                         break;
-                    }
 
                     difficulty.SliderMultiplier = ParseDoubleNullable(keyValue.Value);
                     break;
                 case "SliderTickRate":
-                    if (difficultyOverride?.SliderTickRate is not null)
-                    {
-                        difficulty.SliderTickRate = difficultyOverride.SliderTickRate;
+                    if (difficulty.SliderTickRate.HasValue)
                         break;
-                    }
 
                     difficulty.SliderTickRate = ParseDoubleNullable(keyValue.Value);
                     break;
@@ -312,6 +275,9 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
                     throw new OsuFileReaderException($"Unkown key '{keyValue.Key}'");
             }
         }
+
+        if (!difficulty.ApproachRate.HasValue)
+            difficulty.ApproachRate = 6;
 
         return difficulty;
     }
@@ -449,7 +415,7 @@ public class OsuFileReaderOverride
 {
     public General General { get; set; }
     //TODO property Editor
-    public MetaData MetaData { get; set; }
+    public Metadata MetaData { get; set; }
     public Difficulty Difficulty { get; set; }
     //TODO property Events
 }

@@ -13,7 +13,7 @@ public class ReadOnlyBeatmap<THitObject> : IReadOnlyBeatmap<THitObject> where TH
 {
     public General General { get; internal set; }
     //TODO property Editor
-    public MetaData MetaData { get; internal set; }
+    public Metadata MetaData { get; internal set; }
     public Difficulty Difficulty { get; internal set; }
     //TODO property Events
     public List<TimingPoint> TimingPoints { get; internal set; } = new();
@@ -67,7 +67,7 @@ public class General : IEquatable<General>
     public static bool operator !=(General lhs, General rhs) => !(lhs == rhs);
 }
 
-public class MetaData : IEquatable<MetaData>
+public class Metadata : IEquatable<Metadata>
 {
     public string Title { get; set; }
     public string TitleUnicode { get; set; }
@@ -80,7 +80,7 @@ public class MetaData : IEquatable<MetaData>
     public int? BeatmapID { get; set; }
     public int? BeatmapSetID { get; set; }
 
-    public bool Equals(MetaData other)
+    public bool Equals(Metadata other)
     {
         if (other is null)
             return false;
@@ -105,12 +105,12 @@ public class MetaData : IEquatable<MetaData>
     }
 
     public override bool Equals(object obj)
-        => Equals(obj as MetaData);
+        => Equals(obj as Metadata);
 
     public override int GetHashCode()
         => (this.Title, this.TitleUnicode, this.Artist, this.ArtistUnicode, this.Creator, this.Version, this.Source, this.Tags, this.BeatmapID, this.BeatmapSetID).GetHashCode();
 
-    public static bool operator ==(MetaData lhs, MetaData rhs)
+    public static bool operator ==(Metadata lhs, Metadata rhs)
     {
         if (lhs is null)
         {
@@ -123,7 +123,7 @@ public class MetaData : IEquatable<MetaData>
         return lhs.Equals(rhs);
     }
 
-    public static bool operator !=(MetaData lhs, MetaData rhs) => !(lhs == rhs);
+    public static bool operator !=(Metadata lhs, Metadata rhs) => !(lhs == rhs);
 }
 
 public class Difficulty : IEquatable<Difficulty>
