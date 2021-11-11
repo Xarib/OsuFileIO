@@ -104,7 +104,7 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
         general.OsuFileFormat = generalOverride?.OsuFileFormat ?? ParseIntNullable(this.line.Substring(this.line.LastIndexOf("v", StringComparison.OrdinalIgnoreCase) + 1));
 
         this.line = sr.ReadLineStartingWithOrNull("StackLeniency:");
-        general.StackLeniency = generalOverride?.OsuFileFormat ?? ParseDoubleNullable(this.ReadTagValue());
+        general.StackLeniency = generalOverride?.StackLeniency ?? ParseDoubleNullable(this.ReadTagValue());
 
         //TODO better
         if (this.line is null)

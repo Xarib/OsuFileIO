@@ -709,4 +709,54 @@ public class OsuFileReaderTests
         Assert.AreEqual(expected.SliderMultiplier, actual.SliderMultiplier, $"Expected to override {nameof(actual.SliderMultiplier)}");
         Assert.AreEqual(expected.SliderTickRate, actual.SliderTickRate, $"Expected to override {nameof(actual.SliderTickRate)}");
     }
+
+    [TestMethod]
+    public void ReadFile_GeneralOverrides_ShouldOverride()
+    {
+        //Arrange
+        var stream = new MemoryStream();
+        var writer = new StreamWriter(stream);
+        writer.WriteLine("osu file format v14");
+        writer.WriteLine("[General]");
+        writer.WriteLine("StackLeniency: 0.7");
+        writer.WriteLine("Mode: 0");
+        writer.WriteLine("[Metadata]");
+        writer.WriteLine("[Difficulty]");
+        writer.WriteLine("HPDrainRate:4.7");
+        writer.WriteLine("CircleSize:4");
+        writer.WriteLine("OverallDifficulty:10");
+        writer.WriteLine("ApproachRate:10");
+        writer.WriteLine("SliderMultiplier:2");
+        writer.WriteLine("SliderTickRate:2");
+        writer.WriteLine("[TimingPoints]");
+        writer.WriteLine("1266,279.06976744186,4,1,9,90,1,0");
+        writer.WriteLine("[HitObjects]");
+        writer.WriteLine("562,574.162679425837,4,2,0,30,1,0");
+        writer.Flush();
+        stream.Position = 0;
+
+        //Act
+        var overrides = new OsuFileReaderOverride
+        {
+            General = new General
+            {
+                Mode = GameMode.Catch,
+                OsuFileFormat = 15,
+                StackLeniency = 10
+            }
+        };
+
+        var reader = new OsuFileReaderBuilder(stream)
+            .UseOverrides(overrides)
+            .Build();
+
+        var beatmap = reader.ReadFile();
+
+        //Assert
+        var expected = overrides.General;
+        var actual = beatmap.General;
+        Assert.AreEqual(expected.Mode, actual.Mode, $"Expected to override {nameof(actual.Mode)}");
+        Assert.AreEqual(expected.OsuFileFormat, actual.OsuFileFormat, $"Expected to override {nameof(actual.OsuFileFormat)}");
+        Assert.AreEqual(expected.StackLeniency, actual.StackLeniency, $"Expected to override {nameof(actual.StackLeniency)}");
+    }
 }
