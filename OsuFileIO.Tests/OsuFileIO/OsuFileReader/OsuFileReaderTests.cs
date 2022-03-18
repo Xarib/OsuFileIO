@@ -56,11 +56,11 @@ public class OsuFileReaderTests
     [DeploymentItem(fileLocation + catchFile)]
     [DeploymentItem(fileLocation + maniaFile)]
     [DeploymentItem(fileLocation + taikoFile)]
-    [DataRow(tutorialFile, "new beginnings", "new beginnings", "nekodex", "nekodex", "pishifat", "tutorial", "", "", 2116202, 1011011)]
-    [DataRow(taikoFile, "Amatsu Kitsune", "アマツキツネ", "YURiCa", "ユリカ", "Kyuukai", "Charlotte's Inner Oni", "初音ミク Project mirai 2", "marasy Hanatan 花たん", 1521524, 716642)]
-    [DataRow(catchFile, "Fukagyaku Replace", "不可逆リプレイス", "MY FIRST STORY", "MY FIRST STORY", "Akitoshi", "Chara's Overdose", "信長協奏曲", "Nobunaga Concerto Ending TV Size Asagi Ster koliron Irreversible Chara", 767324, 342218)]
-    [DataRow(maniaFile, "Miracle 5ympho X", "Miracle 5ympho X", "USAO", "USAO", "Mel", "Fullerene's 4K Black Another", "beatmania IIDX 21 SPADA", "frey sionkotori kokodoko ナウい 一年一片 frenchcore dubstep intensity fullerene kurokami gezo", 482546, 137394)]
-    public void ReadMetadata_OsuFile_ReturnsMetadata(string fileName, string title, string titleUnicode, string artist, string artistUnicode, string creator, string version, string source, string tags, int beatmapID, int beatmapSetID)
+    [DataRow(tutorialFile, "new beginnings", "new beginnings", "nekodex", "nekodex", "pishifat", "tutorial", "", new string[0]{}, 2116202, 1011011)]
+    [DataRow(taikoFile, "Amatsu Kitsune", "アマツキツネ", "YURiCa", "ユリカ", "Kyuukai", "Charlotte's Inner Oni", "初音ミク Project mirai 2", new string[]{"marasy", "Hanatan", "花たん"}, 1521524, 716642)]
+    [DataRow(catchFile, "Fukagyaku Replace", "不可逆リプレイス", "MY FIRST STORY", "MY FIRST STORY", "Akitoshi", "Chara's Overdose", "信長協奏曲", new string[]{"Nobunaga", "Concerto", "Ending", "TV", "Size", "Asagi", "Ster", "koliron", "Irreversible", "Chara"}, 767324, 342218)]
+    [DataRow(maniaFile, "Miracle 5ympho X", "Miracle 5ympho X", "USAO", "USAO", "Mel", "Fullerene's 4K Black Another", "beatmania IIDX 21 SPADA", new string[]{"frey", "sionkotori", "kokodoko", "ナウい", "一年一片", "frenchcore", "dubstep", "intensity", "fullerene", "kurokami", "gezo"}, 482546, 137394)]
+    public void ReadMetadata_OsuFile_ReturnsMetadata(string fileName, string title, string titleUnicode, string artist, string artistUnicode, string creator, string version, string source, string[] tags, int beatmapID, int beatmapSetID)
     {
         //Arrange
         var reader = new OsuFileReaderBuilder(fileName).Build();
@@ -90,7 +90,7 @@ public class OsuFileReaderTests
         Assert.AreEqual(expected.Creator, actual.Creator, $"Expected the file reader to read '{nameof(expected.Creator)}' correctly");
         Assert.AreEqual(expected.Version, actual.Version, $"Expected the file reader to read '{nameof(expected.Version)}' correctly");
         Assert.AreEqual(expected.Source, actual.Source, $"Expected the file reader to read '{nameof(expected.Source)}' correctly");
-        Assert.AreEqual(expected.Tags, actual.Tags, $"Expected the file reader to read '{nameof(expected.Tags)}' correctly");
+        CollectionAssert.AreEqual(expected.Tags, actual.Tags, $"Expected the file reader to read '{nameof(expected.Tags)}' correctly");
         Assert.AreEqual(expected.BeatmapID, actual.BeatmapID, $"Expected the file reader to read '{nameof(expected.BeatmapID)}' correctly");
         Assert.AreEqual(expected.BeatmapSetID, actual.BeatmapSetID, $"Expected the file reader to read '{nameof(expected.BeatmapSetID)}' correctly");
     }
@@ -375,7 +375,7 @@ public class OsuFileReaderTests
 
         //Assert
         Assert.AreEqual("dddd", actual.Title, $"Expected the file reader to read '{nameof(actual.Title)}' correctly");
-        Assert.AreEqual("test", actual.Tags, $"Expected the file reader to read '{nameof(actual.Tags)}' correctly");
+        CollectionAssert.AreEqual(new string[]{"test"}, actual.Tags, $"Expected the file reader to read '{nameof(actual.Tags)}' correctly");
         Assert.AreEqual("727", actual.Creator, $"Expected the file reader to read '{nameof(actual.Creator)}' correctly");
     }
 
@@ -507,7 +507,7 @@ public class OsuFileReaderTests
                 BeatmapSetID = 4,
                 Creator = "5",
                 Source = "6",
-                Tags = "7",
+                Tags = new string[]{"7"},
                 Title = "8",
                 TitleUnicode = "9",
                 Version = "10",
@@ -529,7 +529,7 @@ public class OsuFileReaderTests
         Assert.AreEqual(expected.BeatmapSetID, actual.BeatmapSetID, $"Expected to override {nameof(actual.BeatmapSetID)}");
         Assert.AreEqual(expected.Creator, actual.Creator, $"Expected to override {nameof(actual.Creator)}");
         Assert.AreEqual(expected.Source, actual.Source, $"Expected to override {nameof(actual.Source)}");
-        Assert.AreEqual(expected.Tags, actual.Tags, $"Expected to override {nameof(actual.Tags)}");
+        CollectionAssert.AreEqual(expected.Tags, actual.Tags, $"Expected to override {nameof(actual.Tags)}");
         Assert.AreEqual(expected.Title, actual.Title, $"Expected to override {nameof(actual.Title)}");
         Assert.AreEqual(expected.TitleUnicode, actual.TitleUnicode, $"Expected to override {nameof(actual.TitleUnicode)}");
         Assert.AreEqual(expected.Version, actual.Version, $"Expected to override {nameof(actual.Version)}");
@@ -576,7 +576,7 @@ public class OsuFileReaderTests
                 BeatmapSetID = 4,
                 Creator = "5",
                 Source = "6",
-                Tags = "7",
+                Tags = new string[]{"7"},
                 Title = "8",
                 TitleUnicode = "9",
                 Version = "10",
@@ -598,7 +598,7 @@ public class OsuFileReaderTests
         Assert.AreEqual(expected.BeatmapSetID, actual.BeatmapSetID, $"Expected to override {nameof(actual.BeatmapSetID)}");
         Assert.AreEqual(expected.Creator, actual.Creator, $"Expected to override {nameof(actual.Creator)}");
         Assert.AreEqual(expected.Source, actual.Source, $"Expected to override {nameof(actual.Source)}");
-        Assert.AreEqual(expected.Tags, actual.Tags, $"Expected to override {nameof(actual.Tags)}");
+        CollectionAssert.AreEqual(expected.Tags, actual.Tags, $"Expected to override {nameof(actual.Tags)}");
         Assert.AreEqual(expected.Title, actual.Title, $"Expected to override {nameof(actual.Title)}");
         Assert.AreEqual(expected.TitleUnicode, actual.TitleUnicode, $"Expected to override {nameof(actual.TitleUnicode)}");
         Assert.AreEqual(expected.Version, actual.Version, $"Expected to override {nameof(actual.Version)}");
