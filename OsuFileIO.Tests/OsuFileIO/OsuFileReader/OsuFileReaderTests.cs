@@ -56,10 +56,10 @@ public class OsuFileReaderTests
     [DeploymentItem(fileLocation + catchFile)]
     [DeploymentItem(fileLocation + maniaFile)]
     [DeploymentItem(fileLocation + taikoFile)]
-    [DataRow(tutorialFile, "new beginnings", "new beginnings", "nekodex", "nekodex", "pishifat", "tutorial", "", new string[0]{}, 2116202, 1011011)]
-    [DataRow(taikoFile, "Amatsu Kitsune", "アマツキツネ", "YURiCa", "ユリカ", "Kyuukai", "Charlotte's Inner Oni", "初音ミク Project mirai 2", new string[]{"marasy", "Hanatan", "花たん"}, 1521524, 716642)]
-    [DataRow(catchFile, "Fukagyaku Replace", "不可逆リプレイス", "MY FIRST STORY", "MY FIRST STORY", "Akitoshi", "Chara's Overdose", "信長協奏曲", new string[]{"Nobunaga", "Concerto", "Ending", "TV", "Size", "Asagi", "Ster", "koliron", "Irreversible", "Chara"}, 767324, 342218)]
-    [DataRow(maniaFile, "Miracle 5ympho X", "Miracle 5ympho X", "USAO", "USAO", "Mel", "Fullerene's 4K Black Another", "beatmania IIDX 21 SPADA", new string[]{"frey", "sionkotori", "kokodoko", "ナウい", "一年一片", "frenchcore", "dubstep", "intensity", "fullerene", "kurokami", "gezo"}, 482546, 137394)]
+    [DataRow(tutorialFile, "new beginnings", "new beginnings", "nekodex", "nekodex", "pishifat", "tutorial", "", new string[0] { }, 2116202, 1011011)]
+    [DataRow(taikoFile, "Amatsu Kitsune", "アマツキツネ", "YURiCa", "ユリカ", "Kyuukai", "Charlotte's Inner Oni", "初音ミク Project mirai 2", new string[] { "marasy", "Hanatan", "花たん" }, 1521524, 716642)]
+    [DataRow(catchFile, "Fukagyaku Replace", "不可逆リプレイス", "MY FIRST STORY", "MY FIRST STORY", "Akitoshi", "Chara's Overdose", "信長協奏曲", new string[] { "Nobunaga", "Concerto", "Ending", "TV", "Size", "Asagi", "Ster", "koliron", "Irreversible", "Chara" }, 767324, 342218)]
+    [DataRow(maniaFile, "Miracle 5ympho X", "Miracle 5ympho X", "USAO", "USAO", "Mel", "Fullerene's 4K Black Another", "beatmania IIDX 21 SPADA", new string[] { "frey", "sionkotori", "kokodoko", "ナウい", "一年一片", "frenchcore", "dubstep", "intensity", "fullerene", "kurokami", "gezo" }, 482546, 137394)]
     public void ReadMetadata_OsuFile_ReturnsMetadata(string fileName, string title, string titleUnicode, string artist, string artistUnicode, string creator, string version, string source, string[] tags, int beatmapID, int beatmapSetID)
     {
         //Arrange
@@ -375,7 +375,7 @@ public class OsuFileReaderTests
 
         //Assert
         Assert.AreEqual("dddd", actual.Title, $"Expected the file reader to read '{nameof(actual.Title)}' correctly");
-        CollectionAssert.AreEqual(new string[]{"test"}, actual.Tags, $"Expected the file reader to read '{nameof(actual.Tags)}' correctly");
+        CollectionAssert.AreEqual(new string[] { "test" }, actual.Tags, $"Expected the file reader to read '{nameof(actual.Tags)}' correctly");
         Assert.AreEqual("727", actual.Creator, $"Expected the file reader to read '{nameof(actual.Creator)}' correctly");
     }
 
@@ -498,7 +498,8 @@ public class OsuFileReaderTests
         stream.Position = 0;
 
         //Act
-        var overrides = new OsuFileReaderOverride {
+        var overrides = new OsuFileReaderOverride
+        {
             MetaData = new Metadata
             {
                 Artist = "1",
@@ -507,7 +508,7 @@ public class OsuFileReaderTests
                 BeatmapSetID = 4,
                 Creator = "5",
                 Source = "6",
-                Tags = new string[]{"7"},
+                Tags = new string[] { "7" },
                 Title = "8",
                 TitleUnicode = "9",
                 Version = "10",
@@ -567,7 +568,8 @@ public class OsuFileReaderTests
         stream.Position = 0;
 
         //Act
-        var overrides = new OsuFileReaderOverride {
+        var overrides = new OsuFileReaderOverride
+        {
             MetaData = new Metadata
             {
                 Artist = "1",
@@ -576,7 +578,7 @@ public class OsuFileReaderTests
                 BeatmapSetID = 4,
                 Creator = "5",
                 Source = "6",
-                Tags = new string[]{"7"},
+                Tags = new string[] { "7" },
                 Title = "8",
                 TitleUnicode = "9",
                 Version = "10",

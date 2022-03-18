@@ -99,7 +99,7 @@ public class Metadata : IEquatable<Metadata>
             this.Creator == other.Creator &&
             this.Version == other.Version &&
             this.Source == other.Source &&
-            this.Tags == other.Tags &&
+            this.Tags.SequenceEqual(other.Tags) &&
             this.BeatmapID == other.BeatmapID &&
             this.BeatmapSetID == other.BeatmapSetID;
     }

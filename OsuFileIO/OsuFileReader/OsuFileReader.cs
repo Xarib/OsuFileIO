@@ -194,7 +194,7 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
                     if (metadata.Tags is not null)
                         break;
 
-                    metadata.Tags = keyValue.Value.Split(' ');
+                    metadata.Tags = keyValue.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                     break;
                 case "BeatmapID":
                     if (metadata.BeatmapID.HasValue)
