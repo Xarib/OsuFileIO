@@ -17,7 +17,7 @@ public class OsuStdFileReaderTests
     private const string fileLocation = "TestFiles/";
     private const string problematic = "TestFiles/Problematic/";
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("364,180,2185,1,2,0:0:0:0:")]
     [DataRow("140,180,5821,1,2,0:0:0:0:")]
     public void ReadFile_HitObjectData_ReturnsCircle(string line)
@@ -50,7 +50,7 @@ public class OsuStdFileReaderTests
         Assert.AreEqual(actual.Coordinates, actual.EndCoordinates, "Must be same");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("256,192,126433,12,4,129202,3:2:0:0:")]
     [DataRow("256,192,128207,12,8,130025,0:0:0:0:")]
     public void ReadFile_HitObjectData_ReturnsSpinner(string line)
@@ -85,7 +85,7 @@ public class OsuStdFileReaderTests
         Assert.AreEqual(actual.Coordinates, actual.EndCoordinates, "Must be same");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("80,136,133207,2,0,B|114:147|114:147|164:128|164:128|240:144,11,142.5,10|0,0:0|0:0,0:0:0:0:")]
     [DataRow("235,22,173662,6,0,L|295:146,8,113.999996520996,14|2,0:0|0:0,0:0:0:0:")]
     public void ReadFile_HitObjectData_ReturnsSlider(string line)
@@ -137,7 +137,7 @@ public class OsuStdFileReaderTests
         Assert.AreEqual(expectedCoords, actual.EndCoordinates, "Expected to get the correct end coords");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DeploymentItem(fileLocation + "stdShort.osu")]
     [DeploymentItem(fileLocation + "stdShortNoNewLines.osu")]
     public void ReadFile_OsuFileWithoutNewLinesBetween_ReturnsSameHitObjectsWithNewLines()
@@ -154,7 +154,7 @@ public class OsuStdFileReaderTests
         CollectionAssert.AreEqual(actual1.HitObjects.ToList(), actual2.HitObjects.ToList(), $"Expected to get the same HitObjects");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DeploymentItem(fileLocation + "empty.osu")]
     public void ReadFile_EmptyFile_ShouldThrowArgumentException()
     {
@@ -165,7 +165,7 @@ public class OsuStdFileReaderTests
         Assert.ThrowsException<ArgumentException>(actual);
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DeploymentItem(problematic + "100.osu")]
     [DataRow("100.osu")]
     public void ReadFile_ProblematicFile100_ReturnsOsuFile(string fileName)

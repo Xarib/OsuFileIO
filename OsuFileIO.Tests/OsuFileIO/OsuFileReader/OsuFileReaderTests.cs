@@ -21,7 +21,7 @@ public class OsuFileReaderTests
     private const string taikoFile = "taiko.osu";
     private const string fileLocation = "TestFiles/";
 
-    [TestMethod]
+    [DataTestMethod]
     [DeploymentItem(fileLocation + tutorialFile)]
     [DeploymentItem(fileLocation + catchFile)]
     [DeploymentItem(fileLocation + maniaFile)]
@@ -51,7 +51,7 @@ public class OsuFileReaderTests
         Assert.AreEqual(expected.StackLeniency, actual.StackLeniency, $"Expected the file reader to read '{nameof(expected.StackLeniency)}' correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DeploymentItem(fileLocation + tutorialFile)]
     [DeploymentItem(fileLocation + catchFile)]
     [DeploymentItem(fileLocation + maniaFile)]
@@ -95,7 +95,7 @@ public class OsuFileReaderTests
         Assert.AreEqual(expected.BeatmapSetID, actual.BeatmapSetID, $"Expected the file reader to read '{nameof(expected.BeatmapSetID)}' correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DeploymentItem(fileLocation + tutorialFile)]
     [DeploymentItem(fileLocation + catchFile)]
     [DeploymentItem(fileLocation + maniaFile)]
@@ -131,7 +131,7 @@ public class OsuFileReaderTests
         Assert.AreEqual(expected.SliderTickRate, actual.SliderTickRate, $"Expected the file reader to read '{nameof(expected.SliderTickRate)}' correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DeploymentItem(fileLocation + tutorialFile)]
     [DeploymentItem(fileLocation + catchFile)]
     [DeploymentItem(fileLocation + maniaFile)]
@@ -153,7 +153,7 @@ public class OsuFileReaderTests
     }
 
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("-28,461.538461538462,4,1,0,100,1,0")]
     public void ReadTimingPoints_TimingPointData_ReturnsTimingPoint(string timingPoint)
     {
@@ -181,7 +181,7 @@ public class OsuFileReaderTests
         Assert.AreEqual(expected[2], actual.Meter.ToString(), $"Expected the file reader to read '{nameof(actual.Meter)}' correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("34125,-100,4,1,0,87,0,0")]
     [DataRow("36986,-83.3333333333333,4,1,1,70,0,0")]
     public void ReadTimingPoints_InheritedPointData_ReturnsTimingPoint(string timingPoint)

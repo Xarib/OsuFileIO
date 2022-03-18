@@ -21,7 +21,7 @@ public class StdAnalyzerTests
     private const string tutorialFile = "new beginnings.osu";
 
     #region slider length
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("479,194,31356,1,4,0:0:0:0:", 31356)]
     [DataRow("256,192,126433,12,4,129202,3:2:0:0:", 129202)]
     public void Analyze_EndsWithCircleOrSpinner_RetunrsLengthOfMap(string hitObject, int expectedLength)
@@ -56,7 +56,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(TimeSpan.FromMilliseconds(expectedLength), actual.Length, "Expected to analyze the length correclty");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("550,301.507537688442,4,1,0,100,1,0", "172,142,21052,2,0,P|411:58|133:279,1,1200", 24067)]
     [DataRow("550,301.507537688442,4,1,0,100,1,0", "189,100,20449,2,0,P|375:74|125:266,1,936", 22801)]
     [DataRow("550,301.507537688442,4,1,0,100,1,0", "85,82,21655,6,0,B|358:67|358:67|129:270|129:270|393:273,1,840", 23766)]
@@ -97,7 +97,7 @@ public class StdAnalyzerTests
         Assert.IsTrue(milisecondDifference < 1, $"Expected to calculate the slider end time correctly with max 1ms difference but got {milisecondDifference}ms");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DeploymentItem(fileLocation + "1172819.osu")]
     [DeploymentItem(fileLocation + "1860169.osu")]
     [DataRow("1172819.osu", 305271)]
@@ -121,7 +121,7 @@ public class StdAnalyzerTests
 
     #region Hitobject count
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(4)]
     [DataRow(42)]
     public void Analyze_CirclesOnly_ReturnsHitCircleCount(int count)
@@ -161,7 +161,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(count, actual.HitCircleCount, $"Expected to count HitCircles correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(4)]
     [DataRow(42)]
     public void Analyze_SlidersOnly_ReturnsHitSliderCount(int count)
@@ -201,7 +201,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(count, actual.SliderCount, $"Expected to count Sliders correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(4)]
     [DataRow(42)]
     public void Analyze_SpinnersOnly_ReturnsHitSjpinnerCount(int count)
@@ -241,7 +241,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(count, actual.SpinnerCount, $"Expected to count Spinners correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DeploymentItem(fileLocation + "1172819.osu")]
     [DeploymentItem(fileLocation + "1860169.osu")]
     [DeploymentItem(fileLocation + tutorialFile)]
@@ -268,7 +268,7 @@ public class StdAnalyzerTests
 
     #region Bpm
 
-    [TestMethod]
+    [DataTestMethod]
     [DeploymentItem(fileLocation + "1172819.osu")]
     [DeploymentItem(fileLocation + tutorialFile)]
     [DataRow("1172819.osu", 258, 103, 260)]
@@ -293,7 +293,7 @@ public class StdAnalyzerTests
 
     #region SubStreamCounting
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 2 }, 1)]
     [DataRow(new int[] { 2, 2 }, 2)]
     [DataRow(new int[] { 2, 4 }, 1)]
@@ -345,7 +345,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.StandaloneDoubleCount, "Expected to count true doubles correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("163,150,22258,6,0,L|236:149,1,63.7500002235173", 1)]
     [DataRow("163,150,22258,2,0,L|253:150,1,85.0000002980232", 0)]
     [DataRow("163,150,22258,6,0,L|275:152,1,106.250000372529", 0)]
@@ -384,7 +384,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.StandaloneDoubleCount, "Expected to count true doubles correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 3 }, 1)]
     [DataRow(new int[] { 3, 3 }, 2)]
     [DataRow(new int[] { 3, 4 }, 1)]
@@ -436,7 +436,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.StandaloneTripletCount, "Expected to count true triplets correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("163,150,22258,6,0,L|236:149,1,63.7500002235173", 1)]
     [DataRow("163,150,22258,2,0,L|253:150,1,85.0000002980232", 0)]
     [DataRow("163,150,22258,6,0,L|275:152,1,106.250000372529", 0)]
@@ -476,7 +476,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.StandaloneTripletCount, "Expected to count true doubles correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 4 }, 1)]
     [DataRow(new int[] { 4, 4 }, 2)]
     [DataRow(new int[] { 3, 4 }, 1)]
@@ -528,7 +528,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.StandaloneQuadrupletCount, "Expected to count true quadruplets correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("163,150,22258,6,0,L|236:149,1,63.7500002235173", 1)]
     [DataRow("163,150,22258,2,0,L|253:150,1,85.0000002980232", 0)]
     [DataRow("163,150,22258,6,0,L|275:152,1,106.250000372529", 0)]
@@ -573,7 +573,7 @@ public class StdAnalyzerTests
 
     #region StreamCounting
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(601, new int[] { 20 }, 0)] // less than 100Bmp
     [DataRow(600, new int[] { 20 }, 20)] //100Bmp
     [DataRow(400, new int[] { 5 }, 0)] //150Bmp
@@ -631,7 +631,7 @@ public class StdAnalyzerTests
         Assert.IsTrue(actual.QuadrupletCount == 0, "Expected no quadruplets");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 4 }, 0)]
     [DataRow(new int[] { 9 }, 0)]
     [DataRow(new int[] { 6 }, 1)]
@@ -682,7 +682,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.BurstCount, $"Expected count {nameof(actual.BurstCount)} correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 10 }, 1)]
     [DataRow(new int[] { 10, 5 }, 1)]
     [DataRow(new int[] { 10, 5, 16 }, 2)]
@@ -735,7 +735,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.StreamCount, $"Expected count {nameof(actual.StreamCount)} correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 16 }, 0)]
     [DataRow(new int[] { 33 }, 0)]
     [DataRow(new int[] { 24 }, 1)]
@@ -786,7 +786,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.LongStreamCount, $"Expected count {nameof(actual.LongStreamCount)} correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 30 }, 0)]
     [DataRow(new int[] { 33 }, 1)]
     [DataRow(new int[] { 56, 34, 35 }, 3)]
@@ -836,7 +836,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.DeathStreamCount, $"Expected count {nameof(actual.DeathStreamCount)} correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(60000d / 310d, 0)]//310Bpm 
     [DataRow(60000d / 400d, 0)]//310Bpm 
     public void Analyze_300BpmPlusBmpOneTwoJumps_ReturnsLongestStreamCount(double beatLength, int expectedLength)
@@ -883,7 +883,7 @@ public class StdAnalyzerTests
 
     #region StreamAlikePixels
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(3, 4, 4, 0)]
     [DataRow(3, 4, 5, 5)]
     [DataRow(-3, 4, 5, 5)]
@@ -981,7 +981,7 @@ public class StdAnalyzerTests
 
     #region SpacedStreamPixels
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(-1, 5, 0)]
     [DataRow(1, 5, 4)]
     [DataRow(3, 5, 12)]
@@ -1048,7 +1048,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(1, actual.StreamCutsCount, "Expected one stream jump");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(5, 1)]
     [DataRow(4, 1)]
     [DataRow(3, 0)]
@@ -1101,7 +1101,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCuts, actual.StreamCutsCount, "Expected to count cuts in streams");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(1, 0)]
     [DataRow(2, 2)]
     [DataRow(7, 7)]
@@ -1154,7 +1154,7 @@ public class StdAnalyzerTests
 
     #region DegreesCounting
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(100, 100, 1)]
     [DataRow(100, -100, 1)]
     [DataRow(100, 10, 0)]
@@ -1193,7 +1193,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.Jump90DegreesCount, "Expected to find all 90 Degree jumps");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(0, 0, 1)]
     [DataRow(0, 90, 0)]
     [DataRow(100, 100, 0)]
@@ -1307,7 +1307,7 @@ public class StdAnalyzerTests
 
     #region Jumps
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 0, 350 }, 1)]
     [DataRow(new int[] { 0, 350, 0 }, 2)]
     [DataRow(new int[] { 0, 100, 0, 360 }, 1)]
@@ -1349,7 +1349,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.CrossScreenJumpCount, "Expected find all cross screen jumps");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 0, 350 }, 350)]
     [DataRow(new int[] { 0, 350, 100 }, 600)]
     public void Analyze_AnyJumps_ReturnsTotalJumpPixels(int[] xCoords, double expectedLength)
@@ -1389,7 +1389,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedLength, actual.TotalJumpPixels, "Expected to get Jump length");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(120, 120)]
     public void Analyze_JumpFromSlider_ReturnsTotalJumpPixels(int xCoord, double expectedLength)
     {
@@ -1425,7 +1425,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedLength, actual.TotalJumpPixels, "Expected to calculate jump pixels from slider end");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 10 }, 1)]
     [DataRow(new int[] { 10, 0 }, 1)]
     [DataRow(new int[] { 10, -10, 0, 30 }, 3)] // Jumps: 10px -20px 10px 30px
@@ -1471,7 +1471,7 @@ public class StdAnalyzerTests
 
     #region Sliders
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new double[] { 349, 3, 44 })]
     [DataRow(new double[] { 10, 35.55, 343434 })]
     public void Analyze_SlidersWithVariousLengths_ReturnsTotalSliderLength(double[] sliderLengths)
@@ -1511,7 +1511,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(sliderLengths.Sum(), actual.TotalSliderLength, "Expected to sum up all slider lengths");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 5, 7 })]
     [DataRow(new int[] { 2, 6, 5, 7 })]
     public void Analyze_SlidersWithVariousSliderPoints_ReturnsSliderPointCount(int[] sliderPoints)
@@ -1557,7 +1557,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(sliderPoints.Sum(), actual.SliderPointCount, "Expected to sum up all slider points");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(new int[] { 5, 7 })]
     [DataRow(new int[] { 2, 6, 5 })]
     [DataRow(new int[] { 2, 6, 5, 7 })]
@@ -1604,7 +1604,7 @@ public class StdAnalyzerTests
         Assert.AreEqual((double)sliderPoints.Sum() / sliderPoints.Length, actual.AvgSliderPointCount, "Expected to get avg slider point count");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(4)]
     [DataRow(8)]
     public void Analyze_BèzierSliders_ReturnsBèzierSliderCount(int count)
@@ -1644,7 +1644,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(count, actual.BèzierSliderCount, "Expected to count bèzier sliders");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(4)]
     [DataRow(8)]
     public void Analyze_CatmullSliders_ReturnsCatmullSliderCount(int count)
@@ -1684,7 +1684,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(count, actual.CatmullSliderCount, "Expected to count catmull sliders");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(4)]
     [DataRow(8)]
     public void Analyze_LinearSliders_ReturnsLinearSliderCount(int count)
@@ -1724,7 +1724,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(count, actual.LinearSliderCount, "Expected to count linear sliders");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(4)]
     [DataRow(8)]
     public void Analyze_PerfectCicleSliders_ReturnsPerfectCicleSliderCount(int count)
@@ -1764,7 +1764,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(count, actual.PerfectCicleSliderCount, "Expected to count perfect circle sliders");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow(34, 0)] // 1/8
     [DataRow(68, 1)] // 1/4
     [DataRow(100, 0)]
@@ -1802,7 +1802,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(expectedCount, actual.KickSliderCount, "Should count kicksliders correclty");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow()]
     public void Analyze_VariousSliderAtSpeeds_AvgFasterSliderSpeed()
     {
@@ -1937,7 +1937,7 @@ public class StdAnalyzerTests
 
     #region Miscellaneous
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("0,0,0,5,4,0:0:0:0:", 1)]
     [DataRow("0,1,0,5,4,0:0:0:0:", 0)]
     [DataRow("0,0,0,12,4,0,3:2:0:0:", 0)]
@@ -1976,7 +1976,7 @@ public class StdAnalyzerTests
         Assert.AreEqual(prefectStackCount, actual.CirclePerfectStackCount, "Expected to count perfect circle stacks correctly");
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DataRow("0,0,0,6,0,L|10:10,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 1)]
     [DataRow("10,10,0,6,0,L|0:0,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 1)]
     [DataRow("0,1,0,6,0,L|10:10,1,335.999989746094,4|4,0:0|0:3,3:0:0:0:", 0)]

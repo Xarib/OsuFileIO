@@ -53,7 +53,7 @@ public class OsuFileReaderFactoryTests
         _ = stream.Position;
     }
 
-    [TestMethod]
+    [DataTestMethod]
     [DeploymentItem(fileLocation + fileName)]
     [DataRow(fileName, typeof(StdFileReader))]
     [DataRow(taikoFile, typeof(TaikoFileReader))]
