@@ -16,7 +16,7 @@ namespace OsuFileIO.OsuFileReader;
 
 public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> where THitObject : IHitObject
 {
-    private const string orderExceptionMessage = "The File was not read in the correct order. ReadMethods have to be ordere like: 'Genral -> Editor -> Metadata -> Difficulty -> Events -> TimingPoints -> Colours -> HitObjects' or with 'ReadFile'. For repetitions reset the reader";
+    private const string orderExceptionMessage = "The File was not read in the correct order. ReadMethods have to be ordered like: 'Genral -> Editor -> Metadata -> Difficulty -> Events -> TimingPoints -> Colours -> HitObjects' or with 'ReadFile'. For re reads reset the reader";
     protected readonly StreamReader sr;
     protected string line;
     private OsuFileReaderOverride overrides;
@@ -207,6 +207,10 @@ public abstract class OsuFileReader<THitObject> : IOsuFileReader<THitObject> whe
                         break;
 
                     metadata.BeatmapSetID = ParseIntNullable(keyValue.Value);
+                    break;
+                case "Genre":
+                case "Language":
+                    //New osu lazer values??
                     break;
                 default:
                     throw new OsuFileReaderException($"Unkown key '{keyValue.Key}'");
