@@ -1,3 +1,6 @@
+![Nuget](https://img.shields.io/nuget/v/OsuFileIO?label=OsuFileIO%20nuget)
+![Nuget](https://img.shields.io/nuget/v/OsuFileIO.Analyzer?label=OsuFileIO.Analyzer%20nuget)
+
 # OsuFileIO
 
 Yet another library to parse .osu files. Comes with an analyzer.
