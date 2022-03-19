@@ -1,7 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<PackageId>OsuFileIO</PackageId>
+		<Version>0.1.1</Version>
+		<Authors>Xarib</Authors>
+		<PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/Xarib/OsuFileIO</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/Xarib/OsuFileIO.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+	</PropertyGroup>
 
 </Project>
